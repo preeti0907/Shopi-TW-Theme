@@ -1,0 +1,285 @@
+{%- style -%}
+    .header-wrapper {
+      background-color: {{ section.settings.background_color }};
+    }
+    .header-text {
+      color: {{ section.settings.text_color }};
+    }
+  
+    .menu-drawer {
+      position: fixed;
+      transform: translateX(100%);
+      visibility: hidden;
+      z-index: 100;
+      right: 0;
+      top: 0;
+      width: 100%;
+      padding: 0;
+      background-color: #ffffff;
+      overflow-x: hidden;
+      height: 100vh;
+      transition: transform 0.3s ease-in-out
+      , visibility 0s linear 0.3s;
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .menu-drawer.is-open {
+      transform: translateX(0);
+      visibility: visible;
+      transition: transform 0.3s ease-in-out
+      , visibility 0s linear 0s;
+    }
+  
+    @media screen and (min-width: 750px) {
+      .menu-drawer {
+        width: 40rem;
+        border-width: 0 0 0 1px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  
+    .js details[open] > .menu-drawer {
+      transform: translateX(0);
+      visibility: visible;
+    }
+  
+    .menu-drawer__inner-container {
+      position: relative;
+      height: 100%;
+      padding: 4rem 2rem;
+      background-color: {{ section.settings.background_color }};
+    }
+  
+    .menu-drawer__navigation {
+      padding: 2rem 0;
+    }
+  
+    .menu-drawer__menu-item {
+      padding: 1rem 0;
+      text-decoration: none;
+      font-size: 1.125rem;
+      display: block;
+      transition: color 0.3s ease;
+    }
+  
+    .icon {
+      width: 40px;
+      height: 40px;
+      stroke: currentColor;
+    }
+    .svg-wrapper{
+      width: 24px;
+      height: 24px;
+    }
+  
+  {%- endstyle -%}
+  
+  <section class="fixed top-0 left-0 right-0 z-50 w-full">
+    <div class="container mx-auto px-4">
+      <div class="bg-[#f8f5f2] rounded-full my-4 py-3 shadow-md header-wrapper h-[60px]">
+        <div class="flex items-center justify-between h-full">
+          {%- if section.settings.logo != blank -%}
+            <div class="flex items-center space-x-2 pl-4">
+              <img
+                src="{{ section.settings.logo | img_url: 'master' }}"
+                alt="{{ shop.name }}"
+                width="48"
+                height="48"
+                class="h-12 w-auto">
+            </div>
+          {%- else -%}
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg font-bold italic header-text truncate max-w-[150px]">{{ shop.name }}</h1>
+            </div>
+          {%- endif -%}
+  
+          <nav class="hidden md:flex space-x-8">
+            {%- for link in section.settings.menu.links -%}
+              <div class="relative group">
+                <a href="{{ link.url }}" class="font-semibold header-text hover:text-gray-600">
+                  {{ link.title }}
+                </a>
+              </div>
+            {%- endfor -%}
+          </nav>
+  
+          <div class="flex items-center space-x-4">
+            <a href="{{ routes.cart_url }}" class="relative">
+              {% render 'icon'
+                , icon: 'cart'
+                , class: 'header-text' %}
+              <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {%- if cart != empty -%}
+                  {{ cart.item_count }}
+                {%- else -%}
+                  0
+                {%- endif -%}
+              </span>
+            </a>
+  
+            {%- if section.settings.show_wishlist -%}
+              <button id="wishlist-toggle" class="relative">
+                {% render 'icon'
+                  , icon: 'heart'
+                  , class: 'header-text' %}
+                <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center wishlist-count">
+                  0
+                </span>
+              </button>
+            {%- endif -%}
+  
+            {%- if section.settings.show_account -%}
+              <a href="{{ routes.account_url }}" class="relative">
+                {% render 'icon'
+                  , icon: 'account'
+                  , class: 'header-text' %}
+              </a>
+            {%- endif -%}
+  
+  
+            {% render 'icon'
+              , icon: 'search'
+              , class: 'header-text' %}
+  
+  
+              <mobile-navigation>
+              <!-- Mobile Menu Button -->
+              <button
+                class="md:hidden menu-drawer__toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="menu-drawer">
+                {% render 'icon'
+                  , icon: 'menu'
+                  , class: 'header-text' %}
+              </button>
+  
+              <!-- Mobile Menu Drawer -->
+              <div id="menu-drawer" class="menu-drawer gradient motion-reduce">
+                <div class="menu-drawer__inner-container">
+                  <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold">Menu</h2>
+                    <button class="menu-drawer__close-button">
+                      {% render 'icon'
+                        , icon: 'close'
+                        , class: 'header-text' %}
+                    </button>
+                  </div>
+  
+                  <nav class="menu-drawer__navigation">
+                    <ul class="list-none p-0 m-0">
+                      {%- for link in section.settings.menu.links -%}
+                        <li>
+                          <a href="{{ link.url }}" class="menu-drawer__menu-item header-text hover:text-gray-600">
+                            {{ link.title }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </mobile-navigation>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    class MobileNavigation extends HTMLElement {
+  constructor() {
+    super();
+    this.mainDetailsToggle = this.querySelector('#menu-drawer');
+    this.toggleButton = this.querySelector('.menu-drawer__toggle');
+    this.closeButton = this.querySelector('.menu-drawer__close-button');
+    
+    this.toggleButton.addEventListener('click', this.openMenuDrawer.bind(this));
+    this.closeButton.addEventListener('click', this.closeMenuDrawer.bind(this));
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (event) => {
+      if (this.mainDetailsToggle.classList.contains('is-open') && 
+          !this.contains(event.target)) {
+        this.closeMenuDrawer();
+      }
+    });
+  }
+
+  openMenuDrawer() {
+    this.mainDetailsToggle.classList.add('is-open');
+    this.toggleButton.setAttribute('aria-expanded', true);
+    document.body.classList.add('overflow-hidden');
+  }
+
+  closeMenuDrawer() {
+    this.mainDetailsToggle.classList.remove('is-open');
+    this.toggleButton.setAttribute('aria-expanded', false);
+    document.body.classList.remove('overflow-hidden');
+  }
+}
+
+customElements.define('mobile-navigation', MobileNavigation);
+
+// Initialize wishlist functionality
+const wishlistButton = document.getElementById('wishlist-toggle');
+if (wishlistButton) {
+  wishlistButton.addEventListener('click', function() {
+    console.log('Wishlist clicked');
+  });
+}
+  </script>
+  
+  {% schema %}
+    {
+      "name": "Header 1",
+      "tag": "header",
+      "class": "section-header",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "main-menu"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#f8f5f2"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#000000"
+        },
+        {
+          "type": "header",
+          "content": "Header Options"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_wishlist",
+          "label": "Show Wishlist",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_account",
+          "label": "Show Account",
+          "default": true
+        }
+      ],
+      "presets": [
+    {
+      "name": "t:sections.image-banner.presets.name"}
+  ]
+    }
+  {% endschema %}

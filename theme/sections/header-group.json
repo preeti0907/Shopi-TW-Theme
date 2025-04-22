@@ -1,0 +1,50 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "disabled": true,
+      "settings": {
+        "logo_position": "middle-left",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "background-1",
+        "menu_color_scheme": "",
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "header_1_NbczNF": {
+      "type": "header-1",
+      "settings": {
+        "logo": "shopify://shop_images/potted-seeds_925x_a8bdde5d-43d6-419c-8ce1-70fcd2eab312.jpg",
+        "menu": "main-menu",
+        "background_color": "#f8f5f2",
+        "text_color": "#000000",
+        "show_wishlist": true,
+        "show_account": true
+      }
+    }
+  },
+  "order": [
+    "header",
+    "header_1_NbczNF"
+  ]
+}

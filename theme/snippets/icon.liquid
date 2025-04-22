@@ -1,0 +1,216 @@
+{% comment %} 
+          Renders an icon
+          Accepts: 
+          - icon: {String} Name of the icon to render 
+          - class: {String} Custom classes for the SVG (optional) 
+          - width: {Number} Width of the icon (optional, default: 24) 
+          - height: {Number} Height of the icon (optional, default: 24)
+         
+          Usage:
+          {% render 'icon', icon: 'cart' %}
+          {% render 'icon', icon: 'menu', class: 'custom-class' %} 
+{% endcomment %}
+
+{%- liquid
+  assign width = width | default: 24
+  assign height = height | default: 24
+  assign class = class | default: 'icon'
+-%}
+
+<span class="svg-wrapper">
+  {%- case icon -%}
+    {%- when 'menu' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+
+    {%- when 'close' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12" />
+      </svg>
+
+    {%- when 'cart' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      </svg>
+
+    {%- when 'search' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+
+    {%- when 'account' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+
+    {%- when 'heart' -%}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+        class="icon {{ class | escape }}"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+
+    {%- when 'arrow-right' -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M9 18L15 12L9 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+    {%- when 'arrow-left' -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M15 18L9 12L15 6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+    {%- when 'plus' -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12 5V19M5 12H19"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+    {%- when 'minus' -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M5 12H19"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+    {%- when 'filter' -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3M1 14H7M9 8H15M17 16H23"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+
+    {%- else -%}
+      <svg
+        class="{{ class }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect
+          x="4"
+          y="4"
+          width="16"
+          height="16"
+          rx="2"
+          stroke="currentColor"
+          stroke-width="2" />
+      </svg>
+  {%- endcase -%}
+</span>
