@@ -249,6 +249,71 @@
     </div>
   {%- endif -%}
 </slideshow-component>
+ss
+<!-- Trigger Button -->
+<button
+  id="openModal"
+  role="button"
+  aria-label="Open help dialog"
+  aria-controls="helpModal"
+  aria-expanded="false"
+  class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none"
+>
+  Help
+</button>
+
+<!-- Modal Overlay -->
+<div
+  id="helpModal"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  class="fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50 flex hidden"
+>
+  <!-- Modal Content -->
+  <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl relative">
+    <h2 class="text-xl font-semibold mb-4">Help Dialog</h2>
+    <p>This is an accessible modal with ARIA support.</p>
+
+    <!-- Close Button -->
+    <button
+      id="closeModal"
+      aria-label="Close help dialog"
+      class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none"
+    >
+      &times;
+    </button>
+  </div>
+</div>
+
+<!-- Script -->
+<script>
+  const openBtn = document.getElementById("openModal");
+  const modal = document.getElementById("helpModal");
+  const closeBtn = document.getElementById("closeModal");
+
+  openBtn.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+    openBtn.setAttribute("aria-expanded", "true");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    openBtn.setAttribute("aria-expanded", "false");
+  });
+
+  // Optional: Close modal with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      openBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
+
 
 {%- if request.design_mode -%}
   <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>

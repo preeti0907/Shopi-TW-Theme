@@ -29,16 +29,35 @@
             "text_alignment_mobile": "left",
             "color_scheme": "scheme-4"
           }
+        },
+        "slide_DxECgg": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/banner1.png",
+            "image_overlay_opacity": 0,
+            "heading": "Image slide",
+            "heading_size": "h1",
+            "subheading": "Tell your brand's story through images",
+            "button_label": "Button label",
+            "link": "",
+            "button_style_secondary": false,
+            "show_text_box": true,
+            "box_align": "middle-left",
+            "text_alignment": "left",
+            "text_alignment_mobile": "left",
+            "color_scheme": "scheme-4"
+          }
         }
       },
       "block_order": [
-        "slide_hdBd7J"
+        "slide_hdBd7J",
+        "slide_DxECgg"
       ],
       "settings": {
         "layout": "full_bleed",
         "slide_height": "adapt_image",
-        "slider_visual": "counter",
-        "auto_rotate": false,
+        "slider_visual": "dots",
+        "auto_rotate": true,
         "change_slides_speed": 5,
         "image_behavior": "none",
         "show_text_below": true,
@@ -53,11 +72,11 @@
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "featured_image": "shopify://shop_images/mobile-phone-and-gimbal-in-hand.jpg",
+        "featured_image": "shopify://shop_images/Container_3d3583c4-a0e0-4d18-b7d9-9c15e21d2a52.png",
         "image_caption": "Featured Image",
         "image_button_text": "Learn More",
         "image_button_url": "",
-        "image_position": "left",
+        "image_position": "right",
         "collection": "frontpage",
         "products_to_show": 10,
         "show_view_all": true,
@@ -92,6 +111,18 @@
             "text_style": "body"
           }
         },
+        "usp_wNVRx3": {
+          "type": "usp",
+          "settings": {
+            "usp_text": "Unique Selling Point"
+          }
+        },
+        "usp_WRyxgp": {
+          "type": "usp",
+          "settings": {
+            "usp_text": "Unique Selling Point"
+          }
+        },
         "button_Fzh9nN": {
           "type": "button",
           "settings": {
@@ -104,27 +135,166 @@
       "block_order": [
         "heading_7nbbY9",
         "text_abgEiP",
+        "usp_wNVRx3",
+        "usp_WRyxgp",
         "button_Fzh9nN"
       ],
       "settings": {
+        "image": "shopify://shop_images/Container.png",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
         "desktop_content_position": "top",
         "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "section_color_scheme": "",
-        "color_scheme": "",
-        "image_behavior": "none",
         "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-2",
+        "image_behavior": "none"
+      }
+    },
+    "testimonials_tQMYXA": {
+      "type": "Testimonials",
+      "blocks": {
+        "slide_iUDWCt": {
+          "type": "slide",
+          "settings": {
+            "heading": "Image slide",
+            "subheading": "Tell your brand's story through images",
+            "content": "Tell your brand's story through images"
+          }
+        },
+        "slide_yWKGAE": {
+          "type": "slide",
+          "settings": {
+            "heading": "Image slide",
+            "subheading": "Tell your brand's story through images",
+            "content": "Tell your brand's story through images"
+          }
+        },
+        "slide_wfQFT4": {
+          "type": "slide",
+          "settings": {
+            "heading": "Image slide",
+            "subheading": "Tell your brand's story through images",
+            "content": "Tell your brand's story through images"
+          }
+        },
+        "slide_R66bDp": {
+          "type": "slide",
+          "settings": {
+            "heading": "Image slide",
+            "subheading": "Tell your brand's story through images",
+            "content": "Tell your brand's story through images"
+          }
+        }
+      },
+      "block_order": [
+        "slide_iUDWCt",
+        "slide_yWKGAE",
+        "slide_wfQFT4",
+        "slide_R66bDp"
+      ],
+      "settings": {
+        "title": "Testimonials",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "",
+        "slides_to_show": 6,
+        "columns_desktop": 2,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": true,
+        "color_scheme": "background-1",
+        "image_ratio": "adapt",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
         "padding_top": 36,
         "padding_bottom": 36
+      }
+    },
+    "collection_grid_BbQcUH": {
+      "type": "collection-grid",
+      "blocks": {
+        "grid_item_ReUWPn": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        },
+        "grid_item_gPFQ8J": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        },
+        "grid_item_qyTt6R": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        },
+        "grid_item_KBVr69": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        },
+        "grid_item_j9Ea8h": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        },
+        "grid_item_EndJdk": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Container.png",
+            "title": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "grid_item_ReUWPn",
+        "grid_item_gPFQ8J",
+        "grid_item_qyTt6R",
+        "grid_item_KBVr69",
+        "grid_item_j9Ea8h",
+        "grid_item_EndJdk"
+      ],
+      "settings": {
+        "subheading": "",
+        "heading": "Featured collection",
+        "header_alignment": "center",
+        "container": "container-fluid",
+        "background_color": "#ffffff",
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "item_gap": 16
       }
     }
   },
   "order": [
     "slideshow_eByeLh",
     "featured_collection_KdPkGL",
-    "image_with_text_ejbeFW"
+    "image_with_text_ejbeFW",
+    "testimonials_tQMYXA",
+    "collection_grid_BbQcUH"
   ]
 }
