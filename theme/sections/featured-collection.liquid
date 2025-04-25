@@ -89,7 +89,7 @@
         
         <!-- Featured Image Column -->
         <div class="w-full md:w-1/2 mb-8 md:mb-0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %} sticky top-[15px]">
-          <div class=" overflow-hidden rounded-lg h-full flex items-center justify-center bg-gray-100 ">
+          <div class=" overflow-hidden rounded-lg h-full flex items-center justify-center">
             {%- if section.settings.featured_image != blank -%}
               {%- assign img_url = section.settings.featured_image | image_url: width: 1500 -%}
               <img 

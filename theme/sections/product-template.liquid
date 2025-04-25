@@ -1,0 +1,20 @@
+{% schema %}
+    {
+      "name": "Product Template",
+      "settings": [],
+      "presets": [
+        {
+          "name": "Default",
+          "category": "Product"
+        }
+      ]
+    }
+    {% endschema %}
+    
+    <div class="product-template">
+      <!-- Add your product details here -->
+      <h1>{{ product.title }}</h1>
+      <div>{{ product.description }}</div>
+      <div>{{ product.price | money }}</div>
+      <!-- Add more product information as needed -->
+    </div>

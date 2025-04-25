@@ -151,73 +151,7 @@
         "image_behavior": "none"
       }
     },
-    "testimonials_tQMYXA": {
-      "type": "Testimonials",
-      "blocks": {
-        "slide_iUDWCt": {
-          "type": "slide",
-          "settings": {
-            "heading": "Image slide",
-            "subheading": "Tell your brand's story through images",
-            "content": "Tell your brand's story through images"
-          }
-        },
-        "slide_yWKGAE": {
-          "type": "slide",
-          "settings": {
-            "heading": "Image slide",
-            "subheading": "Tell your brand's story through images",
-            "content": "Tell your brand's story through images"
-          }
-        },
-        "slide_wfQFT4": {
-          "type": "slide",
-          "settings": {
-            "heading": "Image slide",
-            "subheading": "Tell your brand's story through images",
-            "content": "Tell your brand's story through images"
-          }
-        },
-        "slide_R66bDp": {
-          "type": "slide",
-          "settings": {
-            "heading": "Image slide",
-            "subheading": "Tell your brand's story through images",
-            "content": "Tell your brand's story through images"
-          }
-        }
-      },
-      "block_order": [
-        "slide_iUDWCt",
-        "slide_yWKGAE",
-        "slide_wfQFT4",
-        "slide_R66bDp"
-      ],
-      "settings": {
-        "title": "Testimonials",
-        "heading_size": "h1",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "",
-        "slides_to_show": 6,
-        "columns_desktop": 2,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": true,
-        "color_scheme": "background-1",
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_quick_add": false,
-        "columns_mobile": "1",
-        "swipe_on_mobile": true,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
+  
     "collection_grid_BbQcUH": {
       "type": "collection-grid",
       "blocks": {
@@ -294,7 +228,6 @@
     "slideshow_eByeLh",
     "featured_collection_KdPkGL",
     "image_with_text_ejbeFW",
-    "testimonials_tQMYXA",
     "collection_grid_BbQcUH"
   ]
 }
