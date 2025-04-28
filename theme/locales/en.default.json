@@ -9,6 +9,7 @@
  */
 {
   "general": {
+    
     "password_page": {
       "login_form_heading": "Enter store using password:",
       "login_password_button": "Enter using password",
@@ -38,6 +39,7 @@
       }
     },
     "continue_shopping": "Continue shopping",
+    "of": "of",
     "pagination": {
       "label": "Pagination",
       "page": "Page {{ number }}",
@@ -347,8 +349,8 @@
     },
     "slideshow": {
       "load_slide": "Load slide",
-      "previous_slideshow": "Previous slide",
-      "next_slideshow": "Next slide",
+      "previous_slide": "Previous Slide",
+      "next_slide": "Next slide",
       "pause_slideshow": "Pause slideshow",
       "play_slideshow": "Play slideshow",
       "carousel": "Carousel",

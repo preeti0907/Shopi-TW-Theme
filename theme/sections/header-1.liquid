@@ -1,322 +1,366 @@
 {%- style -%}
-    .header-wrapper {
-      background-color: {{ section.settings.background_color }};
-    }
-    .header-text {
-      color: {{ section.settings.text_color }};
-    }
-  
+  .menu-drawer {
+    position: fixed;
+    transform: translateX(-100%);
+    visibility: hidden;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: {{ section.settings.drawer_bg_color | default: '#ffffff' }};
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .menu-drawer.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0s;
+  }
+
+  @media screen and (min-width: 768px) {
     .menu-drawer {
-      position: fixed;
-      transform: translateX(100%);
-      visibility: hidden;
-      z-index: 100;
-      right: 0;
-      top: 0;
-      width: 100%;
-      padding: 0;
-      background-color: #ffffff;
-      overflow-x: hidden;
-      height: 100vh;
-      transition: transform 0.3s ease-in-out
-      , visibility 0s linear 0.3s;
-      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
     }
-  
-    .menu-drawer.is-open {
-      transform: translateX(0);
-      visibility: visible;
-      transition: transform 0.3s ease-in-out
-      , visibility 0s linear 0s;
-    }
-  
-    @media screen and (min-width: 750px) {
-      .menu-drawer {
-        width: 40rem;
-        border-width: 0 0 0 1px;
-        border-style: solid;
-        border-color: rgba(0, 0, 0, 0.1);
-      }
-    }
-  
-    .js details[open] > .menu-drawer {
-      transform: translateX(0);
-      visibility: visible;
-    }
-  
-    .menu-drawer__inner-container {
-      position: relative;
-      height: 100%;
-      padding: 4rem 2rem;
-      background-color: {{ section.settings.background_color }};
-    }
-  
-    .menu-drawer__navigation {
-      padding: 2rem 0;
-    }
-  
-    .menu-drawer__menu-item {
-      padding: 1rem 0;
-      text-decoration: none;
-      font-size: 1.125rem;
-      display: block;
-      transition: color 0.3s ease;
-    }
-  
-    .icon {
-      width: 40px;
-      height: 40px;
-      stroke: currentColor;
-    }
-    .svg-wrapper{
-      width: 24px;
-      height: 24px;
-    }
-  
-  {%- endstyle -%}
-  
-  
+  }
 
-<nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo">
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Theme</span>
-  </a>
-  <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get started</button>
-      <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
-        <span class="sr-only">Open main menu</span>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-        </svg>
-    </button>
-  </div>
-  <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-    <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-      <li>
-        <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
-      </li>
-      <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-      </li>
-      <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-      </li>
-      <li>
-        <a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
-      </li>
-    </ul>
-  </div>
-  </div>
-</nav>
+  .header-wrapper {
+    background-color: {{ section.settings.background_color }};
+    transition: background-color 0.3s ease;
+  }
 
-{% comment %} 
-  <section class="fixed top-0 left-0 right-0 z-50 w-full">
+  .header-text {
+    color: {{ section.settings.text_color }};
+    transition: color 0.3s ease;
+  }
+
+  .menu-item {
+    position: relative;
+  }
+
+  .menu-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: {{ section.settings.text_color }};
+    transition: width 0.3s ease;
+  }
+
+  .menu-item:hover::after {
+    width: 100%;
+  }
+
+  .icon-btn {
+    transition: transform 0.2s ease;
+  }
+
+  .icon-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    z-index: 99;
+  }
+
+  .backdrop.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s linear 0s;
+  }
+{%- endstyle -%}
+
+{% if template != 'index' %}
+  {% assign header_class = 'relative sticky top-0' %}
+{% else %}
+  {% assign header_class = 'fixed top-0 left-0 right-0 z-50 w-full' %}
+{% endif %}
+
+
+<header class="{{ header_class | default: 'fixed top-0 left-0 right-0 z-50 w-full' }}">
+  <div class="header-wrapper shadow-sm">
     <div class="container mx-auto px-4">
-      <div class="bg-[#f8f5f2] rounded-full my-4 py-3 shadow-md header-wrapper h-[60px]">
-        <div class="flex items-center justify-between h-full">
+      <div class="flex items-center justify-between h-16">
+        <!-- Menu Toggle for Mobile -->
+        <div class="flex items-center md:hidden">
+          <button 
+            class="menu-drawer__toggle icon-btn p-2 header-text" 
+            type="button" 
+            aria-expanded="false" 
+            aria-label="Toggle menu">
+            <span class="sr-only">Menu</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Logo Area -->
+        <div class="flex items-center">
           {%- if section.settings.logo != blank -%}
-            <div class="flex items-center space-x-2 pl-4">
-              <img
-                src="{{ section.settings.logo | img_url: 'master' }}"
-                alt="{{ shop.name }}"
-                width="48"
-                height="48"
-                class="h-12 w-auto">
-            </div>
-          {%- else -%}
-            <div class="flex items-center gap-2">
-              <h1 class="text-lg font-bold italic header-text truncate max-w-[150px]">{{ shop.name }}</h1>
-            </div>
-          {%- endif -%}
-  
-          <nav class="hidden md:flex space-x-8">
-            {%- for link in section.settings.menu.links -%}
-              <div class="relative group">
-                <a href="{{ link.url }}" class="font-semibold header-text hover:text-gray-600">
-                  {{ link.title }}
-                </a>
-              </div>
-            {%- endfor -%}
-          </nav>
-  
-          <div class="flex items-center space-x-4">
-            <a href="{{ routes.cart_url }}" class="relative">
-              {% render 'icon'
-                , icon: 'cart'
-                , class: 'header-text' %}
-              <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {%- if cart != empty -%}
-                  {{ cart.item_count }}
-                {%- else -%}
-                  0
-                {%- endif -%}
-              </span>
+            <a href="{{ routes.root_url }}" class="flex-shrink-0">
+              <img 
+                src="{{ section.settings.logo | img_url: 'master' }}" 
+                alt="{{ shop.name }}" 
+                class="h-8 w-auto"
+                height=""
+                width="">
             </a>
-  
-            {%- if section.settings.show_wishlist -%}
-              <button id="wishlist-toggle" class="relative">
-                {% render 'icon'
-                  , icon: 'heart'
-                  , class: 'header-text' %}
-                <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center wishlist-count">
-                  0
-                </span>
-              </button>
-            {%- endif -%}
-  
-            {%- if section.settings.show_account -%}
-              <a href="{{ routes.account_url }}" class="relative">
-                {% render 'icon'
-                  , icon: 'account'
-                  , class: 'header-text' %}
-              </a>
-            {%- endif -%}
-  
-  
-            {% render 'icon'
-              , icon: 'search'
-              , class: 'header-text' %}
-  
-  
-              <mobile-navigation>
-              <!-- Mobile Menu Button -->
-              <button
-                class="md:hidden menu-drawer__toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="menu-drawer">
-                {% render 'icon'
-                  , icon: 'menu'
-                  , class: 'header-text' %}
-              </button>
-  
-              <!-- Mobile Menu Drawer -->
-              <div id="menu-drawer" class="menu-drawer gradient motion-reduce">
-                <div class="menu-drawer__inner-container">
-                  <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-bold">Menu</h2>
-                    <button class="menu-drawer__close-button">
-                      {% render 'icon'
-                        , icon: 'close'
-                        , class: 'header-text' %}
-                    </button>
-                  </div>
-  
-                  <nav class="menu-drawer__navigation">
-                    <ul class="list-none p-0 m-0">
-                      {%- for link in section.settings.menu.links -%}
-                        <li>
-                          <a href="{{ link.url }}" class="menu-drawer__menu-item header-text hover:text-gray-600">
-                            {{ link.title }}
-                          </a>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </mobile-navigation>
-          </div>
+          {%- else -%}
+            <a href="{{ routes.root_url }}" class="flex-shrink-0">
+              <h1 class="text-lg font-bold header-text">{{ shop.name }}</h1>
+            </a>
+          {%- endif -%}
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-6">
+          {%- for link in section.settings.menu.links -%}
+            <a href="{{ link.url }}" class="header-text text-sm font-medium menu-item">
+              {{ link.title }}
+            </a>
+          {%- endfor -%}
+        </nav>
+
+        <!-- Action Icons -->
+        <div class="flex items-center space-x-4">
+          <button type="button" class="search-toggle icon-btn header-text" aria-label="Search">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+
+          {%- if section.settings.show_account -%}
+            <a href="{{ routes.account_url }}" class="icon-btn header-text" aria-label="Account">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.show_wishlist -%}
+            <button id="wishlist-toggle" class="icon-btn header-text relative" aria-label="Wishlist">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center wishlist-count">
+                0
+              </span>
+            </button>
+          {%- endif -%}
+
+          <a href="{{ routes.cart_url }}" class="icon-btn header-text relative" aria-label="Cart">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {%- if cart != empty -%}
+                {{ cart.item_count }}
+              {%- else -%}
+                0
+              {%- endif -%}
+            </span>
+          </a>
         </div>
       </div>
     </div>
-  </section> {% endcomment %}
-  
-  <script>
-    class MobileNavigation extends HTMLElement {
-  constructor() {
-    super();
-    this.mainDetailsToggle = this.querySelector('#menu-drawer');
-    this.toggleButton = this.querySelector('.menu-drawer__toggle');
-    this.closeButton = this.querySelector('.menu-drawer__close-button');
-    
-    this.toggleButton.addEventListener('click', this.openMenuDrawer.bind(this));
-    this.closeButton.addEventListener('click', this.closeMenuDrawer.bind(this));
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (event) => {
-      if (this.mainDetailsToggle.classList.contains('is-open') && 
-          !this.contains(event.target)) {
-        this.closeMenuDrawer();
-      }
-    });
-  }
+  </div>
+</header>
 
-  openMenuDrawer() {
-    this.mainDetailsToggle.classList.add('is-open');
-    this.toggleButton.setAttribute('aria-expanded', true);
-    document.body.classList.add('overflow-hidden');
-  }
+<!-- Mobile Menu Drawer -->
+<div id="menu-drawer" class="menu-drawer">
+  <div class="p-6">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-lg font-medium header-text">Menu</h2>
+      <button class="menu-drawer__close-button icon-btn header-text" aria-label="Close menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
 
-  closeMenuDrawer() {
-    this.mainDetailsToggle.classList.remove('is-open');
-    this.toggleButton.setAttribute('aria-expanded', false);
-    document.body.classList.remove('overflow-hidden');
-  }
-}
+    <nav class="mt-6">
+      <ul class="space-y-6">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            <a href="{{ link.url }}" class="block text-lg header-text hover:opacity-70 transition-opacity">
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
 
-customElements.define('mobile-navigation', MobileNavigation);
+    <!-- Mobile Actions -->
+    <div class="mt-12 pt-6 border-t border-gray-200">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <a href="{{ routes.search_url }}" class="flex flex-col items-center header-text">
+          <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <span class="text-sm">Search</span>
+        </a>
 
-// Initialize wishlist functionality
-const wishlistButton = document.getElementById('wishlist-toggle');
-if (wishlistButton) {
-  wishlistButton.addEventListener('click', function() {
-    console.log('Wishlist clicked');
-  });
-}
-  </script>
-  
-  {% schema %}
-    {
-      "name": "Header 1",
-      "tag": "header",
-      "class": "section-header",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "logo",
-          "label": "Logo"
-        },
-        {
-          "type": "link_list",
-          "id": "menu",
-          "label": "Menu",
-          "default": "main-menu"
-        },
-        {
-          "type": "color",
-          "id": "background_color",
-          "label": "Background Color",
-          "default": "#f8f5f2"
-        },
-        {
-          "type": "color",
-          "id": "text_color",
-          "label": "Text Color",
-          "default": "#000000"
-        },
-        {
-          "type": "header",
-          "content": "Header Options"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_wishlist",
-          "label": "Show Wishlist",
-          "default": true
-        },
-        {
-          "type": "checkbox",
-          "id": "show_account",
-          "label": "Show Account",
-          "default": true
-        }
-      ],
-      "presets": [
-    {
-      "name": "t:sections.image-banner.presets.name"}
-  ]
+        {%- if section.settings.show_account -%}
+          <a href="{{ routes.account_url }}" class="flex flex-col items-center header-text">
+            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="text-sm">Account</span>
+          </a>
+        {%- endif -%}
+
+        <a href="{{ routes.cart_url }}" class="flex flex-col items-center header-text">
+          <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+          <span class="text-sm">Cart</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop for Mobile Menu -->
+<div id="menu-backdrop" class="backdrop"></div>
+
+<script>
+  class HeaderNavigation {
+    constructor() {
+      this.menuDrawer = document.getElementById('menu-drawer');
+      this.menuBackdrop = document.getElementById('menu-backdrop');
+      this.toggleButtons = document.querySelectorAll('.menu-drawer__toggle');
+      this.closeButton = document.querySelector('.menu-drawer__close-button');
+      
+      this.init();
     }
-  {% endschema %}
+
+    init() {
+      // Toggle menu button
+      this.toggleButtons.forEach(button => {
+        button.addEventListener('click', () => this.openMenuDrawer());
+      });
+      
+      // Close button
+      this.closeButton.addEventListener('click', () => this.closeMenuDrawer());
+      
+      // Backdrop click
+      this.menuBackdrop.addEventListener('click', () => this.closeMenuDrawer());
+      
+      // Close on escape key
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') this.closeMenuDrawer();
+      });
+
+      // Initialize wishlist functionality
+      const wishlistButton = document.getElementById('wishlist-toggle');
+      if (wishlistButton) {
+        wishlistButton.addEventListener('click', function() {
+          console.log('Wishlist clicked');
+        });
+      }
+    }
+
+    openMenuDrawer() {
+      this.menuDrawer.classList.add('is-open');
+      this.menuBackdrop.classList.add('is-active');
+      document.body.classList.add('overflow-hidden');
+      
+      this.toggleButtons.forEach(button => {
+        button.setAttribute('aria-expanded', 'true');
+      });
+    }
+
+    closeMenuDrawer() {
+      this.menuDrawer.classList.remove('is-open');
+      this.menuBackdrop.classList.remove('is-active');
+      document.body.classList.remove('overflow-hidden');
+      
+      this.toggleButtons.forEach(button => {
+        button.setAttribute('aria-expanded', 'false');
+      });
+    }
+  }
+
+  // Initialize the header navigation
+  document.addEventListener('DOMContentLoaded', () => {
+    new HeaderNavigation();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Minimalist Header",
+  "tag": "section",
+  "class": "section-header sticky top-0  z-50 ",
+  "disabled_on": {
+    "groups": ["aside", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "drawer_bg_color",
+      "label": "Menu Drawer Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Header Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show Wishlist",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Minimalist Header",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}

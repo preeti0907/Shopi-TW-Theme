@@ -94,107 +94,104 @@
     "predictive_search_show_price": false,
     "currency_code_enabled": true,
     "sections": {
-      "announcement-bar": {
-        "type": "announcement-bar",
-        "blocks": {
-          "announcement-bar-0": {
-            "type": "announcement",
-            "settings": {
-              "text": "Welcome to our store",
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "announcement-bar-0"
-        ],
-        "settings": {}
-      },
-      "header": {
-        "type": "header",
-        "settings": {
-          "logo_position": "middle-left",
-          "menu": "main-menu",
-          "show_line_separator": true,
-          "color_scheme": "background-1",
-          "margin_bottom": 0
-        }
-      },
       "footer": {
         "type": "footer",
         "blocks": {
-          "footer-0": {
-            "type": "link_list",
+          "image_diL8mF": {
+            "type": "image",
             "settings": {
-              "heading": "Quick links",
-              "menu": "footer"
+              "title": "About Brand",
+              "image": "shopify://shop_images/logo.png",
+              "image_width": 150,
+              "text": "",
+              "width": "25%",
+              "open_default": true,
+              "order_first": true
             }
           },
-          "footer-1": {
-            "type": "link_list",
+          "menu_fYGfFt": {
+            "type": "menu",
             "settings": {
-              "heading": "Info",
-              "menu": "footer"
+              "title": "",
+              "menu": "footer",
+              "width": "25%",
+              "open_default": true,
+              "order_first": false
             }
           },
-          "footer-2": {
+          "text_YEHiLA": {
             "type": "text",
             "settings": {
-              "heading": "Our mission",
-              "subtext": "<p>Share contact information, store details, and brand content with your customers.</p>"
+              "title": "About us",
+              "text": "<p>Use this text to share information about your brand with your customers.</p>",
+              "width": "25%",
+              "open_default": true,
+              "order_first": false
+            }
+          },
+          "newsletter_ChyB8e": {
+            "type": "newsletter",
+            "settings": {
+              "title": "Subscribe to our newsletter",
+              "description": "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
+              "placeholder": "Your email",
+              "show_social": true,
+              "width": "33%",
+              "open_default": true,
+              "order_first": false
             }
           }
         },
         "block_order": [
-          "footer-0",
-          "footer-1",
-          "footer-2"
+          "image_diL8mF",
+          "menu_fYGfFt",
+          "text_YEHiLA",
+          "newsletter_ChyB8e"
         ],
         "settings": {
-          "color_scheme": "background-1",
-          "newsletter_enable": true,
-          "newsletter_heading": "Subscribe to our emails",
-          "show_social": true,
-          "enable_country_selector": false,
-          "enable_language_selector": false,
-          "payment_enable": true,
-          "margin_top": 48,
-          "padding_top": 36,
-          "padding_bottom": 36
+          "container": "container",
+          "bordered": true,
+          "spacing": 64,
+          "background_color": "#ffffff",
+          "text_color": "#333333",
+          "heading_color": "#000000",
+          "border_color": "#e5e5e5",
+          "copyright_text": "",
+          "show_payment_icons": true
         }
       },
-      "main-password-header": {
-        "type": "main-password-header",
+      "header-1": {
+        "type": "header-1",
         "settings": {
-          "color_scheme": "background-1"
-        }
-      },
-      "main-password-footer": {
-        "type": "main-password-footer",
-        "settings": {
-          "color_scheme": "background-1"
+          "menu": "main-menu",
+          "background_color": "#ffffff",
+          "text_color": "#111827",
+          "drawer_bg_color": "#ffffff",
+          "show_wishlist": true,
+          "show_account": true
         }
       }
     },
+    "content_for_index": [],
     "color_schemes": {
       "scheme-1": {
         "settings": {
-          "background": "#FFFFFF",
+          "background": "#ffffff",
           "background_gradient": "",
           "text": "#121212",
           "button": "#121212",
-          "button_label": "#FFFFFF",
+          "button_label": "#ffffff",
           "secondary_button_label": "#121212",
           "shadow": "#121212"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#F3F3F3",
+          "background": "#f3f3f3",
           "background_gradient": "",
           "text": "#121212",
           "button": "#121212",
-          "button_label": "#F3F3F3",
+          "button_label": "#f3f3f3",
           "secondary_button_label": "#121212",
           "shadow": "#121212"
         }
@@ -203,10 +200,10 @@
         "settings": {
           "background": "#242833",
           "background_gradient": "",
-          "text": "#FFFFFF",
-          "button": "#FFFFFF",
+          "text": "#ffffff",
+          "button": "#ffffff",
           "button_label": "#000000",
-          "secondary_button_label": "#FFFFFF",
+          "secondary_button_label": "#ffffff",
           "shadow": "#121212"
         }
       },
@@ -214,21 +211,21 @@
         "settings": {
           "background": "#121212",
           "background_gradient": "",
-          "text": "#FFFFFF",
-          "button": "#FFFFFF",
+          "text": "#ffffff",
+          "button": "#ffffff",
           "button_label": "#121212",
-          "secondary_button_label": "#FFFFFF",
+          "secondary_button_label": "#ffffff",
           "shadow": "#121212"
         }
       },
       "scheme-5": {
         "settings": {
-          "background": "#334FB4",
+          "background": "#334fb4",
           "background_gradient": "",
-          "text": "#FFFFFF",
-          "button": "#FFFFFF",
-          "button_label": "#334FB4",
-          "secondary_button_label": "#FFFFFF",
+          "text": "#ffffff",
+          "button": "#ffffff",
+          "button_label": "#334fb4",
+          "secondary_button_label": "#ffffff",
           "shadow": "#121212"
         }
       }
