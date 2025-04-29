@@ -11,51 +11,49 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
+    "footer_bN9BEy": {
       "type": "footer",
       "blocks": {
-        "footer-0": {
-          "type": "link_list",
+        "menu_7tym4W": {
+          "type": "menu",
           "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
+            "title": "",
+            "menu": "footer",
+            "width": "25%",
+            "open_default": false,
+            "order_first": false
           }
         },
-        "footer-1": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Info",
-            "menu": "footer"
-          }
-        },
-        "footer-2": {
+        "text_ULK8eQ": {
           "type": "text",
           "settings": {
-            "heading": "Our mission",
-            "subtext": "<p>Share contact information, store details, and brand content with your customers.</p>"
+            "title": "About us",
+            "text": "<p>Use this text to share information about your brand with your customers.</p>",
+            "width": "25%",
+            "open_default": false,
+            "order_first": false
           }
         }
       },
       "block_order": [
-        "footer-0",
-        "footer-1",
-        "footer-2"
+        "menu_7tym4W",
+        "text_ULK8eQ"
       ],
+      "name": "Minimal Footer",
       "settings": {
-        "color_scheme": "background-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "show_social": true,
-        "enable_country_selector": false,
-        "enable_language_selector": false,
-        "payment_enable": true,
-        "margin_top": 48,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "container": "container",
+        "bordered": true,
+        "spacing": 64,
+        "background_color": "#ffffff",
+        "text_color": "#333333",
+        "heading_color": "#000000",
+        "border_color": "#e5e5e5",
+        "copyright_text": "",
+        "show_payment_icons": true
       }
     }
   },
   "order": [
-    "footer"
+    "footer_bN9BEy"
   ]
 }

@@ -12,22 +12,39 @@
     "slideshow_eByeLh": {
       "type": "slideshow",
       "blocks": {
-        "slide_hdBd7J": {
+        "slide_6tdMbT": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/banner1.png",
+            "desktop_image": "shopify://shop_images/Web_OP2_web_04032025.png",
+            "mobile_image": "shopify://shop_images/Mobile_OP2_mob_04032025.webp",
             "content_position": "middle-left",
             "text_color": "white",
             "subtitle": "",
-            "title": "Testing titles",
-            "description": "<p>Transform your daily grooming routine with our premium salon-style products. Experience luxury and quality in every use.</p>",
-            "button_text": "Shop Now",
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": "",
+            "button_style": "outline"
+          }
+        },
+        "slide_hdBd7J": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/jj_esentials_web_19032025.webp",
+            "mobile_image": "shopify://shop_images/jj_esentials_mob_19032025.webp",
+            "content_position": "middle-left",
+            "text_color": "white",
+            "subtitle": "",
+            "title": "",
+            "description": "",
+            "button_text": "",
             "button_link": "",
             "button_style": "outline"
           }
         }
       },
       "block_order": [
+        "slide_6tdMbT",
         "slide_hdBd7J"
       ],
       "settings": {
@@ -54,16 +71,16 @@
         "title_lines": 2,
         "padding_top": 36,
         "padding_bottom": 36,
-        "title": "Featured Collection",
+        "title": "New Arrivals",
         "description": "",
         "background_color": "white",
-        "featured_image": "shopify://shop_images/Container_3d3583c4-a0e0-4d18-b7d9-9c15e21d2a52.png",
+        "featured_image": "shopify://shop_images/Featured_Image_2.png",
         "image_overlay": false,
         "image_caption": "",
         "image_button_text": "",
         "image_button_url": "",
         "image_position": "right",
-        "collection": "frontpage",
+        "collection": "all-products",
         "products_to_show": 10,
         "show_view_all": true
       }
@@ -74,48 +91,40 @@
         "grid_item_34DDcF": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/dark-wall-bedside-table_925x_ef3f77df-7f45-4b4b-8026-a81e05ee48c7.jpg",
-            "title": "",
+            "image": "shopify://shop_images/image.jpg",
+            "title": "COMFORT",
             "link": ""
           }
         },
         "grid_item_F3c8QY": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/comfortable-living-room-cat_925x_6a3c97f8-4f12-4feb-bed2-f63774913411.jpg",
-            "title": "",
+            "image": "shopify://shop_images/image_3.png",
+            "title": "TRENDY",
             "link": ""
           }
         },
         "grid_item_rePbTh": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/yellow-sofa-with-throw-pillows_925x_6db5b586-84b5-42e6-9891-76e52c4c11d6.jpg",
-            "title": "",
+            "image": "shopify://shop_images/image_2.png",
+            "title": "ATHLETIC",
             "link": ""
           }
         },
         "grid_item_4nCNEm": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/bedroom-bed-with-brown-throw-pillows_925x_46843acf-5b79-42b2-b370-bcc0a7dd79ea.jpg",
-            "title": "",
+            "image": "shopify://shop_images/image_1.png",
+            "title": "POLOS",
             "link": ""
           }
         },
         "grid_item_4XhqVr": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/house-plant-in-white-pot_925x_5dc666d9-94fc-43b6-a92d-e1caca900d73.jpg",
-            "title": "",
-            "link": ""
-          }
-        },
-        "grid_item_tkh4eV": {
-          "type": "grid_item",
-          "settings": {
-            "image": "shopify://shop_images/yellow-couch-by-black-and-white-mural_925x_83eb364b-1395-4e87-b76e-42562674b7e3.jpg",
-            "title": "",
+            "image": "shopify://shop_images/image.png",
+            "title": "SWEATSHIRTS",
             "link": ""
           }
         }
@@ -125,20 +134,79 @@
         "grid_item_F3c8QY",
         "grid_item_rePbTh",
         "grid_item_4nCNEm",
-        "grid_item_4XhqVr",
-        "grid_item_tkh4eV"
+        "grid_item_4XhqVr"
       ],
       "settings": {
         "subheading": "",
-        "heading": "Featured collection",
+        "heading": "What do you need for<br> your next Look?",
         "header_alignment": "center",
         "container": "container",
         "columns_mobile": "2",
-        "columns_desktop": 6,
+        "columns_desktop": 5,
         "background_color": "#ffffff",
         "padding_top": 6,
         "padding_bottom": 6,
         "item_gap": 16
+      }
+    },
+    "slideshow_WPEjdN": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_GDEbEh": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/jj_onlineex_web_20022025.webp",
+            "content_position": "middle-center",
+            "text_color": "white",
+            "subtitle": "",
+            "title": "",
+            "description": "",
+            "button_text": "",
+            "button_link": "shopify://collections/all-products",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "slide_GDEbEh"
+      ],
+      "name": "Minimalist Slideshow",
+      "settings": {
+        "height": "adapt",
+        "show_overlay": false,
+        "show_arrows": false,
+        "show_dots": false,
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "custom_class": ""
+      }
+    },
+    "featured_collection_yEqqPb": {
+      "type": "featured-collection",
+      "settings": {
+        "view_all_text": "View all products",
+        "button_style": "primary",
+        "show_secondary_image": false,
+        "show_add_to_cart": true,
+        "variant_selector": "none",
+        "badge_type": "percentage",
+        "show_rating": false,
+        "show_wishlist": true,
+        "title_lines": 2,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "title": "New Arrivals",
+        "description": "",
+        "background_color": "white",
+        "featured_image": "shopify://shop_images/Featured_Image_2.png",
+        "image_overlay": false,
+        "image_caption": "",
+        "image_button_text": "",
+        "image_button_url": "",
+        "image_position": "left",
+        "collection": "all-products",
+        "products_to_show": 10,
+        "show_view_all": true
       }
     },
     "testimonials_WMQg96": {
@@ -215,6 +283,8 @@
     "slideshow_eByeLh",
     "featured_collection_KdPkGL",
     "collection_grid_BbQcUH",
+    "slideshow_WPEjdN",
+    "featured_collection_yEqqPb",
     "testimonials_WMQg96"
   ]
 }

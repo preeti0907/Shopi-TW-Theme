@@ -95,6 +95,55 @@
       {{ value -}}
       {{ label_unavailable }}
     </label>
+    + <input
+    type="radio"
+    id="{{ input_id }}"
+    name="{{ input_name | escape }}"
+    value="{{ value | escape }}"
+    form="{{ product_form_id }}"
+    {% if value.selected %}
+      checked
+    {% endif %}
+    {% if option_disabled %}
+      class="disabled"
+    {% endif %}
+    {{ input_dataset }}
+  >
+  <label for="{{ input_id }}">
+    <div class="image_placeholder">
+      {% if value.variant.featured_image %}
+        <img
+          src="https://onetwo789.myshopify.com/cdn/shop/{{ value.variant.featured_image.src | width: '250', height: '250'}}"
+          alt="{{ value.variant.featured_media.alt | escape }}"
+          class="variant-image__img"
+          height="100px"
+          width="100px"
+        />
+        {% else  %}
+        {{ 'product-5' | placeholder_svg_tag: class: 'placeholder-image' }}
+      {% endif %}
+      {% if value.variant.available == false %}
+        <div class="overlay"></div>
+        <span class="sold_out_badge">Sold Out</span>
+      {% endif %}
+    </div>
+    
+    <div class="content_variatin">
+     <p class="trim_line line_1">{{ value -}}</p> 
+    
+    {% if value.variant.compare_at_price and value.variant.compare_at_price > value.variant.price %}
+      <p class="compare-price">
+        {{ value.variant.compare_at_price | money_with_currency }}
+      </p>
+      {% else %}
+      <p class="current-price">
+      {{ value.variant.price | money_with_currency }}
+    </p>
+    {% endif %}
+    </div>
+    {{ label_unavailable }}
+    
+  </label>
   {%- elsif picker_type == 'dropdown' or picker_type == 'swatch_dropdown' -%}
     <option
       id="{{ input_id }}"

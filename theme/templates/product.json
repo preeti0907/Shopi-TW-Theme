@@ -11,7 +11,45 @@
   "sections": {
     "main": {
       "type": "product-template",
-      "settings": {}
+      "blocks": {
+        "tab_6UfXkt": {
+          "type": "tab",
+          "settings": {
+            "title": "Description",
+            "content_type": "description",
+            "specifications": "<p>No specifications available for this product.</p>",
+            "enable_product_reviews": false,
+            "custom_content": ""
+          }
+        },
+        "tab_86pdwK": {
+          "type": "tab",
+          "settings": {
+            "title": "Reviews",
+            "content_type": "reviews",
+            "specifications": "<p>Reviews</p>",
+            "enable_product_reviews": false,
+            "custom_content": "<p>s</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_6UfXkt",
+        "tab_86pdwK"
+      ],
+      "settings": {
+        "show_vendor": true,
+        "show_short_description": false,
+        "short_description_words": 30,
+        "show_variant_labels": true,
+        "show_quantity_selector": true,
+        "show_dynamic_checkout": true,
+        "show_sku": false,
+        "show_product_type": true,
+        "show_collections": false,
+        "show_tags": false,
+        "show_share_buttons": true
+      }
     }
   },
   "order": [

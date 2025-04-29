@@ -1,0 +1,111 @@
+{% comment %}
+  Breadcrumbs navigation
+  Usage: {% render 'breadcrumbs' %}
+{% endcomment %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumbs">
+  <ol class="flex flex-wrap items-center text-sm">
+    <li class="breadcrumb-item">
+      <a href="/" class="text-gray-500 hover:text-gray-700 transition">
+        Home
+      </a>
+    </li>
+    <li class="breadcrumb-separator mx-2 text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </li>
+    
+    {% if template contains 'collection' and collection.handle %}
+      <li class="breadcrumb-item">
+        {% if current_tags %}
+          <a href="{{ collection.url }}" class="text-gray-500 hover:text-gray-700 transition">
+            {{ collection.title }}
+          </a>
+        {% else %}
+          <span class="text-gray-900 font-medium">{{ collection.title }}</span>
+        {% endif %}
+      </li>
+      
+      {% if current_tags %}
+        <li class="breadcrumb-separator mx-2 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </li>
+        <li class="breadcrumb-item">
+          <span class="text-gray-900 font-medium">
+            {% for tag in current_tags %}
+              {% if forloop.first %}
+                {{ tag | remove_first: 'color:' | remove_first: 'size:' | remove_first: 'vendor:' | remove_first: 'type:' | capitalize }}
+              {% else %}
+                + {{ forloop.length | minus: 1 }} more
+                {% break %}
+              {% endif %}
+            {% endfor %}
+          </span>
+        </li>
+      {% endif %}
+    {% elsif template contains 'product' and product.handle %}
+      {% if collection.handle %}
+        <li class="breadcrumb-item">
+          <a href="{{ collection.url }}" class="text-gray-500 hover:text-gray-700 transition">
+            {{ collection.title }}
+          </a>
+        </li>
+        <li class="breadcrumb-separator mx-2 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </li>
+      {% else %}
+        <li class="breadcrumb-item">
+          <a href="/collections/all" class="text-gray-500 hover:text-gray-700 transition">
+            Products
+          </a>
+        </li>
+        <li class="breadcrumb-separator mx-2 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </li>
+      {% endif %}
+      <li class="breadcrumb-item">
+        <span class="text-gray-900 font-medium">{{ product.title }}</span>
+      </li>
+    {% elsif template contains 'page' and page.handle %}
+      <li class="breadcrumb-item">
+        <span class="text-gray-900 font-medium">{{ page.title }}</span>
+      </li>
+    {% elsif template contains 'blog' and blog.handle %}
+      <li class="breadcrumb-item">
+        {% if article %}
+          <a href="{{ blog.url }}" class="text-gray-500 hover:text-gray-700 transition">
+            {{ blog.title }}
+          </a>
+        {% else %}
+          <span class="text-gray-900 font-medium">{{ blog.title }}</span>
+        {% endif %}
+      </li>
+      
+      {% if article %}
+        <li class="breadcrumb-separator mx-2 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </li>
+        <li class="breadcrumb-item">
+          <span class="text-gray-900 font-medium">{{ article.title }}</span>
+        </li>
+      {% endif %}
+    {% elsif template contains 'cart' %}
+      <li class="breadcrumb-item">
+        <span class="text-gray-900 font-medium">Cart</span>
+      </li>
+    {% elsif template contains 'search' %}
+      <li class="breadcrumb-item">
+        <span class="text-gray-900 font-medium">Search{% if search.terms %}: {{ search.terms }}{% endif %}</span>
+      </li>
+    {% endif %}
+  </ol>
+</nav>

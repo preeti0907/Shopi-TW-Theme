@@ -57,7 +57,7 @@
                 class="w-full flex-shrink-0 md:w-1/{{ section.settings.columns_desktop }}"
                 {{ block.shopify_attributes }}
               >
-                <div class="px-3 md:px-4">
+                <div class="px-3 md:px-4 py-3">
                   {% case testimonial_layout %}
                     {% when 'image_top' %}
                       {% render 'testimonial-image-top', block: block %}
@@ -118,6 +118,9 @@
 {
   "name": "Testimonials",
   "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
   "class": "section",
   "settings": [
     {

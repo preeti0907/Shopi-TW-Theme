@@ -100,7 +100,7 @@
       <div class="w-full md:w-1/2">
         <div class="sticky-image">
           {% if section.settings.featured_image != blank %}
-            <div class="relative overflow-hidden rounded-lg aspect-[4/5] bg-gray-100">
+            <div class="relative overflow-hidden aspect-[4/5] ">
               <img 
                 srcset="
                   {{ section.settings.featured_image | image_url: width: 500 }} 500w,
@@ -153,6 +153,9 @@
   "name": "Featured Collection Image",
   "tag": "section",
   "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
   "presets": [
     {
       "name": "Featured Collection Image",

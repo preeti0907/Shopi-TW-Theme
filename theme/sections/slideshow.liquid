@@ -19,6 +19,12 @@
     position: relative;
   }
 
+  .slide__image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
   .slide__image {
     width: 100%;
     height: 100%;
@@ -39,6 +45,7 @@
     position: absolute;
     pointer-events: auto;
     max-width: 550px;
+    z-index: 2;
   }
 
   .slide__content--top-left {
@@ -180,6 +187,7 @@
         assign button_style = bs.button_style | default: 'primary'
         assign desktop_image = bs.desktop_image
         assign mobile_image = bs.mobile_image | default: desktop_image
+        assign slide_link = bs.button_link | default: ''
       %}
 
       <div 
@@ -190,22 +198,45 @@
         <!-- Desktop Image (hidden on mobile) -->
         <div class="hidden md:block h-full">
           {% if desktop_image != blank %}
-            <img
-              src="{{ desktop_image | image_url: width: 1920 }}"
-              srcset="
-                {{ desktop_image | image_url: width: 480 }} 480w,
-                {{ desktop_image | image_url: width: 768 }} 768w,
-                {{ desktop_image | image_url: width: 1200 }} 1200w,
-                {{ desktop_image | image_url: width: 1600 }} 1600w,
-                {{ desktop_image | image_url: width: 1920 }} 1920w
-              "
-              sizes="100vw"
-              alt="{{ desktop_image.alt | escape }}"
-              loading="{{ forloop.first | default: 'lazy' }}"
-              class="slide__image"
-              width="{{ desktop_image.width }}"
-              height="{{ desktop_image.height }}"
-            >
+            {% if slide_link != blank %}
+              <a href="{{ slide_link }}" class="slide__image-container block">
+                <img
+                  src="{{ desktop_image | image_url: width: 1920 }}"
+                  srcset="
+                    {{ desktop_image | image_url: width: 480 }} 480w,
+                    {{ desktop_image | image_url: width: 768 }} 768w,
+                    {{ desktop_image | image_url: width: 1200 }} 1200w,
+                    {{ desktop_image | image_url: width: 1600 }} 1600w,
+                    {{ desktop_image | image_url: width: 1920 }} 1920w
+                  "
+                  sizes="100vw"
+                  alt="{{ desktop_image.alt | escape }}"
+                  loading="{{ forloop.first | default: 'lazy' }}"
+                  class="slide__image"
+                  width="{{ desktop_image.width }}"
+                  height="{{ desktop_image.height }}"
+                >
+              </a>
+            {% else %}
+              <div class="slide__image-container">
+                <img
+                  src="{{ desktop_image | image_url: width: 1920 }}"
+                  srcset="
+                    {{ desktop_image | image_url: width: 480 }} 480w,
+                    {{ desktop_image | image_url: width: 768 }} 768w,
+                    {{ desktop_image | image_url: width: 1200 }} 1200w,
+                    {{ desktop_image | image_url: width: 1600 }} 1600w,
+                    {{ desktop_image | image_url: width: 1920 }} 1920w
+                  "
+                  sizes="100vw"
+                  alt="{{ desktop_image.alt | escape }}"
+                  loading="{{ forloop.first | default: 'lazy' }}"
+                  class="slide__image"
+                  width="{{ desktop_image.width }}"
+                  height="{{ desktop_image.height }}"
+                >
+              </div>
+            {% endif %}
           {% else %}
             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
               <span class="text-gray-500">{{ 'image' | placeholder_svg_tag: 'w-full h-64' }}</span>
@@ -216,20 +247,41 @@
         <!-- Mobile Image (hidden on desktop) -->
         <div class="md:hidden h-full">
           {% if mobile_image != blank %}
-            <img
-              src="{{ mobile_image | image_url: width: 768 }}"
-              srcset="
-                {{ mobile_image | image_url: width: 375 }} 375w,
-                {{ mobile_image | image_url: width: 550 }} 550w,
-                {{ mobile_image | image_url: width: 768 }} 768w
-              "
-              sizes="100vw"
-              alt="{{ mobile_image.alt | escape }}"
-              loading="{{ forloop.first | default: 'lazy' }}"
-              class="slide__image"
-              width="{{ mobile_image.width }}"
-              height="{{ mobile_image.height }}"
-            >
+            {% if slide_link != blank %}
+              <a href="{{ slide_link }}" class="slide__image-container block">
+                <img
+                  src="{{ mobile_image | image_url: width: 768 }}"
+                  srcset="
+                    {{ mobile_image | image_url: width: 375 }} 375w,
+                    {{ mobile_image | image_url: width: 550 }} 550w,
+                    {{ mobile_image | image_url: width: 768 }} 768w
+                  "
+                  sizes="100vw"
+                  alt="{{ mobile_image.alt | escape }}"
+                  loading="{{ forloop.first | default: 'lazy' }}"
+                  class="slide__image"
+                  width="{{ mobile_image.width }}"
+                  height="{{ mobile_image.height }}"
+                >
+              </a>
+            {% else %}
+              <div class="slide__image-container">
+                <img
+                  src="{{ mobile_image | image_url: width: 768 }}"
+                  srcset="
+                    {{ mobile_image | image_url: width: 375 }} 375w,
+                    {{ mobile_image | image_url: width: 550 }} 550w,
+                    {{ mobile_image | image_url: width: 768 }} 768w
+                  "
+                  sizes="100vw"
+                  alt="{{ mobile_image.alt | escape }}"
+                  loading="{{ forloop.first | default: 'lazy' }}"
+                  class="slide__image"
+                  width="{{ mobile_image.width }}"
+                  height="{{ mobile_image.height }}"
+                >
+              </div>
+            {% endif %}
           {% else %}
             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
               <span class="text-gray-500">{{ 'image' | placeholder_svg_tag: 'w-full h-64' }}</span>
@@ -447,6 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
   "name": "Minimalist Slideshow",
   "tag": "section",
   "class": "section-slideshow",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
   "settings": [
     {
       "type": "header",
@@ -634,7 +689,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
           "type": "url",
           "id": "button_link",
-          "label": "Button link"
+          "label": "Button link",
+          "info": "This link will be applied to both the button and the entire slide image"
         },
         {
           "type": "select",

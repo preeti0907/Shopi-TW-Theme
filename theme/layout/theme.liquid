@@ -23,6 +23,7 @@
   
   <!-- Theme CSS -->
   {{ 'styles.css' | asset_url | stylesheet_tag }}
+  
   {% comment %} {{ 'theme.css' | asset_url | stylesheet_tag }} {% endcomment %}
   
   <!-- Shopify-specific head content -->
@@ -72,15 +73,17 @@
 <body class="flex flex-col min-h-screen">
   <a class="sr-only focus:not-sr-only" href="#MainContent">{{ "accessibility.skip_to_text" | t }}</a>
   
-  {% section 'header-1' %}
+  {% sections 'header-group' %}
   
   <main role="main" id="MainContent" class="flex-grow">
     {{ content_for_layout }}
   </main>
   
-  {% section 'footer' %}
+
+  {% sections 'footer-group' %}
   
   <!-- Theme JavaScript -->
-  {% comment %} {{ 'theme.js' | asset_url | script_tag }} {% endcomment %}
+  <script src="{{ 'infinite-loading.js' | asset_url }}" defer></script>
+
 </body>
 </html>
