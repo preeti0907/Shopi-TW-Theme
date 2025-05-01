@@ -1,89 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ request.locale.iso_code }}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  
-  <!-- Page title and description -->
-  <title>
-    {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
-  </title>
-  {%- if page_description -%}
-    <meta name="description" content="{{ page_description | escape }}">
-  {%- endif -%}
-  
-  <!-- Favicon -->
-  {%- if settings.favicon != blank -%}
-    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
-  {%- endif -%}
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{{ canonical_url }}">
-  
-  <!-- Theme CSS -->
-  {{ 'styles.css' | asset_url | stylesheet_tag }}
-  
-  {% comment %} {{ 'theme.css' | asset_url | stylesheet_tag }} {% endcomment %}
-  
-  <!-- Shopify-specific head content -->
-  {{ content_for_header }}
-  
-  <!-- Theme settings -->
-  {%- liquid
-    assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
-    assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
-    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
-  %}
-  
-  <!-- Font settings -->
-  {%- unless settings.heading_font.system? -%}
-    {{ settings.heading_font | font_face: font_display: 'swap' }}
-  {%- endunless -%}
-  {%- unless settings.body_font.system? -%}
-    {{ settings.body_font | font_face: font_display: 'swap' }}
-    {{ body_font_bold | font_face: font_display: 'swap' }}
-    {{ body_font_italic | font_face: font_display: 'swap' }}
-    {{ body_font_bold_italic | font_face: font_display: 'swap' }}
-  {%- endunless -%}
-  
-  <!-- CSS variables for theme settings -->
-  <style>
-    :root {
-      --color-primary: {{ settings.color_primary }};
-      --color-secondary: {{ settings.color_secondary }};
-      --color-accent: {{ settings.color_accent }};
-      --color-background: {{ settings.color_background }};
-      --color-text: {{ settings.color_text }};
-      --font-heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
-      --font-body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
-    }
-    
-    body {
-      font-family: var(--font-body);
-      color: var(--color-text);
-      background-color: var(--color-background);
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-      font-family: var(--font-heading);
-    }
-  </style>
-</head>
-<body class="flex flex-col min-h-screen">
-  <a class="sr-only focus:not-sr-only" href="#MainContent">{{ "accessibility.skip_to_text" | t }}</a>
-  
-  {% sections 'header-group' %}
-  
-  <main role="main" id="MainContent" class="flex-grow">
-    {{ content_for_layout }}
-  </main>
-  
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  {% sections 'footer-group' %}
-  
-  <!-- Theme JavaScript -->
-  <script src="{{ 'infinite-loading.js' | asset_url }}" defer></script>
+    <!-- Page title and description -->
+    <title>
+      {{ page_title }}
+      {% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}
+      {% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}
+      {% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
 
-</body>
+    <!-- Favicon -->
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <!-- Theme CSS -->
+    {{ 'styles.css' | asset_url | stylesheet_tag }}
+
+    {% comment %} {{ 'theme.css' | asset_url | stylesheet_tag }} {% endcomment %}
+
+    <!-- Shopify-specific head content -->
+    {{ content_for_header }}
+
+    <!-- Theme settings -->
+    {%- liquid
+      assign body_font_bold = settings.body_font | font_modify: 'weight', 'bold'
+      assign body_font_italic = settings.body_font | font_modify: 'style', 'italic'
+      assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+    %}
+
+    <!-- Font settings -->
+    {%- unless settings.heading_font.system? -%}
+      {{ settings.heading_font | font_face: font_display: 'swap' }}
+    {%- endunless -%}
+    {%- unless settings.body_font.system? -%}
+      {{ settings.body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+    {%- endunless -%}
+
+    <!-- CSS variables for theme settings -->
+    <style>
+      :root {
+        --color-primary: {{ settings.color_primary }};
+        --color-secondary: {{ settings.color_secondary }};
+        --color-accent: {{ settings.color_accent }};
+        --color-background: {{ settings.color_background }};
+        --color-text: {{ settings.color_text }};
+        --font-heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+        --font-body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
+      }
+
+      body {
+        font-family: var(--font-body);
+        color: var(--color-text);
+        background-color: var(--color-background);
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+      }
+    </style>
+    <!-- Swiper CSS -->
+    {{ 'swiper-bundle-min.css' | asset_url | stylesheet_tag }}
+
+    <!-- Swiper JS (defer is okay here) -->
+    <script src="{{ 'swiper-bundle-min.js' | asset_url }}" defer></script>
+    <script src="{{ 'swiper-init.js' | asset_url }}" defer></script>
+
+    <!-- GSAP Core + ScrollTrigger -->
+    <script src="{{ 'gsap-min.js' | asset_url }}" defer></script>
+    <script src="{{ 'ScrollTrigger-min.js' | asset_url }}"defer></script>
+
+    <!-- Your custom GSAP code -->
+     <script src="{{ 'gsap-init.js' |  asset_url }}" defer></script>
+    
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <a class="sr-only focus:not-sr-only" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main role="main" id="MainContent" class="flex-grow">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <!-- Theme JavaScript -->
+    <script src="{{ 'infinite-loading.js' | asset_url }}" defer></script>
+  </body>
 </html>

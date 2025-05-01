@@ -1,5 +1,5 @@
 {% comment %}
-  Collection filters sidebar
+  Modern Collection Filters using Storefront Search & Discovery API
   Features:
   - Price range slider
   - Color filters
@@ -9,9 +9,24 @@
   - Tag filters
   - Custom filters based on metafields
   - Mobile toggle
+  - Clear All Filters button
+  - Compatible with Storefront Search & Discovery
 {% endcomment %}
 
-{% assign current_tags = current_tags | default: empty %}
+{%- liquid
+  # Get current filter state
+  assign filter_count = 0
+  
+  # Price filter
+  if filter.price
+    assign filter_count = filter_count | plus: 1
+  endif
+  
+  # All other filter types
+  for filter in collection.filters
+    assign filter_count = filter_count | plus: filter.active_values.size
+  endfor
+-%}
 
 <div class="collection-filters">
   <div class="filters-header flex items-center justify-between mb-4 md:hidden">
@@ -24,40 +39,58 @@
     </button>
   </div>
 
+  <!-- Clear All Filters Button (always visible when filters are active) -->
+  {% if filter_count > 0 %}
+    <div class="clear-all-filters mb-4 flex justify-center">
+      <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md transition-colors duration-150 shadow-sm">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        Clear all filters ({{ filter_count }})
+      </a>
+    </div>
+  {% endif %}
+
   <div id="filters-content" class="hidden md:block">
-    {% if collection.all_tags.size > 0 or collection.all_vendors.size > 0 or collection.all_types.size > 0 %}
+    {% if collection.filters.size > 0 %}
       <div class="active-filters mb-4">
         <div class="flex items-center justify-between">
           <h4 class="text-sm font-medium">Active filters</h4>
-          {% if current_tags.size > 0 %}
-            <a href="{{ collection.url }}" class="text-xs text-gray-500 hover:text-gray-700">Clear all</a>
+          {% if filter_count > 0 %}
+            <button id="clear-filters-small" class="text-xs text-gray-500 hover:text-gray-700" data-url="{{ collection.url }}?sort_by={{ collection.sort_by }}">
+              Clear all
+            </button>
           {% endif %}
         </div>
 
-        {% if current_tags.size > 0 %}
+        {% if filter_count > 0 %}
           <div class="active-tag-list mt-2 flex flex-wrap gap-2">
-            {% for tag in current_tags %}
-              <a
-                href="{{ tag | remove_tag_url: collection.handle }}"
-                class="active-tag flex items-center px-2 py-1 bg-gray-100 text-xs rounded-full"
-              >
-                {{ tag }}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3 ml-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+            <!-- Active price filter -->
+            {% if filter.price %}
+              <a href="{{ filter.price.url_to_remove }}" class="active-tag flex items-center px-2 py-1 bg-gray-100 text-xs rounded-full">
+                Price: {{ filter.price.min | money }} - {{ filter.price.max | money }}
+                <svg class="h-3 w-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </a>
+            {% endif %}
+            
+            <!-- Other active filters -->
+            {% for filter in collection.filters %}
+              {% for active_value in filter.active_values %}
+                <a href="{{ filter.url_to_remove }}?filter.v.option.{{ active_value.param_name }}={{ active_value.value }}" class="active-tag flex items-center px-2 py-1 bg-gray-100 text-xs rounded-full">
+                  {{ filter.label }}: {{ active_value.label }}
+                  <svg class="h-3 w-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </a>
+              {% endfor %}
             {% endfor %}
           </div>
         {% endif %}
       </div>
 
-      {% if collection.all_products_count > 0 %}
+      {% if collection.products_count > 0 %}
         <!-- Price filter -->
         <div class="filter-group mb-6">
           <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
@@ -76,263 +109,189 @@
           <div class="filter-content pt-3">
             <div class="price-range">
               <div class="flex items-center justify-between mb-2">
-                <span id="price-min" class="text-sm">{{ 0 | money }}</span>
-                <span id="price-max" class="text-sm">{{ 1000 | money }}</span>
+                <span id="price-min" class="text-sm">{{ collection.price_min | money }}</span>
+                <span id="price-max" class="text-sm">{{ collection.price_max | money }}</span>
               </div>
 
               <div class="price-slider">
-                <input type="range" id="price-range-input" min="0" max="1000" step="10" class="w-full">
+                <input 
+                  type="range" 
+                  id="price-range-input" 
+                  min="{{ collection.price_min | divided_by: 100 }}" 
+                  max="{{ collection.price_max | divided_by: 100 }}" 
+                  step="10" 
+                  value="{{ filter.price.min | default: collection.price_min | divided_by: 100 }}"
+                  class="w-full"
+                >
               </div>
 
-              <div class="price-inputs flex items-center gap-2 mt-3">
+              <form class="price-inputs flex items-center gap-2 mt-3" action="{{ collection.url }}" method="get">
                 <input
                   type="number"
-                  id="price-min-input"
-                  min="0"
+                  id="filter-min-price"
+                  name="filter.v.price.gte"
+                  min="{{ collection.price_min | divided_by: 100 }}"
+                  max="{{ collection.price_max | divided_by: 100 }}"
+                  value="{{ filter.price.min | default: collection.price_min | divided_by: 100 }}"
                   class="w-1/2 px-2 py-1 border rounded text-sm"
                   placeholder="Min"
                 >
                 <span class="text-gray-400">to</span>
                 <input
                   type="number"
-                  id="price-max-input"
-                  min="0"
+                  id="filter-max-price"
+                  name="filter.v.price.lte"
+                  min="{{ collection.price_min | divided_by: 100 }}"
+                  max="{{ collection.price_max | divided_by: 100 }}"
+                  value="{{ filter.price.max | default: collection.price_max | divided_by: 100 }}"
                   class="w-1/2 px-2 py-1 border rounded text-sm"
                   placeholder="Max"
                 >
-                <button id="price-apply" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm transition">
+                <button type="submit" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm transition">
                   Apply
                 </button>
-              </div>
+                <!-- Keep existing sort parameter when filtering -->
+                {% if collection.sort_by %}
+                  <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+                {% endif %}
+              </form>
             </div>
           </div>
         </div>
 
-        <!-- Color filter -->
-        {% assign all_options = collection.all_products | map: 'variants' | join: ',' | downcase %}
-        {% if all_options contains 'color' %}
-          {% assign color_values = '' | split: '' %}
-          {% for product in collection.products %}
-            {% for variant in product.variants %}
-              {% assign color_option = variant.options[0] %} {# assuming Color is the first option #}
-              {% unless color_values contains color_option %}
-                {% assign color_values = color_values | push: color_option %}
-              {% endunless %}
-            {% endfor %}
-          {% endfor %}
+        <!-- Dynamically render all available filters -->
+        {% for filter in collection.filters %}
+          <div class="filter-group mb-6">
+            <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
+              <span class="font-medium">{{ filter.label }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="transform rotate-0 h-4 w-4 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
-          {% if color_values.size > 0 %}
-            <div class="filter-group mb-6">
-              <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
-                <span class="font-medium">Color</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="transform rotate-0 h-4 w-4 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              <div class="filter-content pt-3">
-                <div class="color-swatches flex flex-wrap gap-2">
-                  {% for color in color_values %}
-                    {% assign color_handle = color | handle %}
-                    {% assign color_tag = 'color:' | append: color_handle %}
-                    <a
-                      href="{{ color_tag | add_tag_url: collection.handle }}"
-                      class="color-swatch w-8 h-8 rounded-full border overflow-hidden flex items-center justify-center{% if current_tags contains color_tag %} ring-2 ring-offset-2 ring-blue-500{% endif %}"
-                      title="{{ color }}"
-                      style="background-color: {{ color | replace: ' ', '' | downcase }}"
+            <div class="filter-content pt-3">
+              {% case filter.type %}
+                {% when 'boolean' %}
+                  <div class="filter-boolean">
+                    <a 
+                      href="{{ filter.url_to_remove }}"
+                      class="flex items-center py-1 {% if filter.active_values.size > 0 %}font-medium text-gray-900{% else %}text-gray-500{% endif %}"
                     >
-                      {% if current_tags contains color_tag %}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                      <input 
+                        type="checkbox" 
+                        class="form-checkbox h-4 w-4 mr-2" 
+                        {% if filter.active_values.size > 0 %}checked{% endif %}
+                      >
+                      <span class="text-sm">{{ filter.active_values.first.label | default: filter.label }}</span>
+                    </a>
+                  </div>
+                
+                {% when 'list' %}
+                  <div class="filter-list overflow-y-auto max-h-60">
+                    {% for value in filter.values %}
+                      <a 
+                        href="{{ value.url }}"
+                        class="filter-option flex items-center justify-between py-1 hover:bg-gray-50 px-1 rounded {% if value.active %}font-medium text-gray-900{% else %}text-gray-600{% endif %}"
+                      >
+                        <div class="flex items-center">
+                          <input 
+                            type="checkbox" 
+                            class="form-checkbox h-4 w-4 mr-2" 
+                            {% if value.active %}checked{% endif %}
+                            onclick="window.location='{{ value.url }}'"
+                          >
+                          <span class="text-sm">{{ value.label }}</span>
+                        </div>
+                        <span class="text-xs text-gray-400">({{ value.count }})</span>
+                      </a>
+                    {% endfor %}
+                  </div>
+                
+                {% when 'price_range' %}
+                  <!-- Already handled with custom price filter above -->
+                
+                {% else %}
+                  <!-- Color swatch special handling -->
+                  {% if filter.label == 'Color' or filter.label == 'Colour' %}
+                    <div class="color-swatches flex flex-wrap gap-2">
+                      {% for value in filter.values %}
+                        {% assign color_value = value.label | downcase %}
+                        <a
+                          href="{{ value.url }}"
+                          class="color-swatch w-8 h-8 rounded-full border overflow-hidden flex items-center justify-center{% if value.active %} ring-2 ring-offset-2 ring-blue-500{% endif %}"
+                          title="{{ value.label }} ({{ value.count }})"
+                          style="background-color: {{ color_value | replace: ' ', '' }}"
                         >
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                      {% endif %}
-                    </a>
-                  {% endfor %}
+                          {% if value.active %}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-4 w-4 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                          {% endif %}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% elsif filter.label == 'Size' %}
+                    <!-- Size special handling -->
+                    <div class="size-options flex flex-wrap gap-1">
+                      {% for value in filter.values %}
+                        <a
+                          href="{{ value.url }}"
+                          class="size-option min-w-[40px] h-8 px-2 flex items-center justify-center border rounded text-sm{% if value.active %} bg-gray-800 text-white border-gray-800{% else %} hover:bg-gray-100{% endif %}"
+                          title="{{ value.count }} products"
+                        >
+                          {{ value.label }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                    <!-- Default for other filter types -->
+                    <div class="filter-list overflow-y-auto max-h-60">
+                      {% for value in filter.values %}
+                        <a 
+                          href="{{ value.url }}"
+                          class="filter-option flex items-center justify-between py-1 hover:bg-gray-50 px-1 rounded {% if value.active %}font-medium text-gray-900{% else %}text-gray-600{% endif %}"
+                        >
+                          <div class="flex items-center">
+                            <input 
+                              type="checkbox" 
+                              class="form-checkbox h-4 w-4 mr-2" 
+                              {% if value.active %}checked{% endif %}
+                              onclick="window.location='{{ value.url }}'"
+                            >
+                            <span class="text-sm">{{ value.label }}</span>
+                          </div>
+                          <span class="text-xs text-gray-400">({{ value.count }})</span>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+              {% endcase %}
+              
+              {% if filter.active_values.size > 0 %}
+                <div class="filter-clear mt-3">
+                  <a href="{{ filter.url_to_remove }}" class="text-xs text-gray-500 hover:text-gray-700 inline-flex items-center">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Clear {{ filter.label }}
+                  </a>
                 </div>
-              </div>
-            </div>
-          {% endif %}
-        {% endif %}
-
-        <!-- Size filter -->
-        {% assign all_variant_options = collection.all_products | map: 'variants' | join: ',' | downcase %}
-
-        {% if all_variant_options contains 'size' %}
-          {% assign size_values = '' | split: '' %}
-          {% for product in collection.products %}
-            {% for variant in product.variants %}
-              {% assign size_option = variant.options[0] %} {# Assumes Size is first option #}
-              {% unless size_values contains size_option %}
-                {% assign size_values = size_values | push: size_option %}
-              {% endunless %}
-            {% endfor %}
-          {% endfor %}
-
-          {% if size_values.size > 0 %}
-            <div class="filter-group mb-6">
-              <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
-                <span class="font-medium">Size</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="transform rotate-0 h-4 w-4 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              <div class="filter-content pt-3">
-                <div class="size-options flex flex-wrap gap-1">
-                  {% for size in size_values %}
-                    {% assign size_handle = size | handle %}
-                    {% assign size_tag = 'size:' | append: size_handle %}
-                    <a
-                      href="{{ size_tag | add_tag_url: collection.handle }}"
-                      class="size-option min-w-[40px] h-8 px-2 flex items-center justify-center border rounded text-sm{% if current_tags contains size_tag %} bg-gray-800 text-white border-gray-800{% else %} hover:bg-gray-100{% endif %}"
-                    >
-                      {{ size }}
-                    </a>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% endif %}
-
-        <!-- Vendor filter -->
-        {% if collection.all_vendors.size > 0 %}
-          <div class="filter-group mb-6">
-            <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
-              <span class="font-medium">Brand</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="transform rotate-0 h-4 w-4 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            <div class="filter-content pt-3">
-              <div class="vendor-list">
-                {% for vendor in collection.all_vendors %}
-                  {% assign vendor_handle = vendor | handle %}
-                  {% assign vendor_tag = 'vendor:' | append: vendor_handle %}
-                  <label class="vendor-option flex items-center py-1">
-                    <input
-                      type="checkbox"
-                      class="form-checkbox h-4 w-4 mr-2"
-                      {% if current_tags contains vendor_tag %}
-                        checked
-                      {% endif %}
-                      data-tag="{{ vendor_tag }}"
-                      data-url="{% if current_tags contains vendor_tag %}{{ vendor_tag | remove_tag_url: collection.handle }}{% else %}{{ vendor_tag | add_tag_url: collection.handle }}{% endif %}"
-                    >
-                    <span class="text-sm">{{ vendor }}</span>
-                  </label>
-                {% endfor %}
-              </div>
+              {% endif %}
             </div>
           </div>
-        {% endif %}
-
-        <!-- Product type filter -->
-        {% if collection.all_types.size > 0 %}
-          <div class="filter-group mb-6">
-            <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
-              <span class="font-medium">Product type</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="transform rotate-0 h-4 w-4 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            <div class="filter-content pt-3">
-              <div class="type-list">
-                {% for type in collection.all_types %}
-                  {% assign type_handle = type | handle %}
-                  {% assign type_tag = 'type:' | append: type_handle %}
-                  <label class="type-option flex items-center py-1">
-                    <input
-                      type="checkbox"
-                      class="form-checkbox h-4 w-4 mr-2"
-                      {% if current_tags contains type_tag %}
-                        checked
-                      {% endif %}
-                      data-tag="{{ type_tag }}"
-                      data-url="{% if current_tags contains type_tag %}{{ type_tag | remove_tag_url: collection.handle }}{% else %}{{ type_tag | add_tag_url: collection.handle }}{% endif %}"
-                    >
-                    <span class="text-sm">{{ type }}</span>
-                  </label>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Tags filter (excluding already used tags) -->
-        {% assign non_filter_tags = collection.all_tags
-          | where_exp: 'tag',
-            'tag contains "color:" or tag contains "size:" or tag contains "vendor:" or tag contains "type:"'
-        %}
-        {% assign filtered_tags = collection.all_tags | minus: non_filter_tags %}
-
-        {% if filtered_tags.size > 0 %}
-          <div class="filter-group mb-6">
-            <button class="filter-heading w-full flex items-center justify-between text-left py-2 border-b">
-              <span class="font-medium">Tags</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="transform rotate-0 h-4 w-4 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            <div class="filter-content pt-3">
-              <div class="tag-list">
-                {% for tag in filtered_tags %}
-                  <label class="tag-option flex items-center py-1">
-                    <input
-                      type="checkbox"
-                      class="form-checkbox h-4 w-4 mr-2"
-                      {% if current_tags contains tag %}
-                        checked
-                      {% endif %}
-                      data-tag="{{ tag }}"
-                      data-url="{% if current_tags contains tag %}{{ tag | remove_tag_url: collection.handle }}{% else %}{{ tag | add_tag_url: collection.handle }}{% endif %}"
-                    >
-                    <span class="text-sm">{{ tag }}</span>
-                  </label>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        {% endif %}
+        {% endfor %}
       {% endif %}
     {% else %}
       <p class="text-sm text-gray-500">No filters available for this collection.</p>
@@ -368,32 +327,30 @@
       });
     });
 
-    // Checkbox filter navigation
-    const filterCheckboxes = document.querySelectorAll('input[data-url]');
-
-    filterCheckboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function () {
+    // Clear filters button (small)
+    const clearFiltersButton = document.getElementById('clear-filters-small');
+    if (clearFiltersButton) {
+      clearFiltersButton.addEventListener('click', function() {
         window.location.href = this.dataset.url;
       });
-    });
+    }
 
-    // Price range filter
+    // Price range slider
     const priceRangeInput = document.getElementById('price-range-input');
-    const priceMinInput = document.getElementById('price-min-input');
-    const priceMaxInput = document.getElementById('price-max-input');
-    const priceApplyButton = document.getElementById('price-apply');
-
-    if (priceRangeInput && priceMinInput && priceMaxInput && priceApplyButton) {
-      priceApplyButton.addEventListener('click', function () {
-        const min = priceMinInput.value || 0;
-        const max = priceMaxInput.value || 1000;
-
-        if (min > 0 || max < 1000) {
-          const currentUrl = new URL(window.location.href);
-          currentUrl.searchParams.set('filter.v.price.gte', min);
-          currentUrl.searchParams.set('filter.v.price.lte', max);
-          window.location.href = currentUrl.toString();
-        }
+    const minPriceInput = document.getElementById('filter-min-price');
+    const maxPriceInput = document.getElementById('filter-max-price');
+    
+    if (priceRangeInput && minPriceInput && maxPriceInput) {
+      // Update input when slider changes
+      priceRangeInput.addEventListener('input', function() {
+        minPriceInput.value = this.value;
+        // For simplicity, we're just updating the min value with the slider
+        // A more advanced implementation would use a dual range slider
+      });
+      
+      // Update slider when input changes
+      minPriceInput.addEventListener('input', function() {
+        priceRangeInput.value = this.value;
       });
     }
   });

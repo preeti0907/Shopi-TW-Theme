@@ -57,34 +57,6 @@
         "custom_class": ""
       }
     },
-    "featured_collection_KdPkGL": {
-      "type": "featured-collection",
-      "settings": {
-        "view_all_text": "View all products",
-        "button_style": "primary",
-        "show_secondary_image": false,
-        "show_add_to_cart": true,
-        "variant_selector": "none",
-        "badge_type": "percentage",
-        "show_rating": false,
-        "show_wishlist": true,
-        "title_lines": 2,
-        "padding_top": 36,
-        "padding_bottom": 36,
-        "title": "New Arrivals",
-        "description": "",
-        "background_color": "white",
-        "featured_image": "shopify://shop_images/Featured_Image_2.png",
-        "image_overlay": false,
-        "image_caption": "",
-        "image_button_text": "",
-        "image_button_url": "",
-        "image_position": "right",
-        "collection": "all-products",
-        "products_to_show": 10,
-        "show_view_all": true
-      }
-    },
     "collection_grid_BbQcUH": {
       "type": "collection-grid",
       "blocks": {
@@ -138,7 +110,7 @@
       ],
       "settings": {
         "subheading": "",
-        "heading": "What do you need for<br> your next Look?",
+        "heading": "What do you need for your next Look?",
         "header_alignment": "center",
         "container": "container",
         "columns_mobile": "2",
@@ -147,6 +119,34 @@
         "padding_top": 6,
         "padding_bottom": 6,
         "item_gap": 16
+      }
+    },
+    "featured_collection_KdPkGL": {
+      "type": "featured-collection",
+      "settings": {
+        "view_all_text": "View all products",
+        "button_style": "primary",
+        "show_secondary_image": false,
+        "show_add_to_cart": true,
+        "variant_selector": "none",
+        "badge_type": "percentage",
+        "show_rating": false,
+        "show_wishlist": true,
+        "title_lines": 2,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "title": "New Arrivals",
+        "description": "",
+        "background_color": "white",
+        "featured_image": "shopify://shop_images/Featured_Image_2.png",
+        "image_overlay": false,
+        "image_caption": "",
+        "image_button_text": "",
+        "image_button_url": "",
+        "image_position": "right",
+        "collection": "all-products",
+        "products_to_show": 6,
+        "show_view_all": true
       }
     },
     "slideshow_WPEjdN": {
@@ -195,10 +195,10 @@
         "title_lines": 2,
         "padding_top": 36,
         "padding_bottom": 36,
-        "title": "New Arrivals",
+        "title": "Best Sellers",
         "description": "",
         "background_color": "white",
-        "featured_image": "shopify://shop_images/Featured_Image_2.png",
+        "featured_image": "shopify://shop_images/Featured_Image_1_9de19b3d-d6e2-45c8-8df9-e322e8dcbe66.png",
         "image_overlay": false,
         "image_caption": "",
         "image_button_text": "",
@@ -215,37 +215,37 @@
         "testimonial_hgUmye": {
           "type": "testimonial",
           "settings": {
-            "author": "Customer Name",
+            "author": "Jessica L.",
             "author_info": "Verified Customer",
             "rating": 5,
-            "content": "Share what your customers are saying about your products, your company..."
+            "content": "Absolutely love the fit and comfort of the t-shirts! The fabric is super soft and breathable—perfect for everyday wear. Will definitely be ordering more soon!"
           }
         },
         "testimonial_dPtY9W": {
           "type": "testimonial",
           "settings": {
-            "author": "Customer Name",
+            "author": "Ravi M.",
             "author_info": "Verified Customer",
             "rating": 5,
-            "content": "Share what your customers are saying about your products, your company..."
+            "content": "I bought a blazer for an important meeting and got so many compliments. It fits like it was tailored just for me. Great quality and fast delivery too!"
           }
         },
         "testimonial_CMqMwi": {
           "type": "testimonial",
           "settings": {
-            "author": "Customer Name",
+            "author": "Nina D.",
             "author_info": "Verified Customer",
             "rating": 5,
-            "content": "Share what your customers are saying about your products, your company..."
+            "content": "The jacket is so warm and stylish. Wore it on my trip to the mountains and stayed cozy the whole time. Great value for money!"
           }
         },
         "testimonial_KL9yfC": {
           "type": "testimonial",
           "settings": {
-            "author": "Customer Name",
+            "author": "Liam H",
             "author_info": "Verified Customer",
             "rating": 5,
-            "content": "Share what your customers are saying about your products, your company..."
+            "content": "I appreciate the eco-friendly approach. The organic cotton t-shirt I bought is not only stylish but also guilt-free. Keep it up!"
           }
         }
       },
@@ -261,7 +261,7 @@
         "heading_size": "text-3xl",
         "description": "",
         "show_description": false,
-        "layout_style": "image_top",
+        "layout_style": "minimal",
         "image_position": "left",
         "slides_to_show": 3,
         "columns_desktop": 3,
@@ -281,8 +281,8 @@
   },
   "order": [
     "slideshow_eByeLh",
-    "featured_collection_KdPkGL",
     "collection_grid_BbQcUH",
+    "featured_collection_KdPkGL",
     "slideshow_WPEjdN",
     "featured_collection_yEqqPb",
     "testimonials_WMQg96"

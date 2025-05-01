@@ -1,68 +1,23 @@
-{%- style -%}
-  .menu-drawer {
-    position: fixed;
-    transform: translateX(-100%);
-    visibility: hidden;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    overflow-x: hidden;
-    background-color: {{ section.settings.drawer_bg_color | default: '#ffffff' }};
-    transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-  }
+{% comment %}
+  Modern Header with Sticky Behavior
+  - Static at top, sticky on scroll
+  - Different styling for index page vs other pages
+  - Transparent blur background when sticky or on index page
+  - Solid white background when static on non-index pages
+{% endcomment %}
 
-  .menu-drawer.is-open {
-    transform: translateX(0);
-    visibility: visible;
-    transition: transform 0.3s ease-in-out, visibility 0s linear 0s;
-  }
+{% liquid
+  if template == 'index' 
+    assign header_position = 'absolute top-0 left-0 right-0'
+    assign initial_bg = 'bg-white/60 backdrop-blur-md'
+  else 
+    assign header_position = 'relative'
+    assign initial_bg = 'bg-white'
+  endif 
+%}
 
-  @media screen and (min-width: 768px) {
-    .menu-drawer {
-      width: 300px;
-    }
-  }
-
-  .header-wrapper {
-    background-color: {{ section.settings.background_color }};
-    transition: background-color 0.3s ease;
-  }
-
-  .header-text {
-    color: {{ section.settings.text_color }};
-    transition: color 0.3s ease;
-  }
-
-  .menu-item {
-    position: relative;
-  }
-
-  .menu-item::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -2px;
-    left: 0;
-    background-color: {{ section.settings.text_color }};
-    transition: width 0.3s ease;
-  }
-
-  .menu-item:hover::after {
-    width: 100%;
-  }
-
-  .icon-btn {
-    transition: transform 0.2s ease;
-  }
-
-  .icon-btn:hover {
-    transform: scale(1.1);
-  }
-
+<!-- Small amount of required custom CSS -->
+<style>
   .backdrop {
     position: fixed;
     top: 0;
@@ -81,23 +36,43 @@
     visibility: visible;
     transition: opacity 0.3s ease, visibility 0s linear 0s;
   }
-{%- endstyle -%}
+  
+  .menu-drawer {
+    position: fixed;
+    transform: translateX(-100%);
+    visibility: hidden;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: {{ section.settings.drawer_bg_color | default: '#ffffff' }};
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+  }
 
-{% if template != 'index' %}
-  {% assign header_class = 'relative sticky top-0' %}
-{% else %}
-  {% assign header_class = 'fixed top-0 left-0 right-0 z-50 w-full' %}
-{% endif %}
+  .menu-drawer.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.3s ease-in-out, visibility 0s linear 0s;
+  }
 
+  @media screen and (min-width: 768px) {
+    .menu-drawer {
+      width: 300px;
+    }
+  }
+</style>
 
-<header class="{{ header_class | default: 'fixed top-0 left-0 right-0 z-50 w-full' }}">
-  <div class="header-wrapper shadow-sm">
-    <div class="container mx-auto px-4">
+<!-- Static Header -->
+<header id="site-header" class="{{ header_position }} z-50 w-full transition-all duration-300">
+  <div class="container mx-auto px-4">
+    <div id="header-wrapper" class="header-wrapper shadow-sm {{ initial_bg }} rounded-[20px] transition-all duration-300 mt-3 px-3">
       <div class="flex items-center justify-between h-16">
         <!-- Menu Toggle for Mobile -->
         <div class="flex items-center md:hidden">
           <button 
-            class="menu-drawer__toggle icon-btn p-2 header-text" 
+            class="menu-drawer__toggle p-2 text-current hover:scale-110 transition-transform" 
             type="button" 
             aria-expanded="false" 
             aria-label="Toggle menu">
@@ -107,7 +82,7 @@
             </svg>
           </button>
         </div>
-
+  
         <!-- Logo Area -->
         <div class="flex items-center">
           {%- if section.settings.logo != blank -%}
@@ -121,38 +96,38 @@
             </a>
           {%- else -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
-              <h1 class="text-lg font-bold header-text">{{ shop.name }}</h1>
+              <h1 class="text-lg font-bold text-current">{{ shop.name }}</h1>
             </a>
           {%- endif -%}
         </div>
-
+  
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-6">
           {%- for link in section.settings.menu.links -%}
-            <a href="{{ link.url }}" class="header-text text-sm font-medium menu-item">
+            <a href="{{ link.url }}" class="text-sm font-medium text-current relative menu-item hover:opacity-80 transition-opacity">
               {{ link.title }}
             </a>
           {%- endfor -%}
         </nav>
-
+  
         <!-- Action Icons -->
         <div class="flex items-center space-x-4">
-          <button type="button" class="search-toggle icon-btn header-text" aria-label="Search">
+          <button type="button" class="search-toggle hover:scale-110 transition-transform text-current" aria-label="Search">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
           </button>
-
+  
           {%- if section.settings.show_account -%}
-            <a href="{{ routes.account_url }}" class="icon-btn header-text" aria-label="Account">
+            <a href="{{ routes.account_url }}" class="hover:scale-110 transition-transform text-current" aria-label="Account">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>
             </a>
           {%- endif -%}
-
+  
           {%- if section.settings.show_wishlist -%}
-            <button id="wishlist-toggle" class="icon-btn header-text relative" aria-label="Wishlist">
+            <button id="wishlist-toggle" class="hover:scale-110 transition-transform text-current relative" aria-label="Wishlist">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
@@ -161,8 +136,8 @@
               </span>
             </button>
           {%- endif -%}
-
-          <a href="{{ routes.cart_url }}" class="icon-btn header-text relative" aria-label="Cart">
+  
+          <a href="{{ routes.cart_url }}" class="hover:scale-110 transition-transform text-current relative" aria-label="Cart">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
             </svg>
@@ -180,12 +155,103 @@
   </div>
 </header>
 
+<!-- Sticky Header (initially hidden) -->
+<div id="sticky-header" class="fixed top-0 left-0 right-0 z-50 w-full transform -translate-y-full transition-transform duration-300">
+  <div class="container mx-auto px-4">
+    <div class="header-wrapper shadow-md bg-white/60 backdrop-blur-md rounded-[20px] transition-all duration-300  mt-3 px-3">
+      <div class="flex items-center justify-between h-16">
+        <!-- Menu Toggle for Mobile -->
+        <div class="flex items-center md:hidden">
+          <button 
+            class="menu-drawer__toggle p-2 text-current hover:scale-110 transition-transform" 
+            type="button" 
+            aria-expanded="false" 
+            aria-label="Toggle menu">
+            <span class="sr-only">Menu</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+  
+        <!-- Logo Area -->
+        <div class="flex items-center">
+          {%- if section.settings.logo != blank -%}
+            <a href="{{ routes.root_url }}" class="flex-shrink-0">
+              <img 
+                src="{{ section.settings.logo | img_url: 'master' }}" 
+                alt="{{ shop.name }}" 
+                class="h-8 w-auto"
+                height=""
+                width="">
+            </a>
+          {%- else -%}
+            <a href="{{ routes.root_url }}" class="flex-shrink-0">
+              <h1 class="text-lg font-bold text-current">{{ shop.name }}</h1>
+            </a>
+          {%- endif -%}
+        </div>
+  
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center space-x-6">
+          {%- for link in section.settings.menu.links -%}
+            <a href="{{ link.url }}" class="text-sm font-medium text-current relative menu-item hover:opacity-80 transition-opacity">
+              {{ link.title }}
+            </a>
+          {%- endfor -%}
+        </nav>
+  
+        <!-- Action Icons -->
+        <div class="flex items-center space-x-4">
+          <button type="button" class="search-toggle hover:scale-110 transition-transform text-current" aria-label="Search">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+  
+          {%- if section.settings.show_account -%}
+            <a href="{{ routes.account_url }}" class="hover:scale-110 transition-transform text-current" aria-label="Account">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </a>
+          {%- endif -%}
+  
+          {%- if section.settings.show_wishlist -%}
+            <button id="wishlist-toggle-sticky" class="hover:scale-110 transition-transform text-current relative" aria-label="Wishlist">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+              <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center wishlist-count">
+                0
+              </span>
+            </button>
+          {%- endif -%}
+  
+          <a href="{{ routes.cart_url }}" class="hover:scale-110 transition-transform text-current relative" aria-label="Cart">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span class="absolute -top-2 -right-2 bg-gray-700 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              {%- if cart != empty -%}
+                {{ cart.item_count }}
+              {%- else -%}
+                0
+              {%- endif -%}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Mobile Menu Drawer -->
-<div id="menu-drawer" class="menu-drawer">
+<div id="menu-drawer" class="menu-drawer shadow-lg">
   <div class="p-6">
     <div class="flex justify-between items-center mb-8">
-      <h2 class="text-lg font-medium header-text">Menu</h2>
-      <button class="menu-drawer__close-button icon-btn header-text" aria-label="Close menu">
+      <h2 class="text-lg font-medium text-current">Menu</h2>
+      <button class="menu-drawer__close-button hover:scale-110 transition-transform text-current" aria-label="Close menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -196,7 +262,7 @@
       <ul class="space-y-6">
         {%- for link in section.settings.menu.links -%}
           <li>
-            <a href="{{ link.url }}" class="block text-lg header-text hover:opacity-70 transition-opacity">
+            <a href="{{ link.url }}" class="block text-lg text-current hover:opacity-70 transition-opacity">
               {{ link.title }}
             </a>
           </li>
@@ -207,7 +273,7 @@
     <!-- Mobile Actions -->
     <div class="mt-12 pt-6 border-t border-gray-200">
       <div class="grid grid-cols-3 gap-4 text-center">
-        <a href="{{ routes.search_url }}" class="flex flex-col items-center header-text">
+        <a href="{{ routes.search_url }}" class="flex flex-col items-center text-current">
           <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
@@ -215,7 +281,7 @@
         </a>
 
         {%- if section.settings.show_account -%}
-          <a href="{{ routes.account_url }}" class="flex flex-col items-center header-text">
+          <a href="{{ routes.account_url }}" class="flex flex-col items-center text-current">
             <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
@@ -223,7 +289,7 @@
           </a>
         {%- endif -%}
 
-        <a href="{{ routes.cart_url }}" class="flex flex-col items-center header-text">
+        <a href="{{ routes.cart_url }}" class="flex flex-col items-center text-current">
           <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
           </svg>
@@ -240,15 +306,34 @@
 <script>
   class HeaderNavigation {
     constructor() {
+      // DOM Elements
       this.menuDrawer = document.getElementById('menu-drawer');
       this.menuBackdrop = document.getElementById('menu-backdrop');
       this.toggleButtons = document.querySelectorAll('.menu-drawer__toggle');
       this.closeButton = document.querySelector('.menu-drawer__close-button');
+      this.siteHeader = document.getElementById('site-header');
+      this.headerWrapper = document.getElementById('header-wrapper');
+      this.stickyHeader = document.getElementById('sticky-header');
+      
+      // Scroll variables
+      this.lastScrollTop = 0;
+      this.scrollThreshold = 500; // Show sticky header after scrolling this many pixels
       
       this.init();
     }
 
     init() {
+      // Mobile menu functionality
+      this.initMobileMenu();
+      
+      // Sticky header functionality
+      this.initStickyHeader();
+
+      // Initialize wishlist functionality
+      this.initWishlist();
+    }
+    
+    initMobileMenu() {
       // Toggle menu button
       this.toggleButtons.forEach(button => {
         button.addEventListener('click', () => this.openMenuDrawer());
@@ -264,14 +349,39 @@
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') this.closeMenuDrawer();
       });
-
-      // Initialize wishlist functionality
-      const wishlistButton = document.getElementById('wishlist-toggle');
-      if (wishlistButton) {
-        wishlistButton.addEventListener('click', function() {
-          console.log('Wishlist clicked');
-        });
+    }
+    
+    initStickyHeader() {
+      // Implement scroll behavior for sticky header
+      window.addEventListener('scroll', () => {
+        this.handleScroll();
+      });
+    }
+    
+    handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Show sticky header after scrolling down past threshold
+      if (scrollTop > this.scrollThreshold) {
+        this.stickyHeader.classList.add('translate-y-0');
+        this.stickyHeader.classList.remove('-translate-y-full');
+      } else {
+        this.stickyHeader.classList.remove('translate-y-0');
+        this.stickyHeader.classList.add('-translate-y-full');
       }
+      
+      // Update regular header styles (only for non-index pages)
+      if (!this.siteHeader.classList.contains('absolute')) {
+        if (scrollTop > 0) {
+          this.headerWrapper.classList.remove('bg-white');
+          this.headerWrapper.classList.add('bg-white/60', 'backdrop-blur-md');
+        } else {
+          this.headerWrapper.classList.add('bg-white');
+          this.headerWrapper.classList.remove('bg-white/60', 'backdrop-blur-md');
+        }
+      }
+      
+      this.lastScrollTop = scrollTop;
     }
 
     openMenuDrawer() {
@@ -293,6 +403,21 @@
         button.setAttribute('aria-expanded', 'false');
       });
     }
+    
+    initWishlist() {
+      const wishlistButtons = [
+        document.getElementById('wishlist-toggle'),
+        document.getElementById('wishlist-toggle-sticky')
+      ];
+      
+      wishlistButtons.forEach(button => {
+        if (button) {
+          button.addEventListener('click', function() {
+            console.log('Wishlist clicked');
+          });
+        }
+      });
+    }
   }
 
   // Initialize the header navigation
@@ -305,7 +430,7 @@
 {
   "name": "Minimalist Header",
   "tag": "section",
-  "class": "section-header sticky top-0  z-50 ",
+  "class": "section-header z-50",
   "enabled_on": {
     "groups": ["header"]
   },

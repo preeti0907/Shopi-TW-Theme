@@ -11,6 +11,7 @@
   - Wishlist functionality
   - Customizable title lines
   - Price display with sale/compare pricing
+  - Sold out badge for unavailable or low inventory products
   
   Usage:
   {% render 'product-card',
@@ -24,7 +25,8 @@
     show_rating: true,
     show_wishlist: true,
     title_lines: 2,
-    lazy_load: true
+    lazy_load: true,
+    low_inventory_threshold: 5
   %}
 {% endcomment %}
 
@@ -43,6 +45,7 @@
     assign show_wishlist = show_wishlist | default: settings.show_wishlist | default: true
     assign title_lines = title_lines | default: settings.title_lines | default: 2
     assign lazy_load = lazy_load | default: true
+    assign low_inventory_threshold = low_inventory_threshold | default: settings.low_inventory_threshold | default: 5
     
     # Default image
     assign featured_image = product.featured_image
@@ -66,10 +69,24 @@
     
     # Get available variant options
     assign option_count = product.options_with_values.size
+    
+    # Check inventory status
+    assign is_sold_out = false
+    assign has_low_inventory = false
+    
+    if product.available == false
+      assign is_sold_out = true
+    elsif product.quantity <= 0
+      assign is_sold_out = true
+    elsif product.quantity <= low_inventory_threshold
+      assign has_low_inventory = true
+    endif
+    
+    assign selected_variant = product.selected_or_first_available_variant
   %}
   
   <!-- Product Image Container -->
-  <div class="relative w-full overflow-hidden rounded-lg bg-gray-100 aspect-square">
+  <div class="relative w-full overflow-hidden rounded-lg bg-gray-100 aspect-square skewElem">
     <a href="{{ product_url }}" class="absolute inset-0 z-10" aria-label="{{ product.title | escape }}"></a>
     
     <!-- Primary Image -->
@@ -86,7 +103,7 @@
       {% if lazy_load %}loading="lazy"{% endif %}
       width="{{ featured_image.width }}"
       height="{{ featured_image.height }}"
-      class="absolute inset-0 object-cover w-full h-full transition-opacity duration-500 ease-in-out"
+      class="absolute inset-0 object-cover w-full h-full transition-opacity duration-500 ease-in-out{% if is_sold_out %} opacity-50{% endif %}"
     >
     
     <!-- Secondary Image (if enabled) -->
@@ -104,8 +121,17 @@
         loading="lazy"
         width="{{ secondary_image.width }}"
         height="{{ secondary_image.height }}"
-        class="absolute inset-0 object-cover w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+        class="absolute inset-0 object-cover w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out{% if is_sold_out %} opacity-50{% endif %}"
       >
+    {% endif %}
+    
+    <!-- Sold Out Overlay -->
+    {% if is_sold_out %}
+      <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+        <div class="bg-black bg-opacity-50 text-white font-bold py-2 px-6 rounded-md transform -rotate-12 text-lg">
+          SOLD OUT
+        </div>
+      </div>
     {% endif %}
     
     <!-- Wishlist Button -->
@@ -122,32 +148,45 @@
       </button>
     {% endif %}
     
-    <!-- Sale Badge -->
-    {% if on_sale and badge_type != 'none' %}
-      <div class="absolute top-2 left-2 z-20 py-1 px-2 bg-red-600 text-white text-xs font-medium rounded">
-        {% case badge_type %}
-          {% when 'percentage' %}
-            {% assign savings_percentage = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round %}
-            Save {{ savings_percentage }}%
-          {% when 'amount' %}
-            {% assign savings_amount = product.compare_at_price | minus: product.price %}
-            Save {{ savings_amount | money }}
-          {% when 'text' %}
-            Sale
-        {% endcase %}
-      </div>
-    {% endif %}
+    <!-- Product Badges (Sale or Inventory) -->
+    <div class="absolute top-2 left-2 z-20 flex flex-col gap-1">
+      {% if on_sale and badge_type != 'none' %}
+        <div class="py-1 px-2 bg-red-600 text-white text-xs font-medium rounded">
+          {% case badge_type %}
+            {% when 'percentage' %}
+              {% assign savings_percentage = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round %}
+              Save {{ savings_percentage }}%
+            {% when 'amount' %}
+              {% assign savings_amount = product.compare_at_price | minus: product.price %}
+              Save {{ savings_amount | money }}
+            {% when 'text' %}
+              Sale
+          {% endcase %}
+        </div>
+      {% endif %}
+      
+      {% if has_low_inventory and is_sold_out == false %}
+        <div class="py-1 px-2 bg-amber-500 text-white text-xs font-medium rounded">
+          Only {{ product.quantity }} left!
+        </div>
+      {% endif %}
+    </div>
     
     <!-- Quick Add to Cart (if enabled) -->
-    {% if show_add_to_cart and product.available %}
+    {% if show_add_to_cart %}
       <div class="absolute inset-x-0 bottom-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 z-20">
         <button
           type="button"
-          class="quick-add w-full bg-black bg-opacity-80 hover:bg-opacity-100 text-white py-2 px-4 rounded-md text-sm font-medium transition-all duration-200"
+          class="quick-add w-full {% if is_sold_out %}bg-gray-500 cursor-not-allowed{% else %}bg-black bg-opacity-80 hover:bg-opacity-100{% endif %} text-white py-2 px-4 rounded-md text-sm font-medium transition-all duration-200"
           data-product-id="{{ product.id }}"
-          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+          data-variant-id="{{ selected_variant.id }}"
+          {% if is_sold_out %}disabled{% endif %}
         >
-          Add to Cart
+          {% if is_sold_out %}
+            Sold Out
+          {% else %}
+            Add to Cart
+          {% endif %}
         </button>
       </div>
     {% endif %}
@@ -176,8 +215,8 @@
           {% when 'dropdown' %}
             <select class="variant-select w-full py-1 px-2 border border-gray-300 rounded-md text-sm">
               {% for variant in product.variants %}
-                <option value="{{ variant.id }}">
-                  {{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}
+                <option value="{{ variant.id }}" {% if variant.available == false or variant.quantity <= 0 %}disabled{% endif %}>
+                  {{ variant.title }}{% unless variant.available or variant.quantity > 0 %} - Sold out{% endunless %}
                 </option>
               {% endfor %}
             </select>
@@ -188,9 +227,10 @@
                 {% if variant.featured_image %}
                   <button
                     type="button"
-                    class="variant-image {% if forloop.first %}ring-2 ring-black{% endif %} w-8 h-8 rounded-full overflow-hidden border border-gray-300"
+                    class="variant-image {% if forloop.first %}ring-2 ring-black{% endif %} w-8 h-8 rounded-full overflow-hidden border border-gray-300 {% if variant.available == false or variant.quantity <= 0 %}opacity-50{% endif %}"
                     data-variant-id="{{ variant.id }}"
-                    title="{{ variant.title }}"
+                    data-variant-available="{% if variant.available and variant.quantity > 0 %}true{% else %}false{% endif %}"
+                    title="{{ variant.title }}{% unless variant.available or variant.quantity > 0 %} - Sold out{% endunless %}"
                   >
                     <img 
                       src="{{ variant.featured_image | image_url: width: 50 }}"
@@ -270,18 +310,25 @@
         </div>
       {% endif %}
       
+      <!-- Inventory Status Display -->
+      {% if is_sold_out == false and has_low_inventory %}
+        <div class="text-xs text-amber-600 font-medium mb-1">
+          Only {{ product.quantity }} left in stock!
+        </div>
+      {% endif %}
+      
       <!-- Price -->
       <div class="mt-auto pt-2">
         <div class="flex items-center">
           {% if on_sale %}
-            <span class="text-base md:text-lg font-medium text-red-600">
+            <span class="text-base md:text-lg font-medium {% if is_sold_out %}text-gray-500{% else %}text-red-600{% endif %}">
               {{ product.price | money }}
             </span>
             <span class="ml-2 text-sm text-gray-500 line-through">
               {{ product.compare_at_price | money }}
             </span>
           {% else %}
-            <span class="text-base md:text-lg font-medium">
+            <span class="text-base md:text-lg font-medium {% if is_sold_out %}text-gray-500{% endif %}">
               {{ product.price | money }}
             </span>
           {% endif %}
@@ -336,8 +383,24 @@
     
     handleVariantChange(event) {
       const variantId = event.target.value;
+      const selectedOption = event.target.selectedOptions[0];
+      const isAvailable = !selectedOption.disabled;
+      
       if (this.quickAddButton) {
         this.quickAddButton.dataset.variantId = variantId;
+        
+        // Update button state based on availability
+        if (isAvailable) {
+          this.quickAddButton.classList.remove('bg-gray-500', 'cursor-not-allowed');
+          this.quickAddButton.classList.add('bg-black', 'bg-opacity-80', 'hover:bg-opacity-100');
+          this.quickAddButton.textContent = 'Add to Cart';
+          this.quickAddButton.disabled = false;
+        } else {
+          this.quickAddButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+          this.quickAddButton.classList.remove('bg-black', 'bg-opacity-80', 'hover:bg-opacity-100');
+          this.quickAddButton.textContent = 'Sold Out';
+          this.quickAddButton.disabled = true;
+        }
       }
     }
     
@@ -364,6 +427,7 @@
     handleVariantImageClick(event) {
       const variantImageBtn = event.currentTarget;
       const variantId = variantImageBtn.dataset.variantId;
+      const isAvailable = variantImageBtn.dataset.variantAvailable === 'true';
       
       // Update active state
       this.variantImages.forEach(img => {
@@ -372,14 +436,32 @@
       
       variantImageBtn.classList.add('ring-2', 'ring-black');
       
-      // Update quick add button variant
+      // Update quick add button variant and availability
       if (this.quickAddButton) {
         this.quickAddButton.dataset.variantId = variantId;
+        
+        if (isAvailable) {
+          this.quickAddButton.classList.remove('bg-gray-500', 'cursor-not-allowed');
+          this.quickAddButton.classList.add('bg-black', 'bg-opacity-80', 'hover:bg-opacity-100');
+          this.quickAddButton.textContent = 'Add to Cart';
+          this.quickAddButton.disabled = false;
+        } else {
+          this.quickAddButton.classList.add('bg-gray-500', 'cursor-not-allowed');
+          this.quickAddButton.classList.remove('bg-black', 'bg-opacity-80', 'hover:bg-opacity-100');
+          this.quickAddButton.textContent = 'Sold Out';
+          this.quickAddButton.disabled = true;
+        }
       }
     }
     
     handleQuickAdd(event) {
       event.preventDefault();
+      
+      // Check if button is disabled (item is sold out)
+      if (this.quickAddButton.disabled) {
+        return;
+      }
+      
       const variantId = this.quickAddButton.dataset.variantId;
       
       // Add loading state

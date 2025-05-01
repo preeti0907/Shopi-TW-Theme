@@ -14,40 +14,66 @@
     "footer_bN9BEy": {
       "type": "footer",
       "blocks": {
+        "image_w6QErb": {
+          "type": "image",
+          "settings": {
+            "title": "",
+            "image": "shopify://shop_images/logo.jpg",
+            "image_width": 150,
+            "text": "<p><br/>At <strong>Gildan</strong>, we believe that great style starts with comfort and quality. For decades, we’ve been a trusted name in apparel—crafting essentials that people love to wear every day. <br/><br/></p>",
+            "width": "33%",
+            "open_default": true,
+            "order_first": true
+          }
+        },
         "menu_7tym4W": {
           "type": "menu",
           "settings": {
             "title": "",
             "menu": "footer",
             "width": "25%",
-            "open_default": false,
+            "open_default": true,
             "order_first": false
           }
         },
-        "text_ULK8eQ": {
-          "type": "text",
+        "menu_MtztNk": {
+          "type": "menu",
           "settings": {
-            "title": "About us",
-            "text": "<p>Use this text to share information about your brand with your customers.</p>",
+            "title": "",
+            "menu": "footer",
             "width": "25%",
-            "open_default": false,
+            "open_default": true,
+            "order_first": false
+          }
+        },
+        "newsletter_Y4mTLQ": {
+          "type": "newsletter",
+          "settings": {
+            "title": "Subscribe to our newsletter",
+            "description": "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
+            "placeholder": "Your email",
+            "show_social": true,
+            "width": "33%",
+            "open_default": true,
             "order_first": false
           }
         }
       },
       "block_order": [
+        "image_w6QErb",
         "menu_7tym4W",
-        "text_ULK8eQ"
+        "menu_MtztNk",
+        "newsletter_Y4mTLQ"
       ],
       "name": "Minimal Footer",
       "settings": {
         "container": "container",
-        "bordered": true,
-        "spacing": 64,
-        "background_color": "#ffffff",
-        "text_color": "#333333",
-        "heading_color": "#000000",
-        "border_color": "#e5e5e5",
+        "bordered": false,
+        "spacing": 56,
+        "background_color": "#334fb4",
+        "text_color": "#ffffff",
+        "heading_color": "#ffffff",
+        "border_color": "#ffffff",
         "copyright_text": "",
         "show_payment_icons": true
       }
