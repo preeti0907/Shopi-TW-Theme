@@ -399,12 +399,29 @@
   {% endif %}
 </section>
 
-<div class="swiper swiper-{{ unique_id }} w-full max-w-6xl mx-auto h-40" data-swiper-id="{{ unique_id }}">
 
+{% comment %} <div class="swiper swiper-{{ unique_id }} w-full max-w-6xl mx-auto" data-swiper-id="{{ unique_id }}">
   <div class="swiper-wrapper">
     {% for block in section.blocks %}
-      <div class="swiper-slide h-96  mx-auto text-center bg-red-200 flex items-center justify-center text-xl font-semibold shadow ">
-       {{ block.id }}
+      <div class="swiper-slide mx-auto text-center bg-red-200 flex items-center justify-center text-xl font-semibold shadow ">
+       
+      <img
+      src="{{ block.settings.desktop_image  | image_url: width: 1920 }}"
+      srcset="
+        {{ block.settings.desktop_image | image_url: width: 480 }} 480w,
+        {{ block.settings.desktop_image | image_url: width: 768 }} 768w,
+        {{ block.settings.desktop_image | image_url: width: 1200 }} 1200w,
+        {{ block.settings.desktop_image | image_url: width: 1600 }} 1600w,
+        {{ block.settings.desktop_image | image_url: width: 1920 }} 1920w
+      "
+      sizes="100vw"
+      alt="{{ block.settings.desktop_image.alt | escape }}"
+      loading="{{ forloop.first | default: 'lazy' }}"
+      class="slide__image"
+      width="{{ block.settings.desktop_image.width }}"
+      height="{{ block.settings.desktop_image.height }}"
+    >
+    
       </div>
     {% endfor %}
   </div>
@@ -415,131 +432,10 @@
 
   <!-- Pagination -->
   <div class="swiper-pagination swiper-pagination-{{ unique_id }}"></div>
-</div>
+</div> {% endcomment %}
+
 <script>
-  class MinimalistSlideshow {
-    constructor(element) {
-      this.slideshow = element;
-      this.slides = Array.from(this.slideshow.querySelectorAll('.slide'));
-      this.dots = Array.from(this.slideshow.querySelectorAll('.slideshow__dot'));
-      this.prevButton = this.slideshow.querySelector('[data-slide-prev]');
-      this.nextButton = this.slideshow.querySelector('[data-slide-next]');
-      this.currentIndex = 0;
-      this.autoplay = this.slideshow.dataset.autoplay === 'true';
-      this.autoplaySpeed = parseInt(this.slideshow.dataset.autoplaySpeed) || 5000;
-      this.autoplayTimer = null;
 
-      this.init();
-    }
-
-    init() {
-      // Initialize event listeners
-      if (this.prevButton) {
-        this.prevButton.addEventListener('click', () => this.goToSlide(this.currentIndex - 1));
-      }
-
-      if (this.nextButton) {
-        this.nextButton.addEventListener('click', () => this.goToSlide(this.currentIndex + 1));
-      }
-
-      this.dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => this.goToSlide(index));
-      });
-
-      // Start autoplay if enabled
-      if (this.autoplay) {
-        this.startAutoplay();
-
-        // Pause autoplay on hover
-        this.slideshow.addEventListener('mouseenter', () => this.pauseAutoplay());
-        this.slideshow.addEventListener('mouseleave', () => this.startAutoplay());
-      }
-
-      // Update on resize for responsive behavior
-      window.addEventListener('resize', () => this.updateSlideHeight());
-
-      // Initial setup
-      this.updateSlideHeight();
-    }
-
-    goToSlide(index) {
-      // Handle wrapping
-      if (index < 0) {
-        index = this.slides.length - 1;
-      } else if (index >= this.slides.length) {
-        index = 0;
-      }
-
-      // Update classes
-      this.slides[this.currentIndex].classList.remove('active');
-      this.slides[index].classList.add('active');
-
-      // Update dots if they exist
-      if (this.dots.length) {
-        this.dots[this.currentIndex].classList.remove('active');
-        this.dots[index].classList.add('active');
-      }
-
-      // Update current index
-      this.currentIndex = index;
-
-      // Reset autoplay timer
-      if (this.autoplay) {
-        this.pauseAutoplay();
-        this.startAutoplay();
-      }
-
-      // Update slide height
-      this.updateSlideHeight();
-    }
-
-    startAutoplay() {
-      if (this.autoplay && !this.autoplayTimer) {
-        this.autoplayTimer = setInterval(() => {
-          this.goToSlide(this.currentIndex + 1);
-        }, this.autoplaySpeed);
-      }
-    }
-
-    pauseAutoplay() {
-      if (this.autoplayTimer) {
-        clearInterval(this.autoplayTimer);
-        this.autoplayTimer = null;
-      }
-    }
-
-    updateSlideHeight() {
-      // Make slideshow height match the current slide's height
-      const activeSlide = this.slides[this.currentIndex];
-      const activeImage = activeSlide.querySelector('img.slide__image');
-
-      if (activeImage && activeImage.complete) {
-        this.setHeight(activeImage);
-      } else if (activeImage) {
-        // If image isn't loaded yet, wait for it
-        activeImage.addEventListener('load', () => this.setHeight(activeImage));
-      }
-    }
-
-    setHeight(image) {
-      // Only apply dynamic height when not using fullscreen mode
-      if (!this.slideshow.classList.contains('slideshow--fullscreen')) {
-        const ratio = image.naturalHeight / image.naturalWidth;
-        const width = image.offsetWidth;
-        const height = width * ratio;
-
-        // Set minimum height to prevent tiny slideshow on very wide screens
-        const minHeight = window.innerWidth < 768 ? 250 : 400;
-        this.slideshow.style.height = `${Math.max(height, minHeight)}px`;
-      }
-    }
-  }
-
-  // Initialize all slideshows on the page
-  document.addEventListener('DOMContentLoaded', () => {
-    const slideshows = document.querySelectorAll('[data-slideshow]');
-    slideshows.forEach((slideshow) => new MinimalistSlideshow(slideshow));
-  });
 </script>
 
 {% schema %}

@@ -82,9 +82,10 @@
     <!-- GSAP Core + ScrollTrigger -->
     <script src="{{ 'gsap-min.js' | asset_url }}" defer></script>
     <script src="{{ 'ScrollTrigger-min.js' | asset_url }}"defer></script>
-
+    <script src="https://unpkg.com/gsap@3.13.0/dist/SplitText.min.js" defer></script>
     <!-- Your custom GSAP code -->
      <script src="{{ 'gsap-init.js' |  asset_url }}" defer></script>
+
     
   </head>
   <body class="flex flex-col min-h-screen">
@@ -100,5 +101,6 @@
 
     <!-- Theme JavaScript -->
     <script src="{{ 'infinite-loading.js' | asset_url }}" defer></script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
   </body>
 </html>
