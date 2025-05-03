@@ -1,0 +1,41 @@
+{% schema %}
+    {
+      "name": "Contact Form",
+      "tag": "section",
+      "class": "bg-white",
+      "settings": []
+    }
+    {% endschema %}
+    
+    <section class="py-12 px-4 max-w-3xl mx-auto">
+      <h1 class="text-4xl font-bold mb-6 text-center">Contact Us</h1>
+    
+      <div class="prose mb-8 text-center max-w-none">
+        {{ page.content }}
+      </div>
+    
+      <form method="post" action="/contact#contact_form" id="contact_form" accept-charset="UTF-8" class="space-y-6">
+        <input type="hidden" name="form_type" value="contact">
+        <input type="hidden" name="utf8" value="✓">
+    
+        <div>
+          <label for="ContactFormName" class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" id="ContactFormName" name="contact[name]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        </div>
+    
+        <div>
+          <label for="ContactFormEmail" class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" id="ContactFormEmail" name="contact[email]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        </div>
+    
+        <div>
+          <label for="ContactFormMessage" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea id="ContactFormMessage" name="contact[body]" rows="5" required class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+        </div>
+    
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md">
+          Send Message
+        </button>
+      </form>
+    </section>
+    

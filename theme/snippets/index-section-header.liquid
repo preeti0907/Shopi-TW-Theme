@@ -1,10 +1,10 @@
 {% if section_settings.heading != blank or section_settings.subheading != blank or section_settings.description != blank %}
-    <div class="section__header text-{{ section_settings.header_alignment }}{% if section_settings.container == 'w-full' %} px-5{% endif %}">
+    <div class="section__header text-{{ section_settings.header_alignment }}{% if section_settings.container == 'w-full' %} px-5{% endif %} mb-4 md:mb-10">
         {% if section_settings.subheading != blank %}
             <p class="section__subheading">{{ section_settings.subheading }}</p>
         {% endif %}
         {% if section_settings.heading != blank %}
-            <h2 class="section__heading">{{ section_settings.heading }}</h2>
+            <h2 class="section__heading text-2xl md:text-3xl font-bold">{{ section_settings.heading }}</h2>
         {% endif %}
         {% if section_settings.description != blank %}
             <div class="section__description">{{ section_settings.description }}</div>

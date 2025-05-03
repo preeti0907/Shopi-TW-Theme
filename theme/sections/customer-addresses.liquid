@@ -1,0 +1,38 @@
+{% schema %}
+    {
+      "name": "Customer Addresses",
+      "tag": "section",
+      "class": "bg-white",
+      "settings": []
+    }
+    {% endschema %}
+    
+    <section class="max-w-4xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold mb-8">Your Addresses</h1>
+    
+      <div id="AddressNewForm">
+        {% comment %} {% form 'customer_address', class: 'space-y-6' %}
+          {% include 'customer/address-form' %}
+        {% endform %} {% endcomment %}
+      </div>
+    
+      <div class="mt-10 space-y-6">
+        {% for address in customer.addresses %}
+          <div class="p-4 border rounded">
+            <p class="mb-2 font-medium">{{ address.name }}</p>
+            <p class="text-sm text-gray-700">
+              {{ address.address1 }}<br>
+              {% if address.address2 %}{{ address.address2 }}<br>{% endif %}
+              {{ address.city }}, {{ address.province }} {{ address.zip }}<br>
+              {{ address.country }}
+            </p>
+    
+            <div class="mt-4 flex gap-4">
+              <a href="#" class="text-blue-600" data-edit-address="{{ address.id }}">Edit</a>
+              <a href="#" class="text-red-600" data-delete-address="{{ address.id }}">Delete</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    

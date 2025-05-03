@@ -7,17 +7,15 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{
+ {
+  "name": "Activate Account",
   "sections": {
     "main": {
-      "type": "main-activate-account",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+      "type": "activate-account"
     }
   },
   "order": [
     "main"
   ]
 }
+

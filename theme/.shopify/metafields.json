@@ -128,6 +128,16 @@
         "name": "list.metaobject_reference",
         "category": "REFERENCE"
       }
+    },
+    {
+      "key": "combo_offers",
+      "namespace": "custom",
+      "name": "Combo Offers",
+      "description": "Attached combo products with custom titles",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
     }
   ],
   "variant": [],

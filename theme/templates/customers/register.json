@@ -7,17 +7,15 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{
+ {
+  "name": "Customer Registration",
   "sections": {
     "main": {
-      "type": "main-register",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+      "type": "customer-register"
     }
   },
   "order": [
     "main"
   ]
 }
+

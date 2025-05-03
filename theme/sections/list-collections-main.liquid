@@ -1,0 +1,29 @@
+{% schema %}
+    {
+      "name": "Collections List",
+      "tag": "section",
+      "class": "bg-white",
+      "settings": []
+    }
+    {% endschema %}
+    
+    <section class="py-12 px-4 max-w-7xl mx-auto">
+      <h1 class="text-4xl font-bold mb-8 text-center">All Collections</h1>
+    
+      <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% for collection in collections %}
+          <a href="{{ collection.url }}" class="block border rounded overflow-hidden shadow hover:shadow-lg transition">
+            {% if collection.image %}
+              <img src="{{ collection.image | image_url: width: 600 }}" alt="{{ collection.title }}" class="w-full h-48 object-cover" height="" width="">
+            {% endif %}
+            <div class="p-4">
+              <h2 class="text-lg font-semibold">{{ collection.title }}</h2>
+              {% if collection.description != blank %}
+                <p class="text-sm text-gray-600 line-clamp-2">{{ collection.description | strip_html }}</p>
+              {% endif %}
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+    

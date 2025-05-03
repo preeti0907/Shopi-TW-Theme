@@ -1,0 +1,37 @@
+{% liquid
+  assign product = product
+%}
+{% comment %}
+  <div class="w-full p-4 bg-white space-y-6">
+    {% for option in product.options_with_values %}
+      <div>
+        <h3 class="font-semibold text-gray-800 mb-2">{{ option.name }}</h3>
+        <div class="flex flex-wrap gap-2">
+          {% for value in option.values %}
+
+            <span class="px-3 py-1 rounded-full border border-gray-300 text-sm text-gray-800 {% if forloop.index == 1 %} bg-gray-300 {% else %}  bg-gray-100  {% endif %}">
+              {{ value }}
+            </span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+
+      <hr/>
+    <pre id="product-json" class="whitespace-pre-wrap text-sm font-mono"></pre>
+  </div>
+{% endcomment %}
+{% for option in product.options_with_values %}
+  <div>
+    <label class="block text-sm font-medium text-gray-700">{{ option.name }}</label>
+    <div class="mt-2 flex space-x-4">
+      {% for value in option.values %}
+        <label class="inline-flex items-center space-x-2">
+          <input type="radio" name="option-{{option.name}}" value="{{ value }}" class="form-radio" data-option-index="{{ forloop.index0 }}-{{option.name}}">
+          <span class="text-sm">{{ value }}</span>
+        </label>
+      {% endfor %}
+    </div>
+  </div>
+{% endfor %}

@@ -7,17 +7,16 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-{
+ {
+  "name": "Order Details",
   "sections": {
     "main": {
-      "type": "main-order",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+      "type": "customer-order"
     }
   },
   "order": [
     "main"
   ]
 }
+
+

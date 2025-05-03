@@ -1,0 +1,52 @@
+{% schema %}
+    {
+      "name": "Customer Order",
+      "tag": "section",
+      "class": "bg-white",
+      "settings": []
+    }
+    {% endschema %}
+    
+    <section class="max-w-4xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold mb-4">Order #{{ order.name }}</h1>
+      <p class="text-gray-500 mb-6">Placed on {{ order.created_at | date: "%B %d, %Y" }}</p>
+    
+      <div class="mb-6">
+        <h2 class="font-semibold mb-2">Shipping Address</h2>
+        <p class="text-sm text-gray-700">
+          {{ order.shipping_address.name }}<br>
+          {{ order.shipping_address.address1 }}<br>
+          {% if order.shipping_address.address2 %}
+            {{ order.shipping_address.address2 }}<br>
+          {% endif %}
+          {{ order.shipping_address.city }}, {{ order.shipping_address.province }} {{ order.shipping_address.zip }}<br>
+          {{ order.shipping_address.country }}
+        </p>
+      </div>
+    
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-t border-b">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="text-left px-4 py-2">Product</th>
+              <th class="text-left px-4 py-2">Qty</th>
+              <th class="text-left px-4 py-2">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for line_item in order.line_items %}
+              <tr class="border-b">
+                <td class="px-4 py-2">{{ line_item.title }}</td>
+                <td class="px-4 py-2">{{ line_item.quantity }}</td>
+                <td class="px-4 py-2">{{ line_item.line_price | money }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="mt-6 text-right">
+        <p class="text-lg font-semibold">Total: {{ order.total_price | money }}</p>
+      </div>
+    </section>
+    

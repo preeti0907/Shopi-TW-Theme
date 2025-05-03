@@ -1,0 +1,12 @@
+<form method="post" action="/cart/add">
+  <input type="hidden" name="id" id="selected-variant-id" value="{{ product.variants.first.id }}">
+
+  <button
+    type="submit"
+    id="add-to-cart-btn"
+    class="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition"
+    {% unless product.variants.first.available %}disabled class="bg-gray-400 cursor-not-allowed"{% endunless %}
+  >
+    Add to Cart
+  </button>
+</form>

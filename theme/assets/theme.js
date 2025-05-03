@@ -336,3 +336,225 @@ class ProductCard {
     document.addEventListener('slider:loaded', initNewProductCards);
     document.addEventListener('slider:changed', initNewProductCards);
   });
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const variantData = window.productVariants;
+    const optionContainers = document.querySelectorAll('[data-option-index]');
+    const variantIdInput = document.getElementById('product-variant-id');
+    const addToCartWrapper = document.getElementById('add-to-cart-wrapper');
+    const soldOutBtn = document.getElementById('sold-out-btn');
+    const hiddenSelects = document.querySelectorAll('[data-option-select]');
+    const quantityInput = document.getElementById('quantity');
+    const quantityIncrease = document.getElementById('quantity-increase');
+    const quantityDecrease = document.getElementById('quantity-decrease');
+    
+    // Set up the selected options array
+    let selectedOptions = [];
+    optionContainers.forEach((container, index) => {
+      // Initialize with first option for each option type
+      const firstButton = container.querySelector('.option-button');
+      if (firstButton) {
+        selectedOptions[index] = firstButton.dataset.value;
+        firstButton.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+        
+        // Update the corresponding hidden select
+        const hiddenSelect = document.querySelector(`[data-option-select="${index}"]`);
+        if (hiddenSelect) {
+          hiddenSelect.value = firstButton.dataset.value;
+        }
+      }
+    });
+    
+    // Quantity selector logic
+    if (quantityIncrease && quantityDecrease && quantityInput) {
+      quantityIncrease.addEventListener('click', () => {
+        const currentValue = parseInt(quantityInput.value, 10);
+        quantityInput.value = currentValue + 1;
+        validateQuantity();
+      });
+      
+      quantityDecrease.addEventListener('click', () => {
+        const currentValue = parseInt(quantityInput.value, 10);
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+        }
+        validateQuantity();
+      });
+      
+      quantityInput.addEventListener('change', validateQuantity);
+      
+      function validateQuantity() {
+        let value = parseInt(quantityInput.value, 10);
+        if (isNaN(value) || value < 1) {
+          value = 1;
+        }
+        quantityInput.value = value;
+      }
+    }
+    
+    // Function to find the matching variant based on selected options
+    function findMatchingVariant() {
+      return variantData.find(variant => {
+        return variant.options.every((option, index) => 
+          option === selectedOptions[index]
+        );
+      });
+    }
+    
+    // Function to update the button state based on variant availability
+    function updateButtonState(variant) {
+      if (variant) {
+        // Update variant ID input
+        variantIdInput.value = variant.id;
+        
+        // Update price display
+        const priceDisplay = document.getElementById('variant-price');
+        const comparePrice = document.getElementById('compare-price');
+        
+        if (variant.price) {
+          priceDisplay.textContent = formatMoney(variant.price);
+        }
+        
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+          comparePrice.textContent = formatMoney(variant.compare_at_price);
+          comparePrice.classList.remove('hidden');
+        } else {
+          comparePrice.classList.add('hidden');
+        }
+        
+        // Update availability
+        if (variant.available) {
+          // Show Add to Cart and Express Checkout buttons
+          addToCartWrapper.classList.remove('hidden');
+          soldOutBtn.classList.add('hidden');
+        } else {
+          // Show Sold Out button, hide Add to Cart and Express Checkout
+          addToCartWrapper.classList.add('hidden');
+          soldOutBtn.classList.remove('hidden');
+        }
+      }
+    }
+    
+    // Helper function to format money values
+    function formatMoney(cents) {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 2
+      });
+      return formatter.format(cents / 100);
+    }
+    
+    // Function to handle button clicks for options
+    function handleOptionClick(e) {
+      const button = e.currentTarget;
+      const optionIndex = parseInt(button.closest('[data-option-index]').dataset.optionIndex);
+      const optionValue = button.dataset.value;
+      
+      // Update selected options array
+      selectedOptions[optionIndex] = optionValue;
+      
+      // Update visual state of buttons (remove highlight from siblings, add to clicked)
+      const siblings = button.parentNode.querySelectorAll('.option-button');
+      siblings.forEach(sib => {
+        sib.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+      });
+      button.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+      
+      // Update the corresponding hidden select
+      const hiddenSelect = document.querySelector(`[data-option-select="${optionIndex}"]`);
+      if (hiddenSelect) {
+        hiddenSelect.value = optionValue;
+      }
+      
+      // Find and update the variant
+      const variant = findMatchingVariant();
+      updateButtonState(variant);
+      
+      // Update available options
+      updateAvailableOptions();
+    }
+    
+    // Add event listeners to all option buttons
+    const optionButtons = document.querySelectorAll('.option-button');
+    optionButtons.forEach(button => {
+      button.addEventListener('click', handleOptionClick);
+    });
+    
+    // Function to update unavailable options (gray them out)
+    function updateAvailableOptions() {
+      // For each option position, check which values are available with current selections
+      optionContainers.forEach((container, optionPosition) => {
+        const buttons = container.querySelectorAll('.option-button');
+        
+        buttons.forEach(button => {
+          // Create a copy of the current selections
+          const testOptions = [...selectedOptions];
+          // Modify the selection for this option position
+          testOptions[optionPosition] = button.dataset.value;
+          
+          // Check if any variant exists with this combination
+          const variantExists = variantData.some(variant => {
+            // Only check if all specified options match
+            return testOptions.every((option, index) => {
+              // Skip positions that haven't been selected yet
+              if (option === undefined) return true;
+              return variant.options[index] === option;
+            });
+          });
+          
+          // Update button styling based on availability
+          if (!variantExists) {
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+            button.classList.remove('hover:bg-gray-50');
+          } else {
+            button.classList.remove('opacity-50', 'cursor-not-allowed');
+            button.classList.add('hover:bg-gray-50');
+          }
+        });
+      });
+    }
+    
+    // Check the initial state of the variant when the page loads
+    const initialVariant = findMatchingVariant();
+    if (initialVariant) {
+      updateButtonState(initialVariant);
+    } else {
+      // If no variant is found initially, try to find the first available variant
+      const firstAvailableVariant = variantData.find(variant => variant.available);
+      if (firstAvailableVariant) {
+        // Update selected options to match the first available variant
+        firstAvailableVariant.options.forEach((option, index) => {
+          selectedOptions[index] = option;
+          
+          // Update UI to reflect these options
+          const optionContainer = document.querySelector(`[data-option-index="${index}"]`);
+          if (optionContainer) {
+            const buttons = optionContainer.querySelectorAll('.option-button');
+            buttons.forEach(button => {
+              if (button.dataset.value === option) {
+                button.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+              } else {
+                button.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+              }
+            });
+            
+            // Update hidden select
+            const hiddenSelect = document.querySelector(`[data-option-select="${index}"]`);
+            if (hiddenSelect) {
+              hiddenSelect.value = option;
+            }
+          }
+        });
+        
+        updateButtonState(firstAvailableVariant);
+      }
+    }
+    
+    // Call initially and whenever an option changes
+    updateAvailableOptions();
+    optionButtons.forEach(button => {
+      button.addEventListener('click', updateAvailableOptions);
+    });
+  });

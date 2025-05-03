@@ -1,0 +1,16 @@
+{% schema %}
+    {
+      "name": "Main Page Content",
+      "tag": "section",
+      "class": "bg-white",
+      "settings": []
+    }
+    {% endschema %}
+    
+    <section class="py-12 px-4 max-w-3xl mx-auto">
+      <h1 class="text-4xl font-bold mb-6 text-center">{{ page.title }}</h1>
+      <div class="prose max-w-none">
+        {{ page.content }}
+      </div>
+    </section>
+    
