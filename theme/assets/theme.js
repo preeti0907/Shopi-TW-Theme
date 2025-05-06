@@ -645,3 +645,30 @@ class ProductCard {
       });
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var cartDrawer = document.getElementById('cart-drawer');
+    var closeBtn = document.getElementById('cart-drawer-close');
+    var cartToggles = document.querySelectorAll('[data-cart-toggle]');
+
+    cartToggles.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (cartDrawer) cartDrawer.classList.remove('hidden');
+      });
+    });
+
+    if (closeBtn && cartDrawer) {
+      closeBtn.addEventListener('click', function() {
+        cartDrawer.classList.add('hidden');
+      });
+    }
+
+    // Event delegation: close if click is on the backdrop
+    if (cartDrawer) {
+      cartDrawer.addEventListener('click', function(e) {
+        if (e.target.id === 'cart-drawer-backdrop') {
+          cartDrawer.classList.add('hidden');
+        }
+      });
+    }
+  });

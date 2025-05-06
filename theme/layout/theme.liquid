@@ -92,7 +92,7 @@
   </head>
   <body class="flex flex-col min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
-
+    {% render 'cart-drawer' %}
     {% sections 'header-group' %}
 
     <main role="main" id="MainContent" class="flex-grow">

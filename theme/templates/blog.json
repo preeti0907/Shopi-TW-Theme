@@ -7,11 +7,11 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
-  "name": "Blog",
+{
   "sections": {
     "main": {
-      "type": "blog-main"
+      "type": "blog-main",
+      "settings": {}
     }
   },
   "order": [
