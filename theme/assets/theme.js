@@ -395,6 +395,11 @@ class ProductCard {
     
     // Function to find the matching variant based on selected options
     function findMatchingVariant() {
+      if (!Array.isArray(variantData) || variantData.length === 0) {
+        // No variants: treat as simple product
+        // You may want to return a default object or null
+        return null;
+      }
       return variantData.find(variant => {
         return variant.options.every((option, index) => 
           option === selectedOptions[index]
@@ -470,7 +475,12 @@ class ProductCard {
       
       // Find and update the variant
       const variant = findMatchingVariant();
-      updateButtonState(variant);
+      if (variant) {
+        updateButtonState(variant);
+      } else {
+        // Handle simple product (no variants)
+        // For example, show the add to cart button, set a default variant ID, etc.
+      }
       
       // Update available options
       updateAvailableOptions();
@@ -516,18 +526,13 @@ class ProductCard {
       });
     }
     
-    // Check the initial state of the variant when the page loads
-    const initialVariant = findMatchingVariant();
-    if (initialVariant) {
-      updateButtonState(initialVariant);
-    } else {
-      // If no variant is found initially, try to find the first available variant
+    // Function to select and update the first available variant
+    function selectFirstAvailableVariant() {
       const firstAvailableVariant = variantData.find(variant => variant.available);
       if (firstAvailableVariant) {
-        // Update selected options to match the first available variant
         firstAvailableVariant.options.forEach((option, index) => {
           selectedOptions[index] = option;
-          
+
           // Update UI to reflect these options
           const optionContainer = document.querySelector(`[data-option-index="${index}"]`);
           if (optionContainer) {
@@ -539,7 +544,7 @@ class ProductCard {
                 button.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
               }
             });
-            
+
             // Update hidden select
             const hiddenSelect = document.querySelector(`[data-option-select="${index}"]`);
             if (hiddenSelect) {
@@ -547,14 +552,96 @@ class ProductCard {
             }
           }
         });
-        
+
         updateButtonState(firstAvailableVariant);
       }
     }
     
-    // Call initially and whenever an option changes
-    updateAvailableOptions();
-    optionButtons.forEach(button => {
-      button.addEventListener('click', updateAvailableOptions);
-    });
+    // Function to handle simple product (no variants)
+    function handleSimpleProduct() {
+      // You may want to set a default variant ID if available
+      if (variantIdInput && window.product && window.product.variants && window.product.variants[0]) {
+        variantIdInput.value = window.product.variants[0].id;
+      }
+
+      // Show Add to Cart and hide Sold Out (unless unavailable)
+      if (addToCartWrapper) {
+        addToCartWrapper.classList.remove('hidden');
+      }
+      if (soldOutBtn) {
+        soldOutBtn.classList.add('hidden');
+      }
+
+      // Optionally update price display
+      const priceDisplay = document.getElementById('variant-price');
+      const comparePrice = document.getElementById('compare-price');
+      if (window.product && window.product.variants && window.product.variants[0]) {
+        const variant = window.product.variants[0];
+        if (variant.price && priceDisplay) {
+          priceDisplay.textContent = formatMoney(variant.price);
+        }
+        if (variant.compare_at_price && variant.compare_at_price > variant.price && comparePrice) {
+          comparePrice.textContent = formatMoney(variant.compare_at_price);
+          comparePrice.classList.remove('hidden');
+        } else if (comparePrice) {
+          comparePrice.classList.add('hidden');
+        }
+      }
+    }
+    
+    // If there are no variants, treat the product as a simple product
+    if (!Array.isArray(variantData) || variantData.length === 0) {
+      // No variants: treat as simple product
+      handleSimpleProduct();
+    } else {
+      // Existing logic for products with variants
+      const initialVariant = findMatchingVariant();
+      if (initialVariant) {
+        updateButtonState(initialVariant);
+      } else {
+        selectFirstAvailableVariant();
+      }
+      updateAvailableOptions();
+      optionButtons.forEach(button => {
+        button.addEventListener('click', updateAvailableOptions);
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('storefront-search-form');
+    const searchInput = document.getElementById('storefront-search-input');
+    const searchResults = document.getElementById('storefront-search-results');
+  
+    if (searchForm && searchInput && searchResults) {
+      searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const query = searchInput.value.trim();
+        if (!query) {
+          searchResults.innerHTML = '<p>Please enter a search term.</p>';
+          return;
+        }
+        searchResults.innerHTML = '<p>Searching...</p>';
+  
+        fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=5`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.resources.results.products.length === 0) {
+              searchResults.innerHTML = '<p>No products found.</p>';
+              return;
+            }
+            searchResults.innerHTML = data.resources.results.products.map(product => `
+              <div class="search-result-item">
+                <a href="${product.url}">
+                  <img src="${product.featured_image.url}" alt="${product.title}" style="width:50px;height:50px;object-fit:cover;">
+                  <span>${product.title}</span>
+                </a>
+              </div>
+            `).join('');
+          })
+          .catch(() => {
+            searchResults.innerHTML = '<p>Error searching. Please try again.</p>';
+          });
+      });
+    }
   });

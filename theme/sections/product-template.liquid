@@ -95,6 +95,31 @@
             </div>
           {% endif %}
 
+          <span>
+            {% if product.metafields.custom.accessory_product %}
+              {% assign accessories = product.metafields.custom.accessory_product.value %}
+              {% assign accessory_count = 0 %}
+              {% for accessory in accessories %}
+                {% assign accessory_count = accessory_count | plus: 1 %}
+              {% endfor %}
+          
+              <!-- This is the main button that should be visible -->
+              <button 
+                class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded text-gray-800 transition-colors"
+                type="button"
+                data-action="show-installation"
+                data-popup-target="{{ product.id }}"
+              >
+                See Accessories ({{ accessory_count }})
+              </button>
+              
+              {% render 'installation-popup',
+                product_id: product.id,
+                item: product,
+                accessories: accessories
+              %}
+            {% endif %}
+          </span>
           {% comment %} Custom variant {% endcomment %}
           {% if product.metafields.custom.combo_offers.value != blank %}
             <h5 class="text-lg font-medium text-gray-900 mb-4">Also Available in:</h5>
@@ -443,12 +468,6 @@
     </div>
   </div>
 </div>
-
-
-
-<script>
-  window.productVariants = {{ product.variants | json }};
-</script>
 
 {% schema %}
 {

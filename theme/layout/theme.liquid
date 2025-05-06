@@ -86,7 +86,9 @@
     <!-- Your custom GSAP code -->
      <script src="{{ 'gsap-init.js' |  asset_url }}" defer></script>
 
-    
+    {% if template.name == 'product' %}
+      {% render 'product-variant-data', product: product %}
+    {% endif %}
   </head>
   <body class="flex flex-col min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>

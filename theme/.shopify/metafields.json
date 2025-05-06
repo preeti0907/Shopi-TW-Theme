@@ -138,6 +138,16 @@
         "name": "list.metaobject_reference",
         "category": "REFERENCE"
       }
+    },
+    {
+      "key": "accessory_product",
+      "namespace": "custom",
+      "name": "Accessory Product",
+      "description": "Products for \"You’ll need these to complete your project\"",
+      "type": {
+        "name": "list.product_reference",
+        "category": "REFERENCE"
+      }
     }
   ],
   "variant": [],

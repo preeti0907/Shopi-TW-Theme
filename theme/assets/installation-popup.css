@@ -1,0 +1,225 @@
+li.link-lv2.leading-8.s {
+    transition: ease all 0.2s;
+  }
+  
+  li.link-lv2.leading-8.s:hover {
+    transform: scale(1.01);
+  }
+  
+  /* installation-popup.css */
+  #dc-installation-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+  }
+  
+  #dc-installation-popup.is-active {
+    display: block;
+  }
+  
+  .dc-installation-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .dc-installation-popup.is-active {
+    display: block;
+  }
+  
+  .dc-installation-popup .popup-content {
+    background: white;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 8px;
+    position: relative;
+  }
+  
+  .dc-installation-popup .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .dc-installation-popup .popup-header h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+  }
+  
+  .dc-installation-popup .popup-header .headoo {
+    flex: 1;
+  }
+  
+  .dc-installation-popup .popup-close {
+    border: none;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 25px;
+    background: #263475;
+    width: 30px;
+    border-radius: 8px;
+    line-height: normal;
+  }
+  
+  .dc-installation-popup .popup-subheader {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  /* .dc-installation-popup .popup-cart-info {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+  } */
+  
+  .dc-installation-popup .installation-product {
+    display: grid;
+    grid-template-columns: 120px 1fr 250px;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dc-installation-popup .product-image {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #f5f5f5;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .dc-installation-popup .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .dc-installation-popup .product-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+  }
+  
+  .dc-installation-popup .product-info p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .dc-installation-popup .quantity-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 5px;
+  }
+  
+  .dc-installation-popup .quantity-control {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: #f5f5f5;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .dc-installation-popup .quantity-input {
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    margin: 0;
+    padding: 0 5px;
+  }
+  
+  .show-installation-btn.block {
+    color: #263476;
+  }
+  .show-installation-btn.block:hover {
+    color: #4a90e2;
+  }
+  .dc-installation-popup .product-total {
+    font-weight: bold;
+    display: block;
+  }
+  .dc-installation-popup .total_price{
+    display: flex;
+    margin-bottom:15px;
+  }
+  
+  .dc-installation-popup .overflow-div {
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+  
+  .dc-installation-popup .add-to-basket {
+    width: 100%;
+    padding: 12px;
+    background: #263475;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dc-installation-popup .add-to-basket:hover {
+    background: #131a3a;
+  }
+  
+  .dc-installation-popup .add-to-basket:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .dc-installation-popup .installation-product {
+      grid-template-columns: 1fr;
+    }
+  
+    .dc-installation-popup .popup-content {
+      margin: 20px auto;
+      padding: 20px;
+    }
+  
+    .dc-installation-popup .popup-header h2 {
+      font-size: 20px;
+    }
+  
+    .dc-installation-popup .popup-close {
+      font-size: 25px;
+      width: 30px;
+    }
+    .dc-installation-popup .overflow-div{
+      height: 78vh;
+    }
+    /* .dc-installation-popup .popup-cart-info{
+      display: none;
+    } */
+  }
+  @media (max-width: 568px) {
+    .dc-installation-popup .product-image {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 1/1 !important;
+    }
+  }
