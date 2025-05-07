@@ -145,9 +145,9 @@
 </header>
 
 <!-- Sticky Header (initially hidden) -->
-<div id="sticky-header" class="fixed top-0 left-0 right-0 z-30 w-full transform -translate-y-full transition-transform duration-300">
+<div id="sticky-header" class="fixed top-0 left-0 right-0 z-30 w-full transform -mt-1 -translate-y-full transition-transform duration-300">
   <div class="container mx-auto px-4">
-    <div class="header-wrapper shadow-md bg-white/60 backdrop-blur-md rounded-[20px] transition-all duration-300  mt-3 px-3">
+    <div class="header-wrapper bg-white/60 shadow-md backdrop-blur-md rounded-[20px] transition-all duration-300  mt-3 px-3 ">
       <div class="flex items-center justify-between h-16">
         <!-- Menu Toggle for Mobile -->
         <div class="flex items-center md:hidden">
@@ -352,7 +352,7 @@
       if (!this.siteHeader.classList.contains('absolute')) {
         if (scrollTop > 0) {
           this.headerWrapper.classList.remove('bg-white');
-          this.headerWrapper.classList.add('bg-white/60', 'backdrop-blur-md');
+          this.headerWrapper.classList.add('bg-white/60', 'backdrop-blur-md', 'shadow-none');
         } else {
           this.headerWrapper.classList.add('bg-white');
           this.headerWrapper.classList.remove('bg-white/60', 'backdrop-blur-md');

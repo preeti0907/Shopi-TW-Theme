@@ -653,21 +653,28 @@ class ProductCard {
 
     cartToggles.forEach(function(btn) {
       btn.addEventListener('click', function() {
-        if (cartDrawer) cartDrawer.classList.remove('hidden');
+        if (cartDrawer) {
+          cartDrawer.classList.remove('hidden');
+          document.body.style.pointerEvents = 'none';
+        }
       });
     });
 
     if (closeBtn && cartDrawer) {
       closeBtn.addEventListener('click', function() {
         cartDrawer.classList.add('hidden');
+        document.body.style.pointerEvents = '';
       });
     }
 
-    // Event delegation: close if click is on the backdrop
+    // Improved click outside handling
     if (cartDrawer) {
       cartDrawer.addEventListener('click', function(e) {
-        if (e.target.id === 'cart-drawer-backdrop') {
+        // Check if the click is outside the drawer content
+        const drawerContent = cartDrawer.querySelector('.pointer-events-auto');
+        if (!drawerContent.contains(e.target)) {
           cartDrawer.classList.add('hidden');
+          document.body.style.pointerEvents = '';
         }
       });
     }

@@ -12,69 +12,59 @@
 
 {% assign section_settings = section.settings %}
 {% assign show_breadcrumbs = section_settings.show_breadcrumbs %}
-{% assign text_position = section_settings.text_position %}
+{% assign text_align_block = section_settings.text_align_block %}
 {% assign show_categories = section_settings.show_categories %}
 {% assign products_per_row_mobile = section_settings.products_per_row_mobile %}
 
 {% assign products_per_row_desktop = section_settings.products_per_row_desktop %}
 {% assign products_per_page = section_settings.products_per_page %}
-{% assign loading_type = section_settings.loading_type %}
-{% assign description_position = section_settings.description_position %}
 
-<div class="collection-container container mx-auto">
-  {% if show_breadcrumbs %}
-    <div class="breadcrumb-container py-3">
-      {%  render 'breadcrumbs' %}
-    </div>
-  {% endif %}
+<div class="collection-container container mx-auto px-4">
+  <div class="collection-page-header mb-8 pt-4 md:pt-6">
+    <div class="flex flex-col md:flex-row gap-x-8 lg:gap-x-12 gap-y-6 items-start">
+      <div class="w-full md:w-2/5 space-y-3 md:space-y-4 order-2 md:order-1 {% if text_align_block == 'center' %}text-center md:text-left{% else %}text-left{% endif %}">
+        {% if section_settings.show_breadcrumbs %}
+          <div class="breadcrumb-container">
+            {% render 'breadcrumbs' %}
+          </div>
+        {% endif %}
 
-  {% if collection.image %}
-    <div class="collection-header relative mb-8">
-      <div class="collection-image-container relative">
-        <img 
-          src="{{ collection.image | img_url: 'master' }}"
-          alt="{{ collection.title | escape }}"
-          class="w-full object-cover h-[300px] md:h-[400px]"
-          loading="lazy"
-          width="{{ collection.image.width }}"
-          height="{{ collection.image.height }}"
-        >
-        
-        {% if text_position == 'overlay' %}
-          <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-            <div class="text-center text-white px-4">
-              <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ collection.title }}</h1>
-              {% if collection.description != blank and description_position == 'header' %}
-                <div class="collection-description max-w-2xl mx-auto">
-                  {{ collection.description }}
-                </div>
-              {% endif %}
-            </div>
+        <h1 class="text-2xl md:text-4xl font-serif font-medium">{{ collection.title }}</h1>
+
+        {% if collection.description != blank and section_settings.description_position == 'header' %}
+          <div class="collection-description text-base text-gray-700 {% if text_align_block == 'center' %}mx-auto md:mx-0 max-w-lg{% endif %}">
+            {{ collection.description }}
           </div>
         {% endif %}
       </div>
-      
-      {% if text_position == 'below' %}
-        <div class="text-center my-6">
-          <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ collection.title }}</h1>
-          {% if collection.description != blank and description_position == 'header' %}
-            <div class="collection-description max-w-2xl mx-auto">
-              {{ collection.description }}
-            </div>
-          {% endif %}
-        </div>
-      {% endif %}
+
+      <div class="w-full md:w-3/5 order-1 md:order-2 aspect-[4/3] md:aspect-[3/1] ">
+        {% if collection.image %}
+          <img
+            src="{{ collection.image | img_url: 'master' }}"
+            alt="{{ collection.title | escape }}"
+            class="w-full  object-cover h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm"
+            loading="lazy"
+            width="{{ collection.image.width }}"
+            height="{{ collection.image.height }}"
+          >
+        {% elsif section.settings.default_collection_image != blank and collection.image == blank %}
+          <img
+            src="{{ section.settings.default_collection_image | img_url: 'master' }}"
+            alt="{{ collection.title | escape }}"
+            class="w-full aspect-[4/3] lg:aspect-video object-cover h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm"
+            loading="lazy"
+            width="{{ section.settings.default_collection_image.width }}"
+            height="{{ section.settings.default_collection_image.height }}"
+          > 
+        {% else %}
+          <div class="w-full aspect-[4/3] lg:aspect-video flex items-center justify-center bg-gray-100 h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm">
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'text-gray-400' }}
+          </div>
+        {% endif %}
+      </div>
     </div>
-  {% else %}
-    <div class="collection-header-no-image text-center my-8">
-      <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ collection.title }}</h1>
-      {% if collection.description != blank and description_position == 'header' %}
-        <div class="collection-description max-w-2xl mx-auto">
-          {{ collection.description }}
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
+  </div>
 
   {% if show_categories and collection.metafields.custom.associated_categories %}
     <div class="associated-categories mb-6">
@@ -88,65 +78,64 @@
     </div>
   {% endif %}
 
-  <div class="collection-content grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
-    <div class="filter-sidebar">
-      {% render 'collection-filters', collection: collection %}
-    </div>
-    
-    <div class="products-grid">
-      {% if collection.products.size > 0 %}
-        <div id="product-grid" 
-          class="grid grid-cols-{{ products_per_row_mobile }} lg:grid-cols-{{ products_per_row_desktop }} gap-4">
-          {% for product in collection.products limit: products_per_page %}
-            <div class="product-card-wrapper">
-              {% render 'product-card',
-                product: product,
-                show_secondary_image: section_settings.show_secondary_image,
-                show_add_to_cart: section_settings.show_add_to_cart,
-                variant_selector: section_settings.variant_selector,
-                badge_type: section_settings.badge_type,
-                show_pack_size: section_settings.show_pack_size,
-                show_sku: section_settings.show_sku,
-                show_rating: section_settings.show_rating,
-                show_wishlist: section_settings.show_wishlist,
-                title_lines: section_settings.title_lines,
-                lazy_load: true
-              %}
-            </div>
-          {% endfor %}
+  <div class="collection-content-wrapper mt-8 md:mt-12">
+    <form id="collection-filters-form" class="collection-filters-form">
+      <div class="collection-content grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
+        <div class="filter-sidebar">
+          {% render 'collection-filters', collection: collection %}
         </div>
-        
-        {% if loading_type == 'pagination' %}
-          <div class="pagination-container flex justify-center mt-8">
-            {% render 'pagination', pagination: paginate %}
+
+        <div class="products-grid-container">
+          <div id="products-grid-ajax-wrapper">
+            {% paginate collection.products by products_per_page %}
+              {% if collection.products.size > 0 %}
+                <div id="product-grid" class="grid grid-cols-{{ products_per_row_mobile }} lg:grid-cols-{{ products_per_row_desktop }} gap-4">
+                  {% for product in collection.products %}
+                    <div class="product-card-wrapper">
+                      {% render 'product-card',
+                        product: product,
+                        show_secondary_image: section_settings.show_secondary_image,
+                        show_add_to_cart: section_settings.show_add_to_cart,
+                        variant_selector: section_settings.variant_selector,
+                        badge_type: section_settings.badge_type,
+                        show_pack_size: section_settings.show_pack_size,
+                        show_sku: section_settings.show_sku,
+                        show_rating: section_settings.show_rating,
+                        show_wishlist: section_settings.show_wishlist,
+                        title_lines: section_settings.title_lines,
+                        lazy_load: true
+                      %}
+                    </div>
+                  {% endfor %}
+                </div>
+
+                {% if paginate.next %}
+                  <div class="infinite-loading mt-8 text-center" data-next-url="{{ paginate.next.url }}">
+                    <div id="loading-indicator" class="hidden">
+                      <div class="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
+                      <p class="mt-2">Loading more products...</p>
+                    </div>
+                    <button id="load-more" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition">
+                      Load more products
+                    </button>
+                  </div>
+                {% endif %}
+              {% else %}
+                <div class="empty-collection text-center py-12">
+                  <p class="text-lg">No products found in this collection.</p>
+                  <a
+                    href="/collections"
+                    class="inline-block mt-4 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition"
+                  >
+                    Browse all collections
+                  </a>
+                </div>
+              {% endif %}
+            {% endpaginate %}
           </div>
-        {% elsif loading_type == 'infinite' %}
-          <div class="infinite-loading mt-8 text-center" data-next-url="{{ paginate.next.url }}">
-            <div id="loading-indicator" class="hidden">
-              <div class="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-              <p class="mt-2">Loading more products...</p>
-            </div>
-            <button id="load-more" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition">
-              Load more products
-            </button>
-          </div>
-        {% endif %}
-      {% else %}
-        <div class="empty-collection text-center py-12">
-          <p class="text-lg">No products found in this collection.</p>
-          <a href="/collections" class="inline-block mt-4 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition">
-            Browse all collections
-          </a>
         </div>
-      {% endif %}
-      
-      {% if collection.description != blank and description_position == 'footer' %}
-        <div class="collection-description mt-16 max-w-4xl mx-auto">
-          <h2 class="text-2xl font-bold mb-4">About {{ collection.title }}</h2>
-          {{ collection.description }}
-        </div>
-      {% endif %}
-    </div>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -169,19 +158,20 @@
     },
     {
       "type": "select",
-      "id": "text_position",
-      "label": "Collection title position",
+      "id": "text_align_block",
+      "label": "Text block alignment",
       "options": [
-        {
-          "value": "overlay",
-          "label": "Overlay on image"
-        },
-        {
-          "value": "below",
-          "label": "Below image"
-        }
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
       ],
-      "default": "overlay"
+      "default": "left",
+      "info": "Aligns the text block (title, description, breadcrumbs)."
+    },
+    {
+      "type": "image_picker",
+      "id": "default_collection_image",
+      "label": "Default Collection Image",
+      "info": "This image will be used if a collection does not have its own featured image."
     },
     {
       "type": "checkbox",
@@ -215,27 +205,11 @@
     {
       "type": "range",
       "id": "products_per_page",
-      "label": "Products per page",
+      "label": "Products per page (for Load More)",
       "min": 4,
-      "max": 48,
-      "step": 4,
-      "default": 16
-    },
-    {
-      "type": "select",
-      "id": "loading_type",
-      "label": "Loading type",
-      "options": [
-        {
-          "value": "pagination",
-          "label": "Pagination"
-        },
-        {
-          "value": "infinite",
-          "label": "Infinite loading"
-        }
-      ],
-      "default": "pagination"
+      "max": 20,
+      "step": 1,
+      "default": 4
     },
     {
       "type": "select",
@@ -357,3 +331,129 @@
   ]
 }
 {% endschema %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const productGridAjaxWrapper = document.getElementById('products-grid-ajax-wrapper');
+
+    if (productGridAjaxWrapper) {
+      productGridAjaxWrapper.addEventListener('click', function(event) {
+        const loadMoreButton = event.target.closest('#load-more'); // Use closest to handle clicks on button's children
+        if (!loadMoreButton) return;
+
+        event.preventDefault();
+        
+        let nextUrl = loadMoreButton.dataset.nextUrl;
+        const sectionId = loadMoreButton.closest('.infinite-loading')?.dataset.sectionId || '{{ section.id }}';
+
+
+        if (!nextUrl) return;
+
+        loadMoreButton.classList.add('hidden');
+        const loadingIndicator = productGridAjaxWrapper.querySelector('#loading-indicator');
+        if (loadingIndicator) {
+          loadingIndicator.classList.remove('hidden');
+        }
+
+        // Append section_id to fetch only the section content
+        const fetchUrl = nextUrl.includes('?') ? `${nextUrl}&section_id=${sectionId}` : `${nextUrl}?section_id=${sectionId}`;
+        
+        console.log('Fetching next page:', fetchUrl);
+
+        fetch(fetchUrl)
+          .then(response => response.text())
+          .then(text => {
+            const parser = new DOMParser();
+            const htmlDocument = parser.parseFromString(text, 'text/html');
+            
+            const newProductWrappers = Array.from(htmlDocument.querySelectorAll('#product-grid .product-card-wrapper'));
+            const currentProductGrid = document.getElementById('product-grid');
+            
+            if (currentProductGrid && newProductWrappers.length > 0) {
+              newProductWrappers.forEach(productWrapper => {
+                const clonedNode = productWrapper.cloneNode(true);
+                currentProductGrid.appendChild(clonedNode);
+
+                // --- START: MORE TARGETED Re-initialize components ---
+
+                // Attempt 1: If your theme uses Shopify's <product-form> custom elements
+                // This might already be handled by the browser when custom elements are connected,
+                // but sometimes they need a nudge or have their own re-init methods.
+                // If the product card contains a <product-form> element:
+                const productFormElement = clonedNode.querySelector('product-form');
+                if (productFormElement && typeof productFormElement._init === 'function') {
+                  // Some custom elements might have an internal _init or similar method
+                  // This is a guess; you'd need to inspect the element's prototype in the console.
+                  // productFormElement._init(); 
+                } else if (productFormElement && typeof ProductForm !== 'undefined' && typeof ProductForm.setup === 'function') {
+                  // Older theme pattern or custom global ProductForm object
+                  // ProductForm.setup(productFormElement);
+                }
+
+
+                // Attempt 2: Re-triggering scripts that might be targeting forms by class
+                // This is a common pattern if your theme initializes forms with a class.
+                // Look in your theme.js or product-related JS for form initialization.
+                // Example: If your theme has a global function like `window.Shopify.theme.sections.register('product', theme.Product);`
+                // or `new theme.Product(formElement);`
+                
+                // Forcibly re-run script tags within the newly added content if any (less common for this issue but possible)
+                // clonedNode.querySelectorAll('script').forEach(script => {
+                //   const newScript = document.createElement('script');
+                //   newScript.textContent = script.textContent;
+                //   // Copy attributes if necessary
+                //   Array.from(script.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                //   script.parentNode.replaceChild(newScript, script);
+                // });
+
+                // --- END: MORE TARGETED Re-initialize components ---
+              });
+
+              // General re-initializations after all new products are appended:
+              if (typeof Shopify !== 'undefined' && Shopify.PaymentButton) {
+                Shopify.PaymentButton.init();
+              }
+
+              document.dispatchEvent(new CustomEvent('theme:content:appended', {
+                bubbles: true,
+                detail: { container: currentProductGrid } 
+              }));
+              
+            }
+
+            // Update or remove the "Load More" button
+            const newLoadMoreButtonHtml = htmlDocument.querySelector('.infinite-loading');
+            const currentLoadMoreContainer = productGridAjaxWrapper.querySelector('.infinite-loading');
+
+            if (currentLoadMoreContainer) {
+              if (newLoadMoreButtonHtml && newLoadMoreButtonHtml.querySelector('#load-more')) {
+                currentLoadMoreContainer.innerHTML = newLoadMoreButtonHtml.innerHTML;
+                const newButtonInDom = currentLoadMoreContainer.querySelector('#load-more');
+                const sourceButton = htmlDocument.querySelector('#load-more'); 
+                if(newButtonInDom && sourceButton && sourceButton.dataset.nextUrl){ 
+                   newButtonInDom.dataset.nextUrl = sourceButton.dataset.nextUrl;
+                } else if (newButtonInDom) {
+                   newButtonInDom.remove(); 
+                }
+              } else {
+                currentLoadMoreContainer.remove();
+              }
+            }
+            
+            if (nextUrl) {
+                history.pushState({ path: nextUrl }, '', nextUrl);
+            }
+          })
+          .catch(e => {
+            console.error('Error loading more products:', e);
+            if (loadMoreButton) loadMoreButton.classList.remove('hidden');
+          })
+          .finally(() => {
+            if (loadingIndicator) {
+              loadingIndicator.classList.add('hidden');
+            }
+          });
+      });
+    }
+  });
+</script>
