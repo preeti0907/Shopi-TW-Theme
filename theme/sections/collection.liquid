@@ -1,459 +1,894 @@
 {% comment %}
-  Collection page template with dynamic customization options
-  Features:
-  - Collection image with text overlay/outside options
-  - Optional breadcrumbs
-  - Associated categories (via metafields)
-  - Filter sidebar
-  - Customizable product grid
-  - Pagination or infinite loading
-  - Optional collection description
+  Simple Collection Page with top filters
+  - Product grid
+  - Top filters (Sort, Category, Color, Sizes)
+  - Active filters display
 {% endcomment %}
 
-{% assign section_settings = section.settings %}
-{% assign show_breadcrumbs = section_settings.show_breadcrumbs %}
-{% assign text_align_block = section_settings.text_align_block %}
-{% assign show_categories = section_settings.show_categories %}
-{% assign products_per_row_mobile = section_settings.products_per_row_mobile %}
-
-{% assign products_per_row_desktop = section_settings.products_per_row_desktop %}
-{% assign products_per_page = section_settings.products_per_page %}
-
-<div class="collection-container container mx-auto px-4">
-  <div class="collection-page-header mb-8 pt-4 md:pt-6">
-    <div class="flex flex-col md:flex-row gap-x-8 lg:gap-x-12 gap-y-6 items-start">
-      <div class="w-full md:w-2/5 space-y-3 md:space-y-4 order-2 md:order-1 {% if text_align_block == 'center' %}text-center md:text-left{% else %}text-left{% endif %}">
-        {% if section_settings.show_breadcrumbs %}
-          <div class="breadcrumb-container">
-            {% render 'breadcrumbs' %}
-          </div>
-        {% endif %}
-
-        <h1 class="text-2xl md:text-4xl font-serif font-medium">{{ collection.title }}</h1>
-
-        {% if collection.description != blank and section_settings.description_position == 'header' %}
-          <div class="collection-description text-base text-gray-700 {% if text_align_block == 'center' %}mx-auto md:mx-0 max-w-lg{% endif %}">
-            {{ collection.description }}
-          </div>
-        {% endif %}
+<div class="collection-container container mx-auto px-4 py-6">
+  <!-- Collection title -->
+  <div class="collection-header mb-6">
+    <h1 class="text-2xl md:text-3xl font-medium">{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <div class="collection-description mt-2 text-gray-600">
+        {{ collection.description }}
       </div>
+    {% endif %}
+  </div>
 
-      <div class="w-full md:w-3/5 order-1 md:order-2 aspect-[4/3] md:aspect-[3/1] ">
-        {% if collection.image %}
-          <img
-            src="{{ collection.image | img_url: 'master' }}"
-            alt="{{ collection.title | escape }}"
-            class="w-full  object-cover h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm"
-            loading="lazy"
-            width="{{ collection.image.width }}"
-            height="{{ collection.image.height }}"
+  <!-- Top filters bar -->
+  <div class="filters-top-row border-t border-b border-gray-200 py-4 mb-6">
+    <div class="filters-wrapper flex flex-wrap items-center justify-between gap-2">
+      <!-- Filter dropdowns -->
+      <div class="filters-left flex flex-wrap items-center gap-3">
+        <!-- Sort dropdown -->
+        <div class="filter-item relative" data-filter="sort">
+          <button
+            type="button"
+            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
           >
-        {% elsif section.settings.default_collection_image != blank and collection.image == blank %}
-          <img
-            src="{{ section.settings.default_collection_image | img_url: 'master' }}"
-            alt="{{ collection.title | escape }}"
-            class="w-full aspect-[4/3] lg:aspect-video object-cover h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm"
-            loading="lazy"
-            width="{{ section.settings.default_collection_image.width }}"
-            height="{{ section.settings.default_collection_image.height }}"
-          > 
-        {% else %}
-          <div class="w-full aspect-[4/3] lg:aspect-video flex items-center justify-center bg-gray-100 h-full md:h-auto rounded-xl lg:rounded-2xl shadow-sm">
-            {{ 'lifestyle-2' | placeholder_svg_tag: 'text-gray-400' }}
+            <span>Sort</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron-down"
+            >
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
+            <div class="p-2">
+              <a
+                href="{{ collection.url }}?sort_by=manual"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'manual' %}font-medium text-blue-600{% endif %}"
+              >
+                Featured
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=price-ascending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'price-ascending' %}font-medium text-blue-600{% endif %}"
+              >
+                Price: Low to High
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=price-descending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'price-descending' %}font-medium text-blue-600{% endif %}"
+              >
+                Price: High to Low
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=title-ascending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'title-ascending' %}font-medium text-blue-600{% endif %}"
+              >
+                Alphabetically: A-Z
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=title-descending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'title-descending' %}font-medium text-blue-600{% endif %}"
+              >
+                Alphabetically: Z-A
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=created-descending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'created-descending' %}font-medium text-blue-600{% endif %}"
+              >
+                Date: Newest to Oldest
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=created-ascending"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'created-ascending' %}font-medium text-blue-600{% endif %}"
+              >
+                Date: Oldest to Newest
+              </a>
+              <a
+                href="{{ collection.url }}?sort_by=best-selling"
+                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'best-selling' %}font-medium text-blue-600{% endif %}"
+              >
+                Best Selling
+              </a>
+            </div>
+            <div class="p-2 border-t">
+              <button
+                type="button"
+                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
           </div>
-        {% endif %}
+        </div>
+
+        <!-- Category dropdown -->
+        <div class="filter-item relative" data-filter="category">
+          <button
+            type="button"
+            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+          >
+            <span>Category</span>
+            {% if current_tags.size > 0 %}
+              <span class="inline-flex items-center justify-center w-5 h-5 text-xs bg-gray-100 rounded-full">
+                {{- current_tags.size -}}
+              </span>
+            {% endif %}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron-down"
+            >
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
+            <div class="p-2 max-h-60 overflow-y-auto">
+              {% assign product_types = collection.all_products | map: 'type' | uniq %}
+              {% for product_type in product_types %}
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer {% if current_tags contains product_type %}font-medium{% endif %}">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 category-filter-checkbox"
+                    value="{{ product_type | handle }}"
+                    {% if current_tags contains product_type %}
+                      checked
+                    {% endif %}
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>{{ product_type }}</span>
+                </label>
+              {% endfor %}
+            </div>
+            <div class="p-2 border-t">
+              <button
+                type="button"
+                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Color dropdown -->
+        <div class="filter-item relative" data-filter="color">
+          <button
+            type="button"
+            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+          >
+            <span>Color</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron-down"
+            >
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
+            <div class="p-3">
+              <div class="grid gap-3">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="white"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-white border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">White</span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="beige"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-[#F5F5DC] border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">Beige</span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="blue"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-blue-500 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">Blue</span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="black"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-black border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">Black</span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="red"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-red-600 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">Red</span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="color-filter-checkbox sr-only"
+                    value="green"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span class="color-swatch bg-green-600 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
+                  <span class="text-sm">Green</span>
+                </label>
+              </div>
+            </div>
+            <div class="p-2 border-t">
+              <button
+                type="button"
+                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sizes dropdown -->
+        <div class="filter-item relative" data-filter="sizes">
+          <button
+            type="button"
+            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+          >
+            <span>Sizes</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron-down"
+            >
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-64 hidden">
+            <div class="p-2">
+              {% for size_option in shop.metafields.product_filter.sizes.value %}
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="{{ size_option | handle }}"
+                    {% if current_tags contains size_option %}
+                      checked
+                    {% endif %}
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>{{ size_option }}</span>
+                </label>
+              {% else %}
+                <!-- Fallback for demo size filters -->
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="s"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>S</span>
+                </label>
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="m"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>M</span>
+                </label>
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="l"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>L</span>
+                </label>
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="xl"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>XL</span>
+                </label>
+                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="mr-2 h-4 w-4 size-filter-checkbox"
+                    value="xxl"
+                    data-url=""
+                    {#
+                    Populated
+                    by
+                    JS
+                    #}
+                  >
+                  <span>XXL</span>
+                </label>
+              {% endfor %}
+            </div>
+            <div class="p-2 border-t">
+              <button
+                type="button"
+                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Range Filter -->
+        <div class="filter-item relative" data-filter="price">
+          <button
+            type="button"
+            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+          >
+            <span>Price</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron-down"
+            >
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-64 hidden">
+            <div class="p-4 space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">{{ cart.currency.symbol }}</span>
+                <input
+                  type="number"
+                  id="filter-price-min"
+                  placeholder="Min"
+                  min="0"
+                  class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-1.5"
+                >
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm">{{ cart.currency.symbol }}</span>
+                <input
+                  type="number"
+                  id="filter-price-max"
+                  placeholder="Max"
+                  min="0"
+                  class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-1.5"
+                >
+              </div>
+            </div>
+            <div class="p-2 border-t">
+              <button
+                type="button"
+                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Products count -->
+      <div class="filters-right text-sm text-gray-500">{{ collection.products_count }} products</div>
     </div>
   </div>
 
-  {% if show_categories and collection.metafields.custom.associated_categories %}
-    <div class="associated-categories mb-6">
-      <div class="flex flex-wrap gap-2 justify-center">
-        {% for category in collection.metafields.custom.associated_categories.value %}
-          <a href="{{ category.url }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm transition">
-            {{ category.title }}
-          </a>
-        {% endfor %}
+  <!-- Active filters -->
+  <div class="active-filters mb-6 {% if current_tags.size == 0 %}hidden{% endif %}">
+    <div class="flex flex-wrap gap-2 items-center">
+      <div class="filters-label flex items-center gap-2 border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-gray-50">
+        <span>Filters</span>
+        <span class="inline-flex items-center justify-center w-5 h-5 text-xs bg-gray-200 rounded-full">
+          {{- current_tags.size -}}
+        </span>
       </div>
+
+      <!-- Loop through active filters -->
+      {% for tag in current_tags %}
+        <a
+          href="{{ collection.url }}/{% for t in current_tags %}{% if t != tag %}{{ t | handle }}+{% endif %}{% endfor %}"
+          class="active-filter-tag flex items-center bg-gray-100 hover:bg-gray-200 rounded-md px-3 py-1.5 text-sm border border-gray-200"
+        >
+          <span>{{ tag }}</span>
+          <span class="ml-1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </span>
+        </a>
+      {% endfor %}
+
+      <!-- Clear all filters -->
+      <a href="{{ collection.url }}" class="clear-filters text-sm text-gray-600 hover:text-gray-900 ml-2">Clear all</a>
     </div>
-  {% endif %}
+  </div>
 
-  <div class="collection-content-wrapper mt-8 md:mt-12">
-    <form id="collection-filters-form" class="collection-filters-form">
-      <div class="collection-content grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
-        <div class="filter-sidebar">
-          {% render 'collection-filters', collection: collection %}
-        </div>
+  <!-- Product grid -->
+  <div class="product-grid">
+    {% paginate collection.products by 20 %}
+      {% if collection.products.size > 0 %}
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {% for product in collection.products %}
+            <div class="product-card">
+              <a href="{{ product.url }}" class="block">
+                <div class="product-image relative pb-[125%] mb-2 bg-gray-100 overflow-hidden">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | img_url: '500x' }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      class="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      width="{{ product.featured_image.width }}"
+                      height="{{ product.featured_image.height }}"
+                    >
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'absolute inset-0 w-full h-full object-cover' }}
+                  {% endif %}
 
-        <div class="products-grid-container">
-          <div id="products-grid-ajax-wrapper">
-            {% paginate collection.products by products_per_page %}
-              {% if collection.products.size > 0 %}
-                <div id="product-grid" class="grid grid-cols-{{ products_per_row_mobile }} lg:grid-cols-{{ products_per_row_desktop }} gap-4">
-                  {% for product in collection.products %}
-                    <div class="product-card-wrapper">
-                      {% render 'product-card',
-                        product: product,
-                        show_secondary_image: section_settings.show_secondary_image,
-                        show_add_to_cart: section_settings.show_add_to_cart,
-                        variant_selector: section_settings.variant_selector,
-                        badge_type: section_settings.badge_type,
-                        show_pack_size: section_settings.show_pack_size,
-                        show_sku: section_settings.show_sku,
-                        show_rating: section_settings.show_rating,
-                        show_wishlist: section_settings.show_wishlist,
-                        title_lines: section_settings.title_lines,
-                        lazy_load: true
-                      %}
-                    </div>
-                  {% endfor %}
+                  <!-- Product badges (sale, sold out, etc.) -->
+                  {% if product.available == false %}
+                    <div class="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded">Sold out</div>
+                  {% elsif product.compare_at_price > product.price %}
+                    <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">Sale</div>
+                  {% endif %}
                 </div>
 
-                {% if paginate.next %}
-                  <div class="infinite-loading mt-8 text-center" data-next-url="{{ paginate.next.url }}">
-                    <div id="loading-indicator" class="hidden">
-                      <div class="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-                      <p class="mt-2">Loading more products...</p>
-                    </div>
-                    <button id="load-more" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition">
-                      Load more products
-                    </button>
+                <div class="product-info">
+                  <h3 class="product-title text-sm font-medium mb-1 line-clamp-2">
+                    {{ product.title }}
+                  </h3>
+                  <div class="product-price flex items-center gap-2">
+                    <span class="text-sm {% if product.compare_at_price > product.price %}text-red-600{% endif %}">
+                      {{ product.price | money }}
+                    </span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="text-xs text-gray-500 line-through">
+                        {{ product.compare_at_price | money }}
+                      </span>
+                    {% endif %}
                   </div>
-                {% endif %}
-              {% else %}
-                <div class="empty-collection text-center py-12">
-                  <p class="text-lg">No products found in this collection.</p>
-                  <a
-                    href="/collections"
-                    class="inline-block mt-4 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition"
-                  >
-                    Browse all collections
-                  </a>
                 </div>
-              {% endif %}
-            {% endpaginate %}
-          </div>
+              </a>
+            </div>
+          {% endfor %}
         </div>
-      </div>
-    </form>
+      {% else %}
+        <div class="empty-collection text-center py-12">
+          <p class="text-lg mb-4">No products found in this collection.</p>
+          <a href="/collections" class="inline-block px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-md transition">
+            Browse all collections
+          </a>
+        </div>
+      {% endif %}
+    {% endpaginate %}
   </div>
 </div>
+
 
 {% schema %}
 {
   "name": "Collection Page",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
   "settings": [
     {
       "type": "header",
-      "content": "Collection Header"
+      "content": "Product Grid Settings"
     },
     {
       "type": "checkbox",
-      "id": "show_breadcrumbs",
-      "label": "Show breadcrumbs",
-      "default": true
-    },
-    {
-      "type": "select",
-      "id": "text_align_block",
-      "label": "Text block alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" }
-      ],
-      "default": "left",
-      "info": "Aligns the text block (title, description, breadcrumbs)."
-    },
-    {
-      "type": "image_picker",
-      "id": "default_collection_image",
-      "label": "Default Collection Image",
-      "info": "This image will be used if a collection does not have its own featured image."
-    },
-    {
-      "type": "checkbox",
-      "id": "show_categories",
-      "label": "Show associated categories",
-      "info": "Display associated categories from collection metafields",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Product Grid"
-    },
-    {
-      "type": "range",
-      "id": "products_per_row_mobile",
-      "label": "Products per row (mobile)",
-      "min": 1,
-      "max": 3,
-      "step": 1,
-      "default": 2
-    },
-    {
-      "type": "range",
-      "id": "products_per_row_desktop",
-      "label": "Products per row (desktop)",
-      "min": 2,
-      "max": 5,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "Products per page (for Load More)",
-      "min": 4,
-      "max": 20,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "select",
-      "id": "description_position",
-      "label": "Description position",
-      "options": [
-        {
-          "value": "header",
-          "label": "After collection header"
-        },
-        {
-          "value": "footer",
-          "label": "After products"
-        },
-        {
-          "value": "none",
-          "label": "Do not show"
-        }
-      ],
-      "default": "footer"
-    },
-    {
-      "type": "header",
-      "content": "Product Card Settings"
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
     },
     {
       "type": "checkbox",
       "id": "show_secondary_image",
       "label": "Show secondary image on hover",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_add_to_cart",
-      "label": "Show add to cart button",
-      "default": true
-    },
-    {
-      "type": "select",
-      "id": "variant_selector",
-      "label": "Variant selector type",
-      "options": [
-        {
-          "value": "dropdown",
-          "label": "Dropdown"
-        },
-        {
-          "value": "list",
-          "label": "Button list"
-        },
-        {
-          "value": "images",
-          "label": "Color/image swatches"
-        },
-        {
-          "value": "none",
-          "label": "None"
-        }
-      ],
-      "default": "dropdown"
-    },
-    {
-      "type": "select",
-      "id": "badge_type",
-      "label": "Sale badge type",
-      "options": [
-        {
-          "value": "percentage",
-          "label": "Discount percentage"
-        },
-        {
-          "value": "amount",
-          "label": "Saving amount"
-        },
-        {
-          "value": "text",
-          "label": "Sale text"
-        },
-        {
-          "value": "none",
-          "label": "None"
-        }
-      ],
-      "default": "percentage"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pack_size",
-      "label": "Show pack size",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_sku",
-      "label": "Show SKU",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "label": "Show product rating",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_wishlist",
-      "label": "Show wishlist button",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "title_lines",
-      "label": "Product title lines",
-      "min": 1,
-      "max": 3,
-      "step": 1,
-      "default": 2
     }
   ]
 }
 {% endschema %}
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const productGridAjaxWrapper = document.getElementById('products-grid-ajax-wrapper');
+  // Make collection information available to JavaScript
+  window.collection_handle = "{{ collection.handle }}";
+  window.collection_url = "{{ collection.url }}";
+  window.current_tags = {{ current_tags | json }};
+</script>
 
-    if (productGridAjaxWrapper) {
-      productGridAjaxWrapper.addEventListener('click', function(event) {
-        const loadMoreButton = event.target.closest('#load-more'); // Use closest to handle clicks on button's children
-        if (!loadMoreButton) return;
+<style>
+  /* Collection Filters Styles */
+  .filters-top-row {
+    border-color: #eeeeee;
+  }
 
-        event.preventDefault();
-        
-        let nextUrl = loadMoreButton.dataset.nextUrl;
-        const sectionId = loadMoreButton.closest('.infinite-loading')?.dataset.sectionId || '{{ section.id }}';
+  /* Filter buttons */
+  .filter-button {
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 150ms ease;
+  }
 
+  .filter-button:hover {
+    background-color: #f9fafb;
+  }
 
-        if (!nextUrl) return;
+  /* Filter dropdowns */
+  .filter-dropdown {
+    min-width: 12rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.375rem;
+    max-height: 20rem;
+    overflow-y: auto;
+  }
 
-        loadMoreButton.classList.add('hidden');
-        const loadingIndicator = productGridAjaxWrapper.querySelector('#loading-indicator');
-        if (loadingIndicator) {
-          loadingIndicator.classList.remove('hidden');
+  /* Rotate chevron animation */
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  .chevron-down {
+    transition: transform 150ms ease;
+  }
+
+  /* Color swatches */
+  .color-swatch {
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Checked state for color swatches */
+  .color-filter-checkbox:checked + .color-swatch::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Black color needs white checkmark */
+  .color-filter-checkbox:checked + .color-swatch.bg-black::after {
+    background-color: white;
+  }
+
+  /* White color needs dark checkmark */
+  .color-filter-checkbox:checked + .color-swatch.bg-white::after {
+    background-color: #333;
+  }
+
+  /* Active filters */
+  .active-filter-tag {
+    background-color: #f3f4f6;
+    transition: all 150ms ease;
+  }
+
+  .active-filter-tag:hover {
+    background-color: #e5e7eb;
+  }
+
+  /* Line clamp for product titles */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const allTagFilterCheckboxSelector = '.category-filter-checkbox, .color-filter-checkbox, .size-filter-checkbox';
+    const allActiveTagFilterCheckboxSelector =
+      '.category-filter-checkbox:checked, .color-filter-checkbox:checked, .size-filter-checkbox:checked';
+
+    // Toggle filter dropdowns
+    const filterButtons = document.querySelectorAll('.filter-button');
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const filterItem = this.closest('.filter-item');
+        const dropdown = filterItem.querySelector('.filter-dropdown');
+        const chevron = this.querySelector('.chevron-down');
+
+        document.querySelectorAll('.filter-dropdown').forEach((otherDropdown) => {
+          if (otherDropdown !== dropdown && !otherDropdown.classList.contains('hidden')) {
+            otherDropdown.classList.add('hidden');
+            const otherChevron = otherDropdown.closest('.filter-item')?.querySelector('.chevron-down');
+            if (otherChevron) {
+              otherChevron.classList.remove('rotate-180');
+            }
+          }
+        });
+        dropdown.classList.toggle('hidden');
+        if (chevron) {
+          chevron.classList.toggle('rotate-180');
+        }
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.filter-item')) {
+        document.querySelectorAll('.filter-dropdown').forEach((dropdown) => {
+          dropdown.classList.add('hidden');
+          const chevron = dropdown.closest('.filter-item')?.querySelector('.chevron-down');
+          if (chevron) {
+            chevron.classList.remove('rotate-180');
+          }
+        });
+      }
+    });
+
+    // Handle Apply Filter buttons
+    const applyFilterButtons = document.querySelectorAll('.apply-filters');
+    applyFilterButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        // 1. Handle Tag-based filters (category, color, size) for URL path
+        const allCheckedTagCheckboxes = document.querySelectorAll(allActiveTagFilterCheckboxSelector);
+        let activeTagFilterValues = [];
+        allCheckedTagCheckboxes.forEach((cb) => {
+          activeTagFilterValues.push(cb.value);
+        });
+        activeTagFilterValues = [...new Set(activeTagFilterValues)]; // Deduplicate
+
+        let newUrl = window.collection_url;
+        if (activeTagFilterValues.length > 0) {
+          newUrl += '/' + activeTagFilterValues.join('+');
         }
 
-        // Append section_id to fetch only the section content
-        const fetchUrl = nextUrl.includes('?') ? `${nextUrl}&section_id=${sectionId}` : `${nextUrl}?section_id=${sectionId}`;
-        
-        console.log('Fetching next page:', fetchUrl);
+        // 2. Handle Price Range filter and other URL parameters
+        const searchParams = new URLSearchParams(window.location.search); // Start with existing params like sort_by
 
-        fetch(fetchUrl)
-          .then(response => response.text())
-          .then(text => {
-            const parser = new DOMParser();
-            const htmlDocument = parser.parseFromString(text, 'text/html');
-            
-            const newProductWrappers = Array.from(htmlDocument.querySelectorAll('#product-grid .product-card-wrapper'));
-            const currentProductGrid = document.getElementById('product-grid');
-            
-            if (currentProductGrid && newProductWrappers.length > 0) {
-              newProductWrappers.forEach(productWrapper => {
-                const clonedNode = productWrapper.cloneNode(true);
-                currentProductGrid.appendChild(clonedNode);
+        // Clear any existing price filter params to avoid conflicts if user clears them
+        searchParams.delete('filter.v.price.gte');
+        searchParams.delete('filter.v.price.lte');
 
-                // --- START: MORE TARGETED Re-initialize components ---
+        const minPriceInput = document.getElementById('filter-price-min');
+        const maxPriceInput = document.getElementById('filter-price-max');
+        const minPrice = minPriceInput ? parseFloat(minPriceInput.value) : null;
+        const maxPrice = maxPriceInput ? parseFloat(maxPriceInput.value) : null;
 
-                // Attempt 1: If your theme uses Shopify's <product-form> custom elements
-                // This might already be handled by the browser when custom elements are connected,
-                // but sometimes they need a nudge or have their own re-init methods.
-                // If the product card contains a <product-form> element:
-                const productFormElement = clonedNode.querySelector('product-form');
-                if (productFormElement && typeof productFormElement._init === 'function') {
-                  // Some custom elements might have an internal _init or similar method
-                  // This is a guess; you'd need to inspect the element's prototype in the console.
-                  // productFormElement._init(); 
-                } else if (productFormElement && typeof ProductForm !== 'undefined' && typeof ProductForm.setup === 'function') {
-                  // Older theme pattern or custom global ProductForm object
-                  // ProductForm.setup(productFormElement);
-                }
+        if (minPrice !== null && !isNaN(minPrice) && minPrice >= 0) {
+          searchParams.set('filter.v.price.gte', minPrice);
+        }
+        if (maxPrice !== null && !isNaN(maxPrice) && maxPrice >= 0) {
+          // Ensure max is not less than min if both are set
+          if (minPrice !== null && !isNaN(minPrice) && maxPrice < minPrice) {
+            searchParams.set('filter.v.price.lte', minPrice); // Or handle as an error
+          } else {
+            searchParams.set('filter.v.price.lte', maxPrice);
+          }
+        }
 
+        const paramsString = searchParams.toString();
+        if (paramsString) {
+          newUrl += '?' + paramsString;
+        }
 
-                // Attempt 2: Re-triggering scripts that might be targeting forms by class
-                // This is a common pattern if your theme initializes forms with a class.
-                // Look in your theme.js or product-related JS for form initialization.
-                // Example: If your theme has a global function like `window.Shopify.theme.sections.register('product', theme.Product);`
-                // or `new theme.Product(formElement);`
-                
-                // Forcibly re-run script tags within the newly added content if any (less common for this issue but possible)
-                // clonedNode.querySelectorAll('script').forEach(script => {
-                //   const newScript = document.createElement('script');
-                //   newScript.textContent = script.textContent;
-                //   // Copy attributes if necessary
-                //   Array.from(script.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                //   script.parentNode.replaceChild(newScript, script);
-                // });
+        // FOR DEBUGGING - REMOVE OR COMMENT OUT LATER
+        // alert('Navigating to: ' + newUrl);
 
-                // --- END: MORE TARGETED Re-initialize components ---
-              });
+        window.location.href = newUrl;
 
-              // General re-initializations after all new products are appended:
-              if (typeof Shopify !== 'undefined' && Shopify.PaymentButton) {
-                Shopify.PaymentButton.init();
-              }
-
-              document.dispatchEvent(new CustomEvent('theme:content:appended', {
-                bubbles: true,
-                detail: { container: currentProductGrid } 
-              }));
-              
+        // Close the dropdown this button is in
+        const filterDropdown = button.closest('.filter-dropdown');
+        if (filterDropdown) {
+          filterDropdown.classList.add('hidden');
+          const filterItem = filterDropdown.closest('.filter-item');
+          if (filterItem) {
+            const chevron = filterItem.querySelector('.chevron-down');
+            if (chevron) {
+              chevron.classList.remove('rotate-180');
             }
-
-            // Update or remove the "Load More" button
-            const newLoadMoreButtonHtml = htmlDocument.querySelector('.infinite-loading');
-            const currentLoadMoreContainer = productGridAjaxWrapper.querySelector('.infinite-loading');
-
-            if (currentLoadMoreContainer) {
-              if (newLoadMoreButtonHtml && newLoadMoreButtonHtml.querySelector('#load-more')) {
-                currentLoadMoreContainer.innerHTML = newLoadMoreButtonHtml.innerHTML;
-                const newButtonInDom = currentLoadMoreContainer.querySelector('#load-more');
-                const sourceButton = htmlDocument.querySelector('#load-more'); 
-                if(newButtonInDom && sourceButton && sourceButton.dataset.nextUrl){ 
-                   newButtonInDom.dataset.nextUrl = sourceButton.dataset.nextUrl;
-                } else if (newButtonInDom) {
-                   newButtonInDom.remove(); 
-                }
-              } else {
-                currentLoadMoreContainer.remove();
-              }
-            }
-            
-            if (nextUrl) {
-                history.pushState({ path: nextUrl }, '', nextUrl);
-            }
-          })
-          .catch(e => {
-            console.error('Error loading more products:', e);
-            if (loadMoreButton) loadMoreButton.classList.remove('hidden');
-          })
-          .finally(() => {
-            if (loadingIndicator) {
-              loadingIndicator.classList.add('hidden');
-            }
-          });
+          }
+        }
       });
+    });
+
+    // Update data-url on tag checkboxes when their state changes
+    const tagFilterCheckboxes = document.querySelectorAll(allTagFilterCheckboxSelector);
+    tagFilterCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', function () {
+        updateAllTagCheckboxDataUrls();
+      });
+    });
+
+    // Mark active filter options and set initial data-urls/values on page load
+    setupActiveFilters();
+
+    function setupActiveFilters() {
+      // Handle active tags from URL path (if current_tags is reliable for this)
+      // or parse them from window.location.pathname if necessary.
+      const activeTagsFromGlobal = window.current_tags || [];
+      if (activeTagsFromGlobal && activeTagsFromGlobal.length > 0) {
+        document.querySelectorAll(allTagFilterCheckboxSelector).forEach((checkbox) => {
+          const value = checkbox.value;
+          checkbox.checked = activeTagsFromGlobal.some((tag) => tag.toLowerCase() === value.toLowerCase());
+        });
+      }
+      updateAllTagCheckboxDataUrls(); // Set initial data-urls for tag checkboxes
+
+      // Handle active price filters from URL parameters
+      const currentUrlParams = new URLSearchParams(window.location.search);
+      const minPriceParam = currentUrlParams.get('filter.v.price.gte');
+      const maxPriceParam = currentUrlParams.get('filter.v.price.lte');
+      const minPriceInput = document.getElementById('filter-price-min');
+      const maxPriceInput = document.getElementById('filter-price-max');
+
+      if (minPriceInput && minPriceParam) {
+        minPriceInput.value = minPriceParam;
+      }
+      if (maxPriceInput && maxPriceParam) {
+        maxPriceInput.value = maxPriceParam;
+      }
+
+      // Show the active filters count section
+      // (This might need adjustment if price is also to be counted as an "active filter" in the display)
+      const activeFiltersSection = document.querySelector('.active-filters');
+      if (activeFiltersSection && (activeTagsFromGlobal.length > 0 || minPriceParam || maxPriceParam)) {
+        activeFiltersSection.classList.remove('hidden');
+        // Potentially update the count in 'current_tags.size' display if price filters should be included.
+      }
+    }
+
+    function updateAllTagCheckboxDataUrls() {
+      const currentlyActiveGlobalTags = [];
+      document.querySelectorAll(allActiveTagFilterCheckboxSelector).forEach((checkbox) => {
+        currentlyActiveGlobalTags.push(checkbox.value);
+      });
+
+      document.querySelectorAll(allTagFilterCheckboxSelector).forEach((checkbox) => {
+        updateSingleTagCheckboxDataUrl(checkbox, currentlyActiveGlobalTags);
+      });
+    }
+
+    function updateSingleTagCheckboxDataUrl(checkbox, currentlyActiveGlobalTags) {
+      const value = checkbox.value;
+      let tagsForThisUrl = [...currentlyActiveGlobalTags];
+
+      if (checkbox.checked) {
+        tagsForThisUrl = tagsForThisUrl.filter((tag) => tag.toLowerCase() !== value.toLowerCase());
+      } else {
+        if (!tagsForThisUrl.some((tag) => tag.toLowerCase() === value.toLowerCase())) {
+          tagsForThisUrl.push(value);
+        }
+      }
+
+      let newDataBaseUrl = window.collection_url;
+      if (tagsForThisUrl.length > 0) {
+        newDataBaseUrl += '/' + tagsForThisUrl.join('+');
+      }
+
+      // Preserve current URL params (like sort_by AND existing price filters) for data-url consistency
+      const currentParams = new URLSearchParams(window.location.search);
+      const paramsString = currentParams.toString();
+      if (paramsString) {
+        newDataBaseUrl += '?' + paramsString;
+      }
+      checkbox.dataset.url = newDataBaseUrl;
     }
   });
 </script>
