@@ -26,6 +26,7 @@
 
     <!-- Theme CSS -->
     {{ 'styles.css' | asset_url | stylesheet_tag }}
+    {{ 'static.css' | asset_url | stylesheet_tag }}
 
     {% comment %} {{ 'theme.css' | asset_url | stylesheet_tag }} {% endcomment %}
 
@@ -93,6 +94,7 @@
   <body class="flex flex-col min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
     {% render 'cart-drawer' %}
+    {% render 'installation-popup', product_id: product.id, item: product, accessories: accessories %}
     {% sections 'header-group' %}
 
     <main role="main" id="MainContent" class="flex-grow bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-green-400/5 via-yellow-400/5 to-blue-400/5">

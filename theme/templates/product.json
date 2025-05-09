@@ -12,8 +12,8 @@
     "main": {
       "type": "product-template",
       "blocks": {
-        "tab_6UfXkt": {
-          "type": "tab",
+        "accordion_YCPxPa": {
+          "type": "accordion",
           "settings": {
             "title": "Description",
             "content_type": "description",
@@ -22,20 +22,20 @@
             "custom_content": ""
           }
         },
-        "tab_86pdwK": {
-          "type": "tab",
+        "accordion_XtwNAQ": {
+          "type": "accordion",
           "settings": {
             "title": "Reviews",
             "content_type": "reviews",
-            "specifications": "<p>Reviews</p>",
+            "specifications": "<p>No specifications available for this product.</p>",
             "enable_product_reviews": false,
-            "custom_content": "<p>s</p>"
+            "custom_content": ""
           }
         }
       },
       "block_order": [
-        "tab_6UfXkt",
-        "tab_86pdwK"
+        "accordion_YCPxPa",
+        "accordion_XtwNAQ"
       ],
       "settings": {
         "show_vendor": true,

@@ -1,34 +1,37 @@
 <!-- Include the popup scripts and styles -->
 {{ 'installation-popup.css' | asset_url | stylesheet_tag }}
-<!-- Button to trigger popup -->
 
+ {% assign accessories = product.metafields.custom.accessory_product.value %}
+ {% assign accessory_count = 0 %}
+ {% for accessory in accessories %}
+   {% assign accessory_count = accessory_count | plus: 1 %}
+ {% endfor %}
 <!-- Hidden product name -->
 <div data-cart-product-name style="display: none;">
   {{ item.title }}
 </div>
-<!-- Installation Popup with Tailwind Classes -->
-<div id="dc-installation-popup-{{ product_id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center is-active:flex">
-  <div class="bg-white p-5 rounded-lg max-w-[90%] w-[600px] max-h-[90vh] overflow-auto relative">
-    <div class="flex justify-between items-start mb-4">
+
+<!-- Installation Popup with minimalist black and white design -->
+<div id="dc-installation-popup-{{ product_id }}" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 items-center justify-center is-active:flex">
+  <div class="bg-white p-6 max-w-[90%] w-[550px] max-h-[90vh] overflow-auto relative">
+    <div class="flex justify-between items-start mb-5">
       <div class="flex-1">
-        <h2 class="text-xl font-bold">Complete Your Purchase!</h2>
-        <div class="mt-1">
-          <p class="text-gray-600">Enhance your order with these premium add-ons before proceeding!</p>
-        </div>
+        <h2 class="text-xl font-medium text-black">Complete Your Purchase!</h2>
+        <p class="text-gray-600 text-sm mt-1">Enhance your order with these premium add-ons before proceeding!</p>
       </div>
-      <button class="bg-transparent border-0 text-2xl cursor-pointer p-0 ml-2 popup-close" data-popup-id="{{ product_id }}" type="button">×</button>
+      <button class="bg-transparent border-0 text-2xl cursor-pointer p-0 ml-2 hover:text-gray-600 popup-close" data-popup-id="{{ product_id }}" type="button">×</button>
     </div>
 
     <div class="overflow-auto">
-      <div class="flex justify-center gap-2 p-2 flex-wrap">
-        <a href="/cart" class="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm">Add to Cart</a>
-        <a href="/checkout" class="inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm">Proceed to Checkout</a>
-      </div>
+      {% comment %} <div class="flex justify-center gap-3 mb-5">
+        <a href="/cart" class="inline-block px-5 py-2.5 bg-gray-100 text-black border border-gray-200 text-sm font-medium hover:bg-gray-200 transition-colors">Add to Cart</a>
+        <a href="/checkout" class="inline-block px-5 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors">Proceed to Checkout</a>
+      </div> {% endcomment %}
 
-      <div class="grid gap-5">
+      <div class="space-y-5">
         {% for accessory in accessories %}
           <div
-            class="grid grid-cols-[120px_1fr_120px] gap-4 p-4 border border-gray-200 rounded-lg shadow-sm"
+            class="grid grid-cols-[100px_1fr_auto] gap-5 py-5 border-t border-gray-200"
             data-variant-id="{{ accessory.variants.first.id }}"
             data-unit-price="{{ accessory.price | money_without_currency | remove: ',' }}"
           >
@@ -37,14 +40,15 @@
                 {% liquid
                   assign base_img = accessory.images[0].src | file_url
                 %}
-
                 <img
                   src="https:{{ base_img |  replace: '/files/files', '/files' }}&width=150"
                   alt="{{ accessory.title }}"
-                  class="h-[120px] w-[120px] object-cover rounded"
+                  class="h-[100px] w-[100px] object-cover"
+                  height=""
+                  width=""
                 >
               {% else %}
-                <div class="h-[120px] w-[120px] bg-gray-100 flex items-center justify-center text-gray-500 text-sm rounded">No image</div>
+                <div class="h-[100px] w-[100px] bg-gray-100 flex items-center justify-center text-gray-500 text-sm">No image</div>
               {% endif %}
             </div>
             <div class="product-info">
@@ -52,18 +56,18 @@
               {% if accessory.metafields.custom.coverage %}
                 <p class="text-sm text-gray-600 mb-1">Coverage: {{ accessory.metafields.custom.coverage }}m²</p>
               {% endif %}
-              <p class="text-sm font-medium">Price: {{ accessory.price | money }}</p>
+              <p class="text-sm font-medium mt-2">Price: {{ accessory.price | money }}</p>
             </div>
-            <div class="flex flex-col gap-2">
-              <div class="flex border border-gray-300 rounded-md h-8">
-                <button type="button" class="quantity-control quantity-minus w-8 flex items-center justify-center border-r border-gray-300 bg-gray-100 hover:bg-gray-200">-</button>
-                <input type="number" class="quantity-input w-full text-center border-0 focus:outline-none focus:ring-0" value="1" min="1">
-                <button type="button" class="quantity-control quantity-plus w-8 flex items-center justify-center border-l border-gray-300 bg-gray-100 hover:bg-gray-200">+</button>
+            <div class="flex flex-col items-end gap-3">
+              <div class="flex border border-gray-200">
+                <button type="button" class="quantity-control quantity-minus w-8 h-8 flex items-center justify-center border-r border-gray-200 bg-white hover:bg-gray-100">-</button>
+                <input type="number" class="quantity-input w-10 h-8 text-center border-0 focus:outline-none focus:ring-0" value="1" min="1">
+                <button type="button" class="quantity-control quantity-plus w-8 h-8 flex items-center justify-center border-l border-gray-200 bg-white hover:bg-gray-100">+</button>
               </div>
               <div class="text-sm font-medium">
-                Total price: <span class="product-total">{% assign raw_price = accessory.price | money_without_currency | remove: ',' %}{% assign initial_total = raw_price | times: 1 %}₹{{ initial_total | money_without_currency }}</span>
+                Total: <span class="product-total">{% assign raw_price = accessory.price | money_without_currency | remove: ',' %}{% assign initial_total = raw_price | times: 1 %}₹{{ initial_total | money_without_currency }}</span>
               </div>
-              <button class="add-to-basket mt-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md py-2 px-4 text-sm font-medium">ADD TO BASKET</button>
+              <button class="add-to-basket bg-black hover:bg-gray-800 text-white py-2 px-4 text-sm font-medium transition-colors">ADD TO BASKET</button>
             </div>
           </div>
         {% endfor %}
@@ -77,10 +81,17 @@
   .is-active\:flex.is-active {
     display: flex;
   }
+  
+  /* Minimize number input arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 18px;
+  }
 </style>
 
-
 <script>
+// Your existing JavaScript remains the same
 document.addEventListener('DOMContentLoaded', function () {
   // Initialize all product totals
   document.querySelectorAll('[data-variant-id]').forEach(product => {
@@ -186,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
           
           // Show success message
           const successMessage = document.createElement('div');
-          successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
+          successMessage.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 z-50';
           successMessage.textContent = 'Item added to cart successfully!';
           document.body.appendChild(successMessage);
           
@@ -198,11 +209,11 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
           console.error('Error adding to cart:', error);
           button.disabled = false;
-          button.textContent = 'Error - Try Again';
+          button.textContent = 'Try Again';
           
           // Show error message
           const errorMessage = document.createElement('div');
-          errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50';
+          errorMessage.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 z-50';
           errorMessage.textContent = 'Failed to add item to cart. Please try again.';
           document.body.appendChild(errorMessage);
           
@@ -223,30 +234,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateProductTotal(productContainer) {
     const quantity = parseInt(productContainer.querySelector('.quantity-input').value);
-    
-    // Get the raw price value and ensure it's properly parsed as a number
     let unitPrice = productContainer.dataset.unitPrice;
-    
-    // Log the raw unit price for debugging
-    console.log('Raw unit price:', unitPrice);
-    
-    // Parse the unit price as a float, ensuring commas are removed
     unitPrice = parseFloat(unitPrice.replace(/,/g, ''));
-    
-    // Calculate the total
     const total = quantity * unitPrice;
     
-    // Format the number with commas for Indian formatting (e.g., 2,624.00)
     const formattedTotal = new Intl.NumberFormat('en-IN', {
       style: 'decimal',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(total);
-    
-    console.log('Quantity:', quantity);
-    console.log('Unit price after parsing:', unitPrice);
-    console.log('Total calculated:', total);
-    console.log('Formatted total:', formattedTotal);
     
     productContainer.querySelector('.product-total').textContent = `₹${formattedTotal}`;
   }
