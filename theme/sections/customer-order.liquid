@@ -7,46 +7,380 @@
     }
     {% endschema %}
     
-    <section class="max-w-4xl mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold mb-4">Order #{{ order.name }}</h1>
-      <p class="text-gray-500 mb-6">Placed on {{ order.created_at | date: "%B %d, %Y" }}</p>
-    
-      <div class="mb-6">
-        <h2 class="font-semibold mb-2">Shipping Address</h2>
-        <p class="text-sm text-gray-700">
-          {{ order.shipping_address.name }}<br>
-          {{ order.shipping_address.address1 }}<br>
-          {% if order.shipping_address.address2 %}
-            {{ order.shipping_address.address2 }}<br>
-          {% endif %}
-          {{ order.shipping_address.city }}, {{ order.shipping_address.province }} {{ order.shipping_address.zip }}<br>
-          {{ order.shipping_address.country }}
-        </p>
+    <div class="min-h-screen">
+    <!-- Header with store logo -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        {% comment %} <a href="/" class="flex-shrink-0">
+          <img class="h-8 w-auto" src="/api/placeholder/150/50" alt="Store logo">
+        </a> {% endcomment %}
+        <div class="ml-4 flex items-center md:ml-6">
+          <a href="/account/logout" class="text-sm font-medium text-gray-500 hover:text-gray-900">
+            Log out
+          </a>
+        </div>
       </div>
-    
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm border-t border-b">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="text-left px-4 py-2">Product</th>
-              <th class="text-left px-4 py-2">Qty</th>
-              <th class="text-left px-4 py-2">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for line_item in order.line_items %}
-              <tr class="border-b">
-                <td class="px-4 py-2">{{ line_item.title }}</td>
-                <td class="px-4 py-2">{{ line_item.quantity }}</td>
-                <td class="px-4 py-2">{{ line_item.line_price | money }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Welcome banner -->
+      <div class="bg-white shadow rounded-lg mb-6">
+        <div class="px-4 py-5 sm:p-6">
+          <h1 class="text-2xl font-bold text-gray-900">
+            My Orders
+          </h1>
+          <p class="mt-1 text-sm text-gray-500">
+            View and track all your orders.
+          </p>
+        </div>
       </div>
-    
-      <div class="mt-6 text-right">
-        <p class="text-lg font-semibold">Total: {{ order.total_price | money }}</p>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <!-- Sidebar - Identical to account page -->
+        <div class="bg-white shadow rounded-lg overflow-hidden lg:col-span-1">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900">Account Menu</h2>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <nav class="space-y-1" aria-label="Account">
+              <a href="/account" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Account Dashboard
+              </a>
+
+              <a href="/account/orders" class="bg-gray-100 text-gray-900 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-indigo-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                Orders
+              </a>
+
+              <a href="/account/addresses" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Addresses
+              </a>
+
+              {% if settings.enable_wishlist %}
+              <a href="/pages/wishlist" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Wishlist
+              </a>
+              {% endif %}
+
+              <a href="/cart" class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Cart
+              </a>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Orders List Section - Main content that changes -->
+        <div class="bg-white shadow rounded-lg overflow-hidden lg:col-span-2">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900">Your Orders</h2>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            {% if customer.orders.size > 0 %}
+              <div class="overflow-hidden">
+                {% paginate customer.orders by 5 %}
+                  <ul role="list" class="divide-y divide-gray-200">
+                    {% for order in customer.orders %}
+                      <li class="py-4">
+                        <div class="flex items-center justify-between">
+                          <div>
+                            <h3 class="text-sm font-medium text-gray-900">
+                              <a href="/account/orders/{{ order.id }}" class="hover:underline">Order #{{ order.name }}</a>
+                            </h3>
+                            <p class="text-sm text-gray-500">
+                              {{ order.created_at | date: '%B %d, %Y' }}
+                            </p>
+                          </div>
+                          <div class="flex items-center space-x-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                              {% if order.financial_status == 'paid' %}
+                                bg-green-100 text-green-800
+                              {% elsif order.financial_status == 'pending' %}
+                                bg-yellow-100 text-yellow-800
+                              {% elsif order.financial_status == 'refunded' %}
+                                bg-blue-100 text-blue-800
+                              {% elsif order.financial_status == 'voided' or order.financial_status == 'canceled' %}
+                                bg-red-100 text-red-800
+                              {% else %}
+                                bg-gray-100 text-gray-800
+                              {% endif %}
+                            ">
+                              {{ order.financial_status | capitalize }}
+                            </span>
+                            <p class="text-sm font-medium text-gray-900">
+                              {{ order.total_price | money }}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <!-- Order details preview -->
+                        <div class="mt-2">
+                          <button type="button" class="text-sm text-indigo-600 hover:text-indigo-500 focus:outline-none flex items-center toggle-details" data-order-id="{{ order.id }}">
+                            <span class="show-text">Show details</span>
+                            <span class="hide-text hidden">Hide details</span>
+                            <svg class="ml-1 h-5 w-5 show-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                            <svg class="ml-1 h-5 w-5 hide-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                            </svg>
+                          </button>
+                        </div>
+                        
+                        <!-- Expandable order details -->
+                        <div class="mt-4 hidden order-details bg-gray-50 rounded-md px-4 py-3" data-order-id="{{ order.id }}">
+                          <h4 class="text-sm font-medium text-gray-900 mb-3">Order Items</h4>
+                          <ul class="space-y-3">
+                            {% for line_item in order.line_items %}
+                              <li class="grid grid-cols-1 gap-x-4 sm:grid-cols-4 items-center">
+                                <div class="sm:col-span-3 flex items-center">
+                                  <div class="flex-shrink-0 h-10 w-10 rounded-md border border-gray-200 overflow-hidden bg-gray-100">
+                                    {% if line_item.image %}
+                                      <img src="{{ line_item.image | img_url: '60x60', crop: 'center' }}" alt="{{ line_item.title }}" class="h-full w-full object-center object-cover"
+                                      height="" width="">
+                                    {% else %}
+                                      <div class="h-full w-full flex items-center justify-center">
+                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                      </div>
+                                    {% endif %}
+                                  </div>
+                                  <div class="ml-3">
+                                    <p class="text-sm font-medium text-gray-900">{{ line_item.title }}</p>
+                                    {% if line_item.variant_title %}
+                                      <p class="text-xs text-gray-500">{{ line_item.variant_title }}</p>
+                                    {% endif %}
+                                    <p class="text-xs text-gray-500">Qty: {{ line_item.quantity }}</p>
+                                  </div>
+                                </div>
+                                <div class="sm:text-right">
+                                  <p class="text-sm font-medium text-gray-900">{{ line_item.final_line_price | money }}</p>
+                                </div>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                          
+                          <div class="mt-4 pt-4 border-t border-gray-200">
+                            <div class="flex justify-between text-sm">
+                              <p class="text-gray-500">Subtotal</p>
+                              <p class="font-medium text-gray-900">{{ order.subtotal_price | money }}</p>
+                            </div>
+                            
+                            {% if order.shipping_price > 0 %}
+                              <div class="flex justify-between text-sm mt-2">
+                                <p class="text-gray-500">Shipping</p>
+                                <p class="font-medium text-gray-900">{{ order.shipping_price | money }}</p>
+                              </div>
+                            {% endif %}
+                            
+                            {% if order.total_discounts > 0 %}
+                              <div class="flex justify-between text-sm mt-2">
+                                <p class="text-gray-500">Discounts</p>
+                                <p class="font-medium text-gray-900">-{{ order.total_discounts | money }}</p>
+                              </div>
+                            {% endif %}
+                            
+                            {% if order.total_tax > 0 %}
+                              <div class="flex justify-between text-sm mt-2">
+                                <p class="text-gray-500">Tax</p>
+                                <p class="font-medium text-gray-900">{{ order.total_tax | money }}</p>
+                              </div>
+                            {% endif %}
+                            
+                            <div class="flex justify-between text-sm font-medium mt-4 pt-2 border-t border-gray-200">
+                              <p class="text-gray-900">Total</p>
+                              <p class="text-gray-900">{{ order.total_price | money }}</p>
+                            </div>
+                          </div>
+                          
+                          <div class="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                            {% if order.shipping_address %}
+                              <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-1">Shipping Address</h4>
+                                <p class="text-sm text-gray-500">
+                                  {{ order.shipping_address.name }}<br>
+                                  {{ order.shipping_address.address1 }}
+                                  {% if order.shipping_address.address2 != "" %}
+                                    <br>{{ order.shipping_address.address2 }}
+                                  {% endif %}
+                                  <br>
+                                  {{ order.shipping_address.city }}, {{ order.shipping_address.province_code }} {{ order.shipping_address.zip }}<br>
+                                  {{ order.shipping_address.country }}
+                                </p>
+                              </div>
+                            {% endif %}
+                            
+                            {% if order.billing_address and order.billing_address != order.shipping_address %}
+                              <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-1">Billing Address</h4>
+                                <p class="text-sm text-gray-500">
+                                  {{ order.billing_address.name }}<br>
+                                  {{ order.billing_address.address1 }}
+                                  {% if order.billing_address.address2 != "" %}
+                                    <br>{{ order.billing_address.address2 }}
+                                  {% endif %}
+                                  <br>
+                                  {{ order.billing_address.city }}, {{ order.billing_address.province_code }} {{ order.billing_address.zip }}<br>
+                                  {{ order.billing_address.country }}
+                                </p>
+                              </div>
+                            {% endif %}
+                          </div>
+                          
+                          <div class="mt-6 text-right">
+                            <a href="/account/orders/{{ order.id }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              View complete order
+                            </a>
+                          </div>
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  
+                  <!-- Pagination -->
+                  {% if paginate.pages > 1 %}
+                    <div class="border-t border-gray-200 px-4 py-3 flex items-center justify-between mt-4">
+                      <div class="flex-1 flex justify-between sm:hidden">
+                        {% if paginate.previous %}
+                          <a href="{{ paginate.previous.url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Previous
+                          </a>
+                        {% else %}
+                          <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-100 cursor-not-allowed">
+                            Previous
+                          </span>
+                        {% endif %}
+                        
+                        {% if paginate.next %}
+                          <a href="{{ paginate.next.url }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next
+                          </a>
+                        {% else %}
+                          <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-gray-100 cursor-not-allowed">
+                            Next
+                          </span>
+                        {% endif %}
+                      </div>
+                      
+                      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                          <p class="text-sm text-gray-700">
+                            Showing <span class="font-medium">{{ paginate.current_offset | plus: 1 }}</span> to <span class="font-medium">{{ paginate.current_offset | plus: paginate.current_items }}</span> of <span class="font-medium">{{ paginate.items }}</span> orders
+                          </p>
+                        </div>
+                        <div>
+                          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            {% if paginate.previous %}
+                              <a href="{{ paginate.previous.url }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                              </a>
+                            {% else %}
+                              <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-300 cursor-not-allowed">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                              </span>
+                            {% endif %}
+                            
+                            {% for part in paginate.parts %}
+                              {% if part.is_link %}
+                                <a href="{{ part.url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                  {{ part.title }}
+                                </a>
+                              {% else %}
+                                {% if part.title == paginate.current_page %}
+                                  <span class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600" aria-current="page">
+                                    {{ part.title }}
+                                  </span>
+                                {% else %}
+                                  <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                    {{ part.title }}
+                                  </span>
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
+                            
+                            {% if paginate.next %}
+                              <a href="{{ paginate.next.url }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                </svg>
+                              </a>
+                            {% else %}
+                              <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-sm font-medium text-gray-300 cursor-not-allowed">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                </svg>
+                              </span>
+                            {% endif %}
+                          </nav>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endpaginate %}
+              </div>
+            {% else %}
+              <!-- Empty state if no orders -->
+              <div class="text-center py-6">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No orders</h3>
+                <p class="mt-1 text-sm text-gray-500">You haven't placed any orders yet.</p>
+                <div class="mt-6">
+                  <a href="/collections/all" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Start shopping
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </section>
-    
+    </div>
+  </div>
+
+  <script>
+    // Toggle order details
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButtons = document.querySelectorAll('.toggle-details');
+      
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const orderId = this.dataset.orderId;
+          const detailsDiv = document.querySelector(`.order-details[data-order-id="${orderId}"]`);
+          const showText = this.querySelector('.show-text');
+          const hideText = this.querySelector('.hide-text');
+          const showIcon = this.querySelector('.show-icon');
+          const hideIcon = this.querySelector('.hide-icon');
+          
+          detailsDiv.classList.toggle('hidden');
+          showText.classList.toggle('hidden');
+          hideText.classList.toggle('hidden');
+          showIcon.classList.toggle('hidden');
+          hideIcon.classList.toggle('hidden');
+        });
+      });
+    });
+  </script>

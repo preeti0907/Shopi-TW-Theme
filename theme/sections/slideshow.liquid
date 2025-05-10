@@ -1,22 +1,8 @@
 {%- style -%}
-  .slideshow {
+  .swiper-slide {
     position: relative;
-    overflow: hidden;
-  }
-
-  .slide {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    transition: opacity 0.5s ease-in-out;
-  }
-
-  .slide.active {
-    opacity: 1;
-    position: relative;
   }
 
   .slide__image-container {
@@ -39,6 +25,7 @@
     top: 0;
     left: 0;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
   }
 
   .slide__content {
@@ -104,82 +91,56 @@
     text-align: right;
   }
 
-  .slideshow__controls {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .slideshow__dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .slideshow__dot.active {
-    background-color: white;
-  }
-
-  .slideshow__arrows {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  .slideshow__arrow {
-    position: absolute;
+  /* Swiper Navigation Styles */
+  .swiper-button-next,
+  .swiper-button-prev {
+    background-color: rgba(255, 255, 255, 0.7);
     width: 40px;
     height: 40px;
-    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    pointer-events: auto;
     transition: background-color 0.3s ease;
   }
 
-  .slideshow__arrow:hover {
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
     background-color: rgba(255, 255, 255, 0.9);
   }
 
-  .slideshow__arrow--prev {
-    left: 20px;
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
+    font-size: 18px;
+    color: #000;
   }
 
-  .slideshow__arrow--next {
-    right: 20px;
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .swiper-pagination-bullet-active {
+    background: white;
   }
 
   @media screen and (max-width: 768px) {
-    .slideshow__arrow {
+    .swiper-button-next,
+    .swiper-button-prev {
       width: 32px;
       height: 32px;
     }
   }
 {%- endstyle -%}
+
 {% assign unique_id = section.id %}
 
 <section
   id="slideshow-{{ section.id }}"
-  class="slideshow relative w-full"
+  class="swiper swiper-slideshow_{{ section.id }} w-full aspect-square md:aspect-[3/1]"
+  data-swiper-id="slideshow_{{ section.id }}"
   data-autoplay="{{ section.settings.autoplay }}"
   data-autoplay-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
-  data-slideshow
 >
-  <div class="slideshow__slides">
+  <div class="swiper-wrapper">
     {% for block in section.blocks %}
       {% liquid
         assign bs = block.settings
@@ -191,11 +152,7 @@
         assign slide_link = bs.button_link | default: ''
       %}
 
-      <div
-        class="slide {% if forloop.first %}active{% endif %}"
-        data-slide="{{ forloop.index0 }}"
-        {{ block.shopify_attributes }}
-      >
+      <div class="swiper-slide" {{ block.shopify_attributes }}>
         <!-- Desktop Image (hidden on mobile) -->
         <div class="hidden md:block h-full">
           {% if desktop_image != blank %}
@@ -341,102 +298,8 @@
     {% endfor %}
   </div>
 
-  {% if section.blocks.size > 1 %}
-    {% if section.settings.show_dots %}
-      <div class="slideshow__controls">
-        {% for block in section.blocks %}
-          <button
-            class="slideshow__dot{% if forloop.first %} active{% endif %}"
-            data-slide-index="{{ forloop.index0 }}"
-            aria-label="{{ 'sections.slideshow.slide' | t }} {{ forloop.index }} {{ 'general.of' | t | default: 'of' }} {{ forloop.length }}"
-          ></button>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if section.settings.show_arrows %}
-      <div class="slideshow__arrows">
-        <button
-          class="slideshow__arrow slideshow__arrow--prev"
-          data-slide-prev
-          aria-label="{{ 'sections.slideshow.previous_slide' | t }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-        <button
-          class="slideshow__arrow slideshow__arrow--next"
-          data-slide-next
-          aria-label="{{ 'sections.slideshow.next_slide' | t }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-      </div>
-    {% endif %}
-  {% endif %}
 </section>
 
-
-{% comment %} <div class="swiper swiper-{{ unique_id }} w-full max-w-6xl mx-auto" data-swiper-id="{{ unique_id }}">
-  <div class="swiper-wrapper">
-    {% for block in section.blocks %}
-      <div class="swiper-slide mx-auto text-center bg-red-200 flex items-center justify-center text-xl font-semibold shadow ">
-       
-      <img
-      src="{{ block.settings.desktop_image  | image_url: width: 1920 }}"
-      srcset="
-        {{ block.settings.desktop_image | image_url: width: 480 }} 480w,
-        {{ block.settings.desktop_image | image_url: width: 768 }} 768w,
-        {{ block.settings.desktop_image | image_url: width: 1200 }} 1200w,
-        {{ block.settings.desktop_image | image_url: width: 1600 }} 1600w,
-        {{ block.settings.desktop_image | image_url: width: 1920 }} 1920w
-      "
-      sizes="100vw"
-      alt="{{ block.settings.desktop_image.alt | escape }}"
-      loading="{{ forloop.first | default: 'lazy' }}"
-      class="slide__image"
-      width="{{ block.settings.desktop_image.width }}"
-      height="{{ block.settings.desktop_image.height }}"
-    >
-    
-      </div>
-    {% endfor %}
-  </div>
-
-  <!-- Navigation -->
-  <div class="swiper-button-next swiper-button-next-{{ unique_id }}"></div>
-  <div class="swiper-button-prev swiper-button-prev-{{ unique_id }}"></div>
-
-  <!-- Pagination -->
-  <div class="swiper-pagination swiper-pagination-{{ unique_id }}"></div>
-</div> {% endcomment %}
-
-<script>
-
-</script>
 
 {% schema %}
 {
@@ -450,34 +313,6 @@
     {
       "type": "header",
       "content": "Slideshow Settings"
-    },
-    {
-      "type": "select",
-      "id": "height",
-      "label": "Slideshow height",
-      "options": [
-        {
-          "value": "adapt",
-          "label": "Adapt to first image"
-        },
-        {
-          "value": "small",
-          "label": "Small"
-        },
-        {
-          "value": "medium",
-          "label": "Medium"
-        },
-        {
-          "value": "large",
-          "label": "Large"
-        },
-        {
-          "value": "fullscreen",
-          "label": "Full screen"
-        }
-      ],
-      "default": "adapt"
     },
     {
       "type": "checkbox",
@@ -512,15 +347,6 @@
       "unit": "s",
       "label": "Change slides every",
       "default": 5
-    },
-    {
-      "type": "header",
-      "content": "Advanced"
-    },
-    {
-      "type": "text",
-      "id": "custom_class",
-      "label": "Custom classes"
     }
   ],
   "blocks": [

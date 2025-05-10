@@ -1,42 +1,32 @@
 {% schema %}
-  {
-    "name": "Search Results",
-    "tag": "section",
-    "class": "bg-white",
-    "settings": []
-  }
-  {% endschema %}
-  
-  <section class="py-12 px-4 max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">
-      Search Results for “{{ search.terms }}”
-    </h1>
-  
-    {% if search.results_count == 0 %}
-      <p class="text-gray-500 text-center">No results found. Try searching for something else.</p>
-    {% else %}
-      <p class="text-sm text-gray-500 mb-4 text-center">
-        {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %}
-      </p>
-  
-      <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {% for item in search.results %}
-          <a href="{{ item.url }}" class="block border rounded overflow-hidden hover:shadow-lg transition">
-            {% if item.object_type == 'product' %}
-              {% if item.image %}
-                <img src="{{ item.image | image_url: width: 600 }}" alt="{{ item.title }}" class="w-full h-48 object-cover" height="" width="">
-              {% endif %}
-            {% endif %}
-            <div class="p-4">
-              <h2 class="text-lg font-semibold">{{ item.title }}</h2>
-              {% if item.object_type == 'product' %}
-                <p class="text-blue-600 font-medium mt-1">{{ item.price | money }}</p>
-              {% endif %}
-              <p class="text-sm text-gray-600 line-clamp-2">{{ item.content | strip_html }}</p>
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </section>
-  
+{
+  "name": "Search Results",
+  "tag": "section",
+  "class": "bg-white",
+  "settings": []
+}
+{% endschema %}
+
+<section class="py-12 px-4 max-w-7xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6 text-center">Search Results for “{{ search.terms }}”</h1>
+
+  {% if search.results_count == 0 %}
+    <p class="text-gray-500 text-center">No results found. Try searching for something else.</p>
+  {% else %}
+    <p class="text-sm text-gray-500 mb-4 text-center">
+      {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %}
+    </p>
+
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {% for item in search.results %}
+        {% render 'product-card',
+          product: item,
+          show_secondary_image: true,
+          show_add_to_cart: true,
+          badge_type: 'percentage',
+          title_lines: 2
+        %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>

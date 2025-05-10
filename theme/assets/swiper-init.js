@@ -3,10 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   sliders.forEach((slider) => {
     const uniqueId = slider.dataset.swiperId;
+    const isSlideshow = uniqueId.includes('slideshow_');
 
-    new Swiper(".swiper-" + uniqueId, {
+    // Default Swiper configuration
+    const swiperConfig = {
       loop: true,
-      effect: "coverflow",
       centeredSlides: true,
       navigation: {
         nextEl: ".swiper-button-next-" + uniqueId,
@@ -15,22 +16,37 @@ document.addEventListener("DOMContentLoaded", function () {
       pagination: {
         el: ".swiper-pagination-" + uniqueId,
         clickable: true,
-      },
-      navigation: {
-        nextEl: ".swiper-button-next-" + uniqueId,
-        prevEl: ".swiper-button-prev-" + uniqueId,
-      },
-    });
+      }
+    };
+
+    // Add fade effect for slideshows
+    if (isSlideshow) {
+      swiperConfig.effect = "fade";
+      swiperConfig.fadeEffect = {
+        crossFade: true
+      };
+      swiperConfig.autoplay = {
+        delay: 5000,
+        disableOnInteraction: false
+      };
+    } else {
+      // Default effect for other sliders
+      swiperConfig.effect = "coverflow";
+    }
+
+    new Swiper(".swiper-" + uniqueId, swiperConfig);
   });
 
- 
+  // Product gallery swiper
   var swiper = new Swiper(".myProductSwiper", {
     spaceBetween: 10,
     slidesPerView: 4,
     freeMode: true,
     watchSlidesProgress: true,
-    loop:true,
+    loop: true,
   });
+
+  // Thumbnail swiper
   var swiper2 = new Swiper(".mySwiper2", {
     spaceBetween: 10,
     navigation: {
