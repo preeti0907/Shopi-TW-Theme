@@ -17,68 +17,68 @@
   class="product-template md:mt-8 mb-5 md:mb-12"
 >
   <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
       <!-- One 1 (Carousel/Swiper) -->
-      <div class=" order-1 md:col-span-2 ">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {% for image in product.images %}
-            <div class="swiper-slide bg-white flex items-center justify-center bg-center bg-cover rounded overflow-hidden border-gray-100 ">
-              <img
-                src="{{ image.src | img_url: 'master' }}"
-                alt="{{ image.alt | escape }}"
-                class="block w-full h-full object-cover"
-                height=""
-                width=""
-              >
-            </div>
-          {% else %}
-            {% for i in (1..5) %}
-              <div class="swiper-slide bg-white flex items-center justify-center bg-center bg-cover ">
-                {% capture current %}{% cycle "men", "women", "accessories", "new", "collections" %}{% endcapture %}
-                {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+      <!-- Swiper -->
+
+      <div class="order-1 lg:col-span-2  ">
+        <div class="w-full aspect-square overflow-hidden hidden md:block">
+          <div class=" grid grid-cols-1 md:grid-cols-2 gap-2 h-full max-h-full">
+            {% for image in product.images %}
+              <div class="bg-white flex items-center justify-center bg-center bg-cover rounded overflow-hidden border-gray-100 ">
+                <img
+                  src="{{ image.src | img_url: 'master' }}"
+                  alt="{{ image.alt | escape }}"
+                  class="block w-full h-full object-cover"
+                  height=""
+                  width=""
+                >
               </div>
             {% endfor %}
-          {% endfor %}
+          </div>
+        </div>
+        <div class="md:hidden">
+          <div class="swiper myProductSwiper w-full aspect-square overflow-hidden ">
+            <div class="swiper-wrapper h-full max-h-full">
+              {% for image in product.images %}
+                <div class="swiper-slide bg-white flex items-center justify-center bg-center bg-cover rounded overflow-hidden border-gray-100 ">
+                  <img
+                    src="{{ image.src | img_url: 'master' }}"
+                    alt="{{ image.alt | escape }}"
+                    class="block w-full h-full object-cover"
+                    height=""
+                    width=""
+                  >
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
         </div>
       </div>
 
       <!-- Two 2 (Sticky content) -->
-      <div class="order-2  md:row-span-2 md:sticky md:top-0 md:self-start bg-white">
-        <div class="product-details p-4">
+      <div class="order-2 md:row-span-2 md:sticky md:top-0 md:self-start md:bg-white">
+        <div class="product-details p-0 md:p-4">
           <!-- Vendor -->
           {% if section.settings.show_vendor and product.vendor %}
-            <div class="product-vendor text-sm text-gray-500 uppercase tracking-wider mb-2">
+            <div class="product-vendor text-xs hidden md:block sm:text-sm text-gray-500 uppercase tracking-wider mb-2">
               {{ product.vendor }}
             </div>
           {% endif %}
 
           <!-- Title -->
-          <h1 class="text-3xl font-medium mb-4">{{ product.title }}</h1>
-
-          <!-- Price -->
-          {% comment %}
-            <div class="product-price mb-6">
-              <span class="text-xl font-medium {% if product.compare_at_price > product.price %}text-red-600{% endif %}">
-                {{ product.price | money }}
-              </span>
-
-              {% if product.compare_at_price > product.price %}
-                <span class="ml-2 text-gray-500 line-through">
-                  {{ product.compare_at_price | money }}
-                </span>
-              {% endif %}
-            </div>
-          {% endcomment %}
+          <h1 class="text-lg sm:text-2xl md:text-3xl font-medium mb-2 md:mb-4">{{ product.title }}</h1>
 
           <!-- Short Description -->
           {% if product.description != blank and section.settings.show_short_description %}
-            <div class="product-short-description mb-6 text-gray-600">
+            <div class="product-short-description mb-4 md:mb-6 text-sm md:text-base text-gray-600">
               <p>{{ product.description | strip_html | truncatewords: section.settings.short_description_words }}</p>
             </div>
           {% endif %}
 
-          <span>
-            {% if product.metafields.custom.accessory_product %}
+          {% if product.metafields.custom.accessory_product %}
+            <span>
               {% assign accessories = product.metafields.custom.accessory_product.value %}
               {% assign accessory_count = 0 %}
               {% for accessory in accessories %}
@@ -87,71 +87,23 @@
 
               <!-- This is the main button that should be visible -->
               <button
-                class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded text-gray-800 transition-colors"
+                class="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded text-gray-800 transition-colors mb-3"
                 type="button"
                 data-action="show-installation"
                 data-popup-target="{{ product.id }}"
               >
                 See Accessories ({{ accessory_count }})
               </button>
-            {% endif %}
-          </span>
+            </span>
+          {% endif %}
+
           {% comment %} Custom variant {% endcomment %}
           {% if product.metafields.custom.combo_offers.value != blank %}
-            <h5 class="text-lg font-medium text-gray-900 mb-4">Also Available in:</h5>
+            <h5 class="text-base sm:text-lg font-medium text-gray-900 mb-3 md:mb-4">Also Available in:</h5>
             {% assign offer = product.metafields.custom.combo_offers.value %}
-{% comment %} 
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 md:gap-2">
-              <!-- Current product -->
-              <div class="flex flex-col border border-blue-800 overflow-hidden rounded bg-blue-100">
-                <div class="flex items-center justify-center aspect-square bg-white">
-                  <img
-                    src="{{ product.featured_image | img_url: '150x150', crop: 'center' }}"
-                    alt="{{ product.title }}"
-                    class="h-full w-full aspect-square object-contain"
-                    height="100"
-                    width="100"
-                  >
-                </div>
-                <div class="border-t border-blue-800 p-1 text-left">
-                  <div class="font-medium text-xs">{{ product.title }}</div>
-                  <div class="text-sm">{{ product.price | money }}</div>
-                </div>
-              </div>
-
-              <!-- Other products from metafields -->
-              {% assign letter_index = 0 %}
-
-              {% for spec in offer %}
-                <div class="flex flex-col border border-gray-300 overflow-hidden rounded bg-white">
-                  <a href="{{ spec.product.value.url }}" class="block">
-                    <div class="flex items-center justify-center aspect-square bg-white">
-                      {% if spec.product.value.featured_image %}
-                        <img
-                          src="{{ spec.product.value.featured_image | img_url: '150x150', crop: 'center' }}"
-                          alt="{{ spec.product_name }}"
-                          class="h-full w-full aspect-square object-contain"
-                          height="100"
-                          width="100"
-                        >
-                      {% else %}
-                        <div class="w-full h-full flex items-center justify-center">
-                          <span class="text-gray-400">No image</span>
-                        </div>
-                      {% endif %}
-                    </div>
-                    <div class="border-t border-gray-300 p-1 text-left">
-                      <div class="font-medium text-xs">{{ spec.product_name }}</div>
-                      <div class="text-sm">{{ spec.product.value.price | money }}</div>
-                    </div>
-                  </a>
-                </div>
-                {% assign letter_index = letter_index | plus: 1 %}
-              {% endfor %}
-            </div> {% endcomment %}
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 md:gap-2">
+            <div class="grid grid-cols-3 lg:grid-cols-3 gap-1 md:gap-2 mb-4 md:mb-5">
               <!-- Current product (highlighted with subtle color) -->
-              <div class="flex flex-col border border-indigo-400 overflow-hidden bg-gray-50 shadow-sm relative rounded overflow-hidden">
+              <div class="flex flex-col border border-indigo-400 overflow-hidden bg-gray-50 shadow-sm relative rounded">
                 <!-- Subtle color indicator -->
                 <div class="flex items-center justify-center aspect-square bg-white relative z-10">
                   <img
@@ -160,11 +112,12 @@
                     class="h-full w-full aspect-square object-contain"
                     height="100"
                     width="100"
+                    loading="lazy"
                   >
                 </div>
-                <div class="border-t border-gray-400 p-1.5 text-left relative z-10">
-                  <div class="font-medium text-xs">{{ product.title }}</div>
-                  <div class="text-sm">{{ product.price | money }}</div>
+                <div class="border-t border-gray-400 p-1 sm:p-1.5 text-left relative z-10">
+                  <div class="font-medium text-xs truncate">{{ product.title }}</div>
+                  <div class="text-xs sm:text-sm">{{ product.price | money }}</div>
                 </div>
               </div>
 
@@ -184,16 +137,17 @@
                         class="h-full w-full aspect-square object-contain"
                         height="100"
                         width="100"
+                        loading="lazy"
                       >
                     {% else %}
                       <div class="w-full h-full flex items-center justify-center">
-                        <span class="text-gray-400">No image</span>
+                        <span class="text-xs sm:text-sm text-gray-400">No image</span>
                       </div>
                     {% endif %}
                   </div>
-                  <div class="border-t border-gray-200 p-1.5 text-left">
-                    <div class="font-medium text-xs">{{ spec.product_name }}</div>
-                    <div class="text-sm">{{ spec.product.value.price | money }}</div>
+                  <div class="border-t border-gray-200 p-1 sm:p-1.5 text-left">
+                    <div class="font-medium text-xs truncate">{{ spec.product_name }}</div>
+                    <div class="text-xs sm:text-sm">{{ spec.product.value.price | money }}</div>
                   </div>
                 </a>
                 {% assign letter_index = letter_index | plus: 1 %}
@@ -214,19 +168,20 @@
             method="post"
             action="/cart/add"
             id="product-form"
-            class="mt-5"
+            class=""
           >
             <input type="hidden" name="id" id="product-variant-id" value="{{ product.variants.first.id }}">
 
+           
             {% if product.has_only_default_variant == false %}
               {% for option in product.options_with_values %}
-                <div class="mb-4">
-                  <span class="block text-sm font-medium text-gray-700 mb-3">{{ option.name }}</span>
-                  <div class="flex flex-wrap gap-2" data-option-index="{{ forloop.index0 }}">
+                <div class="flex flex-wrap items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                  <span class="block text-sm font-bold text-gray-700 uppercase min-w-12">{{ option.name }}</span>
+                  <div class="flex flex-wrap gap-1 sm:gap-2" data-option-index="{{ forloop.index0 }}">
                     {% for value in option.values %}
                       <button
                         type="button"
-                        class="option-button px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-150"
+                        class="option-button px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-md text-xs sm:text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-150"
                         data-value="{{ value }}"
                         data-option-position="{{ forloop.index0 }}"
                       >
@@ -250,13 +205,14 @@
             %}
 
             <!-- Quantity Selector -->
-            <div class="mb-6">
+            <div class="mb-2 md:mb-3">
               <label for="quantity" class="block text-sm font-medium text-gray-800 mb-1">Quantity</label>
               <div class="flex items-center border border-gray-300 rounded-md overflow-hidden w-max">
                 <button
                   type="button"
                   id="quantity-decrease"
-                  class="flex-shrink-0 px-3 py-1 bg-white text-gray-600 hover:bg-gray-100 focus:outline-none transition duration-150"
+                  class="flex-shrink-0 px-2 sm:px-3 py-1 bg-white text-gray-600 hover:bg-gray-100 focus:outline-none transition duration-150"
+                  aria-label="Decrease quantity"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -275,13 +231,14 @@
                   name="quantity"
                   value="1"
                   min="1"
-                  class="w-12 text-center py-1 border-x border-gray-200 text-sm focus:outline-none"
+                  class="w-10 sm:w-12 text-center py-1 border-x border-gray-200 text-sm focus:outline-none"
                 >
 
                 <button
                   type="button"
                   id="quantity-increase"
-                  class="flex-shrink-0 px-3 py-1 bg-white text-gray-600 hover:bg-gray-100 focus:outline-none transition duration-150"
+                  class="flex-shrink-0 px-2 sm:px-3 py-1 bg-white text-gray-600 hover:bg-gray-100 focus:outline-none transition duration-150"
+                  aria-label="Increase quantity"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +258,7 @@
               <button
                 type="submit"
                 id="add-to-cart-btn"
-                class="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-150 ease-in-out font-medium mb-3"
+                class="w-full bg-indigo-600 text-white py-2.5 sm:py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-150 ease-in-out font-medium text-sm sm:text-base mb-2 sm:mb-3"
               >
                 Add to Cart
               </button>
@@ -310,7 +267,7 @@
               <button
                 type="button"
                 id="express-checkout-btn"
-                class="w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-150 ease-in-out font-medium"
+                class="w-full bg-white border border-gray-300 text-gray-700 py-2.5 sm:py-3 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-150 ease-in-out font-medium text-sm sm:text-base"
               >
                 Express Checkout
               </button>
@@ -320,7 +277,7 @@
             <button
               type="button"
               id="sold-out-btn"
-              class="hidden w-full bg-gray-400 text-white py-3 px-4 rounded-md transition-all duration-150 ease-in-out font-medium cursor-not-allowed"
+              class="hidden w-full bg-gray-400 text-white py-2.5 sm:py-3 px-4 rounded-md transition-all duration-150 ease-in-out font-medium text-sm sm:text-base cursor-not-allowed"
               disabled
             >
               Sold Out
@@ -328,10 +285,10 @@
           </form>
 
           <!-- Additional Product Meta -->
-          <div class="product-meta mt-6 pt-6 border-t border-gray-200">
+          <div class="product-meta mt-5 md:mt-6 pt-5 md:pt-6 border-t border-gray-200">
             <!-- SKU -->
             {% if product.selected_or_first_available_variant.sku != blank and section.settings.show_sku %}
-              <div class="product-sku mb-2 text-sm">
+              <div class="product-sku mb-1.5 sm:mb-2 text-xs sm:text-sm">
                 <span class="font-medium">SKU:</span>
                 <span id="variant-sku">{{ product.selected_or_first_available_variant.sku }}</span>
               </div>
@@ -339,12 +296,14 @@
 
             <!-- Product Type -->
             {% if product.type != blank and section.settings.show_product_type %}
-              <div class="product-type mb-2 text-sm"><span class="font-medium">Type:</span> {{ product.type }}</div>
+              <div class="product-type mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                <span class="font-medium">Type:</span> {{ product.type }}
+              </div>
             {% endif %}
 
             <!-- Collections -->
             {% if product.collections.size > 0 and section.settings.show_collections %}
-              <div class="product-collections mb-2 text-sm">
+              <div class="product-collections mb-1.5 sm:mb-2 text-xs sm:text-sm">
                 <span class="font-medium">Collections:</span>
                 {% for collection in product.collections %}
                   <a href="{{ collection.url }}" class="text-gray-600 hover:text-black transition">
@@ -357,7 +316,7 @@
 
             <!-- Tags -->
             {% if product.tags.size > 0 and section.settings.show_tags %}
-              <div class="product-tags mb-2 text-sm">
+              <div class="product-tags mb-1.5 sm:mb-2 text-xs sm:text-sm">
                 <span class="font-medium">Tags:</span>
                 {% for tag in product.tags %}
                   <span class="text-gray-600">{{ tag }}</span>

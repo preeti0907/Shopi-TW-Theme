@@ -286,131 +286,134 @@
 <div id="menu-backdrop" class="backdrop"></div>
 
 <script>
-  class HeaderNavigation {
-    constructor() {
-      // DOM Elements
-      this.menuDrawer = document.getElementById('menu-drawer');
-      this.menuBackdrop = document.getElementById('menu-backdrop');
-      this.toggleButtons = document.querySelectorAll('.menu-drawer__toggle');
-      this.closeButton = document.querySelector('.menu-drawer__close-button');
-      this.siteHeader = document.getElementById('site-header');
-      this.headerWrapper = document.getElementById('header-wrapper');
-      this.stickyHeader = document.getElementById('sticky-header');
-      
-      // Scroll variables
-      this.lastScrollTop = 0;
-      this.scrollThreshold = 500; // Show sticky header after scrolling this many pixels
-      
-      this.init();
-    }
+  // Check if HeaderNavigation is already defined
+  if (typeof HeaderNavigation === 'undefined') {
+    class HeaderNavigation {
+      constructor() {
+        // DOM Elements
+        this.menuDrawer = document.getElementById('menu-drawer');
+        this.menuBackdrop = document.getElementById('menu-backdrop');
+        this.toggleButtons = document.querySelectorAll('.menu-drawer__toggle');
+        this.closeButton = document.querySelector('.menu-drawer__close-button');
+        this.siteHeader = document.getElementById('site-header');
+        this.headerWrapper = document.getElementById('header-wrapper');
+        this.stickyHeader = document.getElementById('sticky-header');
+        
+        // Scroll variables
+        this.lastScrollTop = 0;
+        this.scrollThreshold = 500;
+        
+        this.init();
+      }
 
-    init() {
-      // Mobile menu functionality
-      this.initMobileMenu();
-      
-      // Sticky header functionality
-      this.initStickyHeader();
+      init() {
+        // Mobile menu functionality
+        this.initMobileMenu();
+        
+        // Sticky header functionality
+        this.initStickyHeader();
 
-      // Initialize wishlist functionality
-      this.initWishlist();
-    }
-    
-    initMobileMenu() {
-      // Toggle menu button
-      this.toggleButtons.forEach(button => {
-        button.addEventListener('click', () => this.openMenuDrawer());
-      });
-      
-      // Close button
-      this.closeButton.addEventListener('click', () => this.closeMenuDrawer());
-      
-      // Backdrop click
-      this.menuBackdrop.addEventListener('click', () => this.closeMenuDrawer());
-      
-      // Close on escape key
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') this.closeMenuDrawer();
-      });
-    }
-    
-    initStickyHeader() {
-      // If the sticky header element doesn't exist (e.g., on product pages), do nothing.
-      if (!this.stickyHeader) {
-        return;
+        // Initialize wishlist functionality
+        this.initWishlist();
       }
       
-      // Implement scroll behavior for sticky header
-      window.addEventListener('scroll', () => {
-        this.handleScroll();
-      });
-    }
-    
-    handleScroll() {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Show sticky header after scrolling down past threshold
-      if (scrollTop > this.scrollThreshold) {
-        this.stickyHeader.classList.add('translate-y-0');
-        this.stickyHeader.classList.remove('-translate-y-full');
-      } else {
-        this.stickyHeader.classList.remove('translate-y-0');
-        this.stickyHeader.classList.add('-translate-y-full');
+      initMobileMenu() {
+        // Toggle menu button
+        this.toggleButtons.forEach(button => {
+          button.addEventListener('click', () => this.openMenuDrawer());
+        });
+        
+        // Close button
+        this.closeButton.addEventListener('click', () => this.closeMenuDrawer());
+        
+        // Backdrop click
+        this.menuBackdrop.addEventListener('click', () => this.closeMenuDrawer());
+        
+        // Close on escape key
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') this.closeMenuDrawer();
+        });
       }
       
-      // Update regular header styles (only for non-index pages)
-      if (!this.siteHeader.classList.contains('absolute')) {
-        if (scrollTop > 0) {
-          this.headerWrapper.classList.remove('bg-white');
-          this.headerWrapper.classList.add('bg-white/60', 'backdrop-blur-md', 'shadow-none');
+      initStickyHeader() {
+        // If the sticky header element doesn't exist (e.g., on product pages), do nothing.
+        if (!this.stickyHeader) {
+          return;
+        }
+        
+        // Implement scroll behavior for sticky header
+        window.addEventListener('scroll', () => {
+          this.handleScroll();
+        });
+      }
+      
+      handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Show sticky header after scrolling down past threshold
+        if (scrollTop > this.scrollThreshold) {
+          this.stickyHeader.classList.add('translate-y-0');
+          this.stickyHeader.classList.remove('-translate-y-full');
         } else {
-          this.headerWrapper.classList.add('bg-white');
-          this.headerWrapper.classList.remove('bg-white/60', 'backdrop-blur-md');
+          this.stickyHeader.classList.remove('translate-y-0');
+          this.stickyHeader.classList.add('-translate-y-full');
         }
+        
+        // Update regular header styles (only for non-index pages)
+        if (!this.siteHeader.classList.contains('absolute')) {
+          if (scrollTop > 0) {
+            this.headerWrapper.classList.remove('bg-white');
+            this.headerWrapper.classList.add('bg-white/60', 'backdrop-blur-md', 'shadow-none');
+          } else {
+            this.headerWrapper.classList.add('bg-white');
+            this.headerWrapper.classList.remove('bg-white/60', 'backdrop-blur-md');
+          }
+        }
+        
+        this.lastScrollTop = scrollTop;
+      }
+
+      openMenuDrawer() {
+        this.menuDrawer.classList.add('is-open');
+        this.menuBackdrop.classList.add('is-active');
+        document.body.classList.add('overflow-hidden');
+        
+        this.toggleButtons.forEach(button => {
+          button.setAttribute('aria-expanded', 'true');
+        });
+      }
+
+      closeMenuDrawer() {
+        this.menuDrawer.classList.remove('is-open');
+        this.menuBackdrop.classList.remove('is-active');
+        document.body.classList.remove('overflow-hidden');
+        
+        this.toggleButtons.forEach(button => {
+          button.setAttribute('aria-expanded', 'false');
+        });
       }
       
-      this.lastScrollTop = scrollTop;
+      initWishlist() {
+        const wishlistButtons = [
+          document.getElementById('wishlist-toggle'),
+          document.getElementById('wishlist-toggle-sticky')
+        ];
+        
+        wishlistButtons.forEach(button => {
+          if (button) {
+            button.addEventListener('click', function() {
+              console.log('Wishlist clicked');
+            });
+          }
+        });
+      }
     }
 
-    openMenuDrawer() {
-      this.menuDrawer.classList.add('is-open');
-      this.menuBackdrop.classList.add('is-active');
-      document.body.classList.add('overflow-hidden');
-      
-      this.toggleButtons.forEach(button => {
-        button.setAttribute('aria-expanded', 'true');
-      });
-    }
-
-    closeMenuDrawer() {
-      this.menuDrawer.classList.remove('is-open');
-      this.menuBackdrop.classList.remove('is-active');
-      document.body.classList.remove('overflow-hidden');
-      
-      this.toggleButtons.forEach(button => {
-        button.setAttribute('aria-expanded', 'false');
-      });
-    }
-    
-    initWishlist() {
-      const wishlistButtons = [
-        document.getElementById('wishlist-toggle'),
-        document.getElementById('wishlist-toggle-sticky')
-      ];
-      
-      wishlistButtons.forEach(button => {
-        if (button) {
-          button.addEventListener('click', function() {
-            console.log('Wishlist clicked');
-          });
-        }
-      });
-    }
+    // Initialize the header navigation
+    document.addEventListener('DOMContentLoaded', () => {
+      new HeaderNavigation();
+    });
   }
-
-  // Initialize the header navigation
-  document.addEventListener('DOMContentLoaded', () => {
-    new HeaderNavigation();
-  });
 </script>
 
 {% schema %}

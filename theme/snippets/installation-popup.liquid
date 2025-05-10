@@ -1,25 +1,25 @@
 <!-- Include the popup scripts and styles -->
 {{ 'installation-popup.css' | asset_url | stylesheet_tag }}
 
- {% assign accessories = product.metafields.custom.accessory_product.value %}
- {% assign accessory_count = 0 %}
- {% for accessory in accessories %}
-   {% assign accessory_count = accessory_count | plus: 1 %}
- {% endfor %}
+{% assign accessories = product.metafields.custom.accessory_product.value %}
+{% assign accessory_count = 0 %}
+{% for accessory in accessories %}
+  {% assign accessory_count = accessory_count | plus: 1 %}
+{% endfor %}
 <!-- Hidden product name -->
 <div data-cart-product-name style="display: none;">
   {{ item.title }}
 </div>
 
-<!-- Installation Popup with minimalist black and white design -->
-<div id="dc-installation-popup-{{ product_id }}" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 items-center justify-center is-active:flex">
-  <div class="bg-white p-6 max-w-[90%] w-[550px] max-h-[90vh] overflow-auto relative">
-    <div class="flex justify-between items-start mb-5">
-      <div class="flex-1">
-        <h2 class="text-xl font-medium text-black">Complete Your Purchase!</h2>
-        <p class="text-gray-600 text-sm mt-1">Enhance your order with these premium add-ons before proceeding!</p>
+<!-- Installation Popup with responsive design -->
+<div id="dc-installation-popup-{{ product_id }}" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 items-center justify-center is-active:flex overflow-y-auto py-4 sm:py-6">
+  <div class="bg-white p-4 sm:p-6 max-w-[95%] sm:max-w-[90%] w-full sm:w-[550px] max-h-[90vh] overflow-auto relative mx-auto my-auto rounded-md">
+    <div class="flex justify-between items-start mb-3 sm:mb-5">
+      <div class="flex-1 pr-2">
+        <h2 class="text-lg sm:text-xl font-medium text-black">Complete Your Purchase!</h2>
+        <p class="text-gray-600 text-xs sm:text-sm mt-1">Enhance your order with these premium add-ons before proceeding!</p>
       </div>
-      <button class="bg-transparent border-0 text-2xl cursor-pointer p-0 ml-2 hover:text-gray-600 popup-close" data-popup-id="{{ product_id }}" type="button">×</button>
+      <button class="bg-transparent border-0 text-2xl cursor-pointer p-0 ml-2 hover:text-gray-600 popup-close" data-popup-id="{{ product_id }}" type="button" aria-label="Close popup">×</button>
     </div>
 
     <div class="overflow-auto">
@@ -28,14 +28,60 @@
         <a href="/checkout" class="inline-block px-5 py-2.5 bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors">Proceed to Checkout</a>
       </div> {% endcomment %}
 
-      <div class="space-y-5">
+      <div class="space-y-3 sm:space-y-5">
         {% for accessory in accessories %}
           <div
-            class="grid grid-cols-[100px_1fr_auto] gap-5 py-5 border-t border-gray-200"
+            class="grid grid-cols-1 sm:grid-cols-[100px_1fr_auto] gap-3 sm:gap-5 py-4 sm:py-5 border-t border-gray-200"
             data-variant-id="{{ accessory.variants.first.id }}"
             data-unit-price="{{ accessory.price | money_without_currency | remove: ',' }}"
           >
-            <div class="product-image">
+            <!-- Mobile Product Layout (shows on small screens) -->
+            <div class="sm:hidden grid grid-cols-[80px_1fr] gap-3">
+              <!-- Product Image (Mobile) -->
+              <div class="product-image">
+                {% if accessory.images.size > 0 %}
+                  {% liquid
+                    assign base_img = accessory.images[0].src | file_url
+                  %}
+                  <img
+                    src="https:{{ base_img |  replace: '/files/files', '/files' }}&width=150"
+                    alt="{{ accessory.title }}"
+                    class="h-[80px] w-[80px] object-cover"
+                    height=""
+                    width=""
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="h-[80px] w-[80px] bg-gray-100 flex items-center justify-center text-gray-500 text-xs">No image</div>
+                {% endif %}
+              </div>
+              
+              <!-- Product Info (Mobile) -->
+              <div class="product-info">
+                <h3 class="text-sm font-medium mb-1">{{ accessory.title }}</h3>
+                {% if accessory.metafields.custom.coverage %}
+                  <p class="text-xs text-gray-600 mb-1">Coverage: {{ accessory.metafields.custom.coverage }}m²</p>
+                {% endif %}
+                <p class="text-xs font-medium mt-1">Price: {{ accessory.price | money }}</p>
+              </div>
+            </div>
+            
+            <!-- Mobile Controls (shows on small screens) -->
+            <div class="sm:hidden flex justify-between items-center mt-2">
+              <div class="flex border border-gray-200">
+                <button type="button" class="quantity-control quantity-minus w-7 h-7 flex items-center justify-center border-r border-gray-200 bg-white hover:bg-gray-100">-</button>
+                <input type="number" class="quantity-input w-9 h-7 text-center border-0 focus:outline-none focus:ring-0 text-sm" value="1" min="1">
+                <button type="button" class="quantity-control quantity-plus w-7 h-7 flex items-center justify-center border-l border-gray-200 bg-white hover:bg-gray-100">+</button>
+              </div>
+              <div class="text-xs font-medium">
+                Total: <span class="product-total">{% assign raw_price = accessory.price | money_without_currency | remove: ',' %}{% assign initial_total = raw_price | times: 1 %}₹{{ initial_total | money_without_currency }}</span>
+              </div>
+              <button class="add-to-basket bg-black hover:bg-gray-800 text-white py-1.5 px-3 text-xs font-medium transition-colors">ADD</button>
+            </div>
+
+            <!-- Desktop Layout (hidden on small screens) -->
+            <!-- Product Image (Desktop) -->
+            <div class="product-image hidden sm:block">
               {% if accessory.images.size > 0 %}
                 {% liquid
                   assign base_img = accessory.images[0].src | file_url
@@ -46,19 +92,24 @@
                   class="h-[100px] w-[100px] object-cover"
                   height=""
                   width=""
+                  loading="lazy"
                 >
               {% else %}
                 <div class="h-[100px] w-[100px] bg-gray-100 flex items-center justify-center text-gray-500 text-sm">No image</div>
               {% endif %}
             </div>
-            <div class="product-info">
+            
+            <!-- Product Info (Desktop) -->
+            <div class="product-info hidden sm:block">
               <h3 class="text-base font-medium mb-1">{{ accessory.title }}</h3>
               {% if accessory.metafields.custom.coverage %}
                 <p class="text-sm text-gray-600 mb-1">Coverage: {{ accessory.metafields.custom.coverage }}m²</p>
               {% endif %}
               <p class="text-sm font-medium mt-2">Price: {{ accessory.price | money }}</p>
             </div>
-            <div class="flex flex-col items-end gap-3">
+            
+            <!-- Desktop Controls (hidden on small screens) -->
+            <div class="hidden sm:flex sm:flex-col items-end gap-3">
               <div class="flex border border-gray-200">
                 <button type="button" class="quantity-control quantity-minus w-8 h-8 flex items-center justify-center border-r border-gray-200 bg-white hover:bg-gray-100">-</button>
                 <input type="number" class="quantity-input w-10 h-8 text-center border-0 focus:outline-none focus:ring-0" value="1" min="1">
@@ -67,7 +118,7 @@
               <div class="text-sm font-medium">
                 Total: <span class="product-total">{% assign raw_price = accessory.price | money_without_currency | remove: ',' %}{% assign initial_total = raw_price | times: 1 %}₹{{ initial_total | money_without_currency }}</span>
               </div>
-              <button class="add-to-basket bg-black hover:bg-gray-800 text-white py-2 px-4 text-sm font-medium transition-colors">ADD TO BASKET</button>
+              <button class="add-to-basket bg-black hover:bg-gray-800 text-white py-2 px-4 text-sm font-medium transition-colors rounded">ADD TO BASKET</button>
             </div>
           </div>
         {% endfor %}
@@ -87,6 +138,18 @@
   input[type="number"]::-webkit-outer-spin-button {
     opacity: 1;
     height: 18px;
+  }
+  
+  /* Prevent body scrolling when popup is open */
+  body.popup-open {
+    overflow: hidden;
+  }
+  
+  /* Make sure fixed positioning works properly on iOS */
+  @supports (-webkit-touch-callout: none) {
+    #dc-installation-popup-{{ product_id }} {
+      height: -webkit-fill-available;
+    }
   }
 </style>
 
@@ -110,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (popup) {
           popup.classList.add('is-active');
+          document.body.classList.add('popup-open'); // Prevent background scrolling
         } else {
           console.error(`Popup with ID dc-installation-popup-${popupId} not found`);
         }
@@ -128,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (popup) {
           popup.classList.remove('is-active');
+          document.body.classList.remove('popup-open'); // Allow background scrolling again
         }
       });
     });
@@ -138,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
     popup.addEventListener('click', (e) => {
       if (e.target === popup) {
         popup.classList.remove('is-active');
+        document.body.classList.remove('popup-open'); // Allow background scrolling again
       }
     });
   });
@@ -158,7 +224,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         input.value = value;
-        updateProductTotal(button.closest('[data-variant-id]'));
+        
+        // Find the product container and update all related quantity inputs
+        const productContainer = button.closest('[data-variant-id]');
+        const allInputs = productContainer.querySelectorAll('.quantity-input');
+        allInputs.forEach(inp => {
+          inp.value = value;
+        });
+        
+        updateProductTotal(productContainer);
       });
     });
   }
@@ -172,8 +246,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const variantId = product.dataset.variantId;
         const quantity = product.querySelector('.quantity-input').value;
 
-        button.disabled = true;
-        button.textContent = 'Adding...';
+        // Disable all add-to-basket buttons in this product
+        const allButtons = product.querySelectorAll('.add-to-basket');
+        allButtons.forEach(btn => {
+          btn.disabled = true;
+          btn.textContent = btn.textContent === 'ADD' ? 'Adding...' : 'Adding...';
+        });
 
         try {
           const response = await fetch('/cart/add.js', {
@@ -193,11 +271,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
           if (!response.ok) throw new Error('Failed to add to cart');
 
-          button.textContent = 'Added!';
+          allButtons.forEach(btn => {
+            btn.textContent = btn.textContent === 'Adding...' ? 'Added!' : 'Added!';
+          });
           
           // Show success message
           const successMessage = document.createElement('div');
-          successMessage.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 z-50';
+          successMessage.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 z-50 text-sm rounded-md';
           successMessage.textContent = 'Item added to cart successfully!';
           document.body.appendChild(successMessage);
           
@@ -208,12 +288,14 @@ document.addEventListener('DOMContentLoaded', function () {
           
         } catch (error) {
           console.error('Error adding to cart:', error);
-          button.disabled = false;
-          button.textContent = 'Try Again';
+          allButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = btn.textContent === 'Adding...' ? 'ADD' : 'TRY AGAIN';
+          });
           
           // Show error message
           const errorMessage = document.createElement('div');
-          errorMessage.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 z-50';
+          errorMessage.className = 'fixed top-4 right-4 bg-red-600 text-white px-4 py-2 z-50 text-sm rounded-md';
           errorMessage.textContent = 'Failed to add item to cart. Please try again.';
           document.body.appendChild(errorMessage);
           
@@ -228,7 +310,16 @@ document.addEventListener('DOMContentLoaded', function () {
   // Handle quantity input changes
   document.querySelectorAll('.quantity-input').forEach(input => {
     input.addEventListener('change', () => {
-      updateProductTotal(input.closest('[data-variant-id]'));
+      const productContainer = input.closest('[data-variant-id]');
+      const allInputs = productContainer.querySelectorAll('.quantity-input');
+      const value = input.value;
+      
+      // Sync all quantity inputs in the same product
+      allInputs.forEach(inp => {
+        inp.value = value;
+      });
+      
+      updateProductTotal(productContainer);
     });
   });
 
@@ -244,7 +335,10 @@ document.addEventListener('DOMContentLoaded', function () {
       maximumFractionDigits: 2
     }).format(total);
     
-    productContainer.querySelector('.product-total').textContent = `₹${formattedTotal}`;
+    const totalElements = productContainer.querySelectorAll('.product-total');
+    totalElements.forEach(el => {
+      el.textContent = `₹${formattedTotal}`;
+    });
   }
 });
 </script>

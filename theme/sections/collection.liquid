@@ -7,516 +7,62 @@
 
 <div class="collection-container container mx-auto px-4 py-6">
   <!-- Collection title -->
-  <div class="collection-header mb-6">
-    <h1 class="text-2xl md:text-3xl font-medium">{{ collection.title }}</h1>
-    {% if collection.description != blank %}
-      <div class="collection-description mt-2 text-gray-600">
-        {{ collection.description }}
+  <div class="collection-page-header mb-8 pt-4 md:pt-6">
+    <div class="flex flex-col md:flex-row gap-x-8 lg:gap-x-12 gap-y-6 items-start">
+      <div
+        class="w-full md:w-2/5 space-y-3 md:space-y-4 order-2 md:order-1 {% if text_align_block == 'center' %}text-center md:text-left{% else %}text-left{% endif %}"
+      >
+        {% if section_settings.show_breadcrumbs %}
+          <div class="breadcrumb-container">{% render 'breadcrumbs' %}</div>
+        {% endif %}
+
+        <h1 class="text-2xl md:text-4xl font-serif font-medium">
+          {{ collection.title }}
+        </h1>
+
+        {% if collection.description != blank and section_settings.description_position == 'header' %}
+          <div
+            class="collection-description text-base text-gray-700 {% if text_align_block == 'center' %}mx-auto md:mx-0 max-w-lg{% endif %}"
+          >
+            {{ collection.description }}
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
-  </div>
-
-  <!-- Top filters bar -->
-  <div class="filters-top-row border-t border-b border-gray-200 py-4 mb-6">
-    <div class="filters-wrapper flex flex-wrap items-center justify-between gap-2">
-      <!-- Filter dropdowns -->
-      <div class="filters-left flex flex-wrap items-center gap-3">
-        <!-- Sort dropdown -->
-        <div class="filter-item relative" data-filter="sort">
-          <button
-            type="button"
-            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+      <div
+        class="w-full md:w-3/5 order-1 md:order-2 aspect-[4/3] md:aspect-[3/1] overflow-hidden"
+      >
+        {% if collection.image %}
+          <img
+            src="{{ collection.image | img_url: 'master' }}"
+            alt="{{ collection.title | escape }}"
+            class="w-full object-cover h-full rounded-xl lg:rounded-2xl shadow-sm"
+            loading="lazy"
+            width="{{ collection.image.width }}"
+            height="{{ collection.image.height }}"
           >
-            <span>Sort</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="chevron-down"
-            >
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
-            <div class="p-2">
-              <a
-                href="{{ collection.url }}?sort_by=manual"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'manual' %}font-medium text-blue-600{% endif %}"
-              >
-                Featured
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=price-ascending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'price-ascending' %}font-medium text-blue-600{% endif %}"
-              >
-                Price: Low to High
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=price-descending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'price-descending' %}font-medium text-blue-600{% endif %}"
-              >
-                Price: High to Low
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=title-ascending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'title-ascending' %}font-medium text-blue-600{% endif %}"
-              >
-                Alphabetically: A-Z
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=title-descending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'title-descending' %}font-medium text-blue-600{% endif %}"
-              >
-                Alphabetically: Z-A
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=created-descending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'created-descending' %}font-medium text-blue-600{% endif %}"
-              >
-                Date: Newest to Oldest
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=created-ascending"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'created-ascending' %}font-medium text-blue-600{% endif %}"
-              >
-                Date: Oldest to Newest
-              </a>
-              <a
-                href="{{ collection.url }}?sort_by=best-selling"
-                class="block px-3 py-2 hover:bg-gray-100 rounded text-sm {% if collection.sort_by == 'best-selling' %}font-medium text-blue-600{% endif %}"
-              >
-                Best Selling
-              </a>
-            </div>
-            <div class="p-2 border-t">
-              <button
-                type="button"
-                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Category dropdown -->
-        <div class="filter-item relative" data-filter="category">
-          <button
-            type="button"
-            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+        {% elsif section.settings.default_collection_image != blank and collection.image == blank %}
+          <img
+            src="{{ section.settings.default_collection_image | img_url: 'master' }}"
+            alt="{{ collection.title | escape }}"
+            class="w-full object-cover h-full  rounded-xl lg:rounded-2xl shadow-sm"
+            loading="lazy"
+            width="{{ section.settings.default_collection_image.width }}"
+            height="{{ section.settings.default_collection_image.height }}"
           >
-            <span>Category</span>
-            {% if current_tags.size > 0 %}
-              <span class="inline-flex items-center justify-center w-5 h-5 text-xs bg-gray-100 rounded-full">
-                {{- current_tags.size -}}
-              </span>
-            {% endif %}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="chevron-down"
-            >
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
-            <div class="p-2 max-h-60 overflow-y-auto">
-              {% assign product_types = collection.all_products | map: 'type' | uniq %}
-              {% for product_type in product_types %}
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer {% if current_tags contains product_type %}font-medium{% endif %}">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 category-filter-checkbox"
-                    value="{{ product_type | handle }}"
-                    {% if current_tags contains product_type %}
-                      checked
-                    {% endif %}
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>{{ product_type }}</span>
-                </label>
-              {% endfor %}
-            </div>
-            <div class="p-2 border-t">
-              <button
-                type="button"
-                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Color dropdown -->
-        <div class="filter-item relative" data-filter="color">
-          <button
-            type="button"
-            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
+        {% else %}
+          <div
+            class="w-full object-cover h-full flex items-center justify-center bg-gray-100 rounded-xl lg:rounded-2xl shadow-sm"
           >
-            <span>Color</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="chevron-down"
-            >
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-48 hidden">
-            <div class="p-3">
-              <div class="grid gap-3">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="white"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-white border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">White</span>
-                </label>
-
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="beige"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-[#F5F5DC] border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">Beige</span>
-                </label>
-
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="blue"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-blue-500 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">Blue</span>
-                </label>
-
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="black"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-black border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">Black</span>
-                </label>
-
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="red"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-red-600 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">Red</span>
-                </label>
-
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="color-filter-checkbox sr-only"
-                    value="green"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span class="color-swatch bg-green-600 border border-gray-300 w-5 h-5 rounded-sm inline-block"></span>
-                  <span class="text-sm">Green</span>
-                </label>
-              </div>
-            </div>
-            <div class="p-2 border-t">
-              <button
-                type="button"
-                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'text-gray-400' }}
           </div>
-        </div>
-
-        <!-- Sizes dropdown -->
-        <div class="filter-item relative" data-filter="sizes">
-          <button
-            type="button"
-            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
-          >
-            <span>Sizes</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="chevron-down"
-            >
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-64 hidden">
-            <div class="p-2">
-              {% for size_option in shop.metafields.product_filter.sizes.value %}
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="{{ size_option | handle }}"
-                    {% if current_tags contains size_option %}
-                      checked
-                    {% endif %}
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>{{ size_option }}</span>
-                </label>
-              {% else %}
-                <!-- Fallback for demo size filters -->
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="s"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>S</span>
-                </label>
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="m"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>M</span>
-                </label>
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="l"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>L</span>
-                </label>
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="xl"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>XL</span>
-                </label>
-                <label class="flex items-center px-3 py-2 hover:bg-gray-100 rounded text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="mr-2 h-4 w-4 size-filter-checkbox"
-                    value="xxl"
-                    data-url=""
-                    {#
-                    Populated
-                    by
-                    JS
-                    #}
-                  >
-                  <span>XXL</span>
-                </label>
-              {% endfor %}
-            </div>
-            <div class="p-2 border-t">
-              <button
-                type="button"
-                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Price Range Filter -->
-        <div class="filter-item relative" data-filter="price">
-          <button
-            type="button"
-            class="filter-button flex items-center gap-1.5 border border-gray-300 rounded-md px-3 py-1.5 text-sm hover:border-gray-400 focus:outline-none"
-          >
-            <span>Price</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="chevron-down"
-            >
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </button>
-          <div class="filter-dropdown absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-64 hidden">
-            <div class="p-4 space-y-3">
-              <div class="flex items-center gap-2">
-                <span class="text-sm">{{ cart.currency.symbol }}</span>
-                <input
-                  type="number"
-                  id="filter-price-min"
-                  placeholder="Min"
-                  min="0"
-                  class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-1.5"
-                >
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-sm">{{ cart.currency.symbol }}</span>
-                <input
-                  type="number"
-                  id="filter-price-max"
-                  placeholder="Max"
-                  min="0"
-                  class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-1.5"
-                >
-              </div>
-            </div>
-            <div class="p-2 border-t">
-              <button
-                type="button"
-                class="apply-filters w-full bg-blue-600 text-white rounded-md py-2 text-sm hover:bg-blue-700 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
-        </div>
+        {% endif %}
       </div>
-
-      <!-- Products count -->
-      <div class="filters-right text-sm text-gray-500">{{ collection.products_count }} products</div>
     </div>
   </div>
 
-  <!-- Active filters -->
-  <div class="active-filters mb-6 {% if current_tags.size == 0 %}hidden{% endif %}">
-    <div class="flex flex-wrap gap-2 items-center">
-      <div class="filters-label flex items-center gap-2 border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-gray-50">
-        <span>Filters</span>
-        <span class="inline-flex items-center justify-center w-5 h-5 text-xs bg-gray-200 rounded-full">
-          {{- current_tags.size -}}
-        </span>
-      </div>
-
-      <!-- Loop through active filters -->
-      {% for tag in current_tags %}
-        <a
-          href="{{ collection.url }}/{% for t in current_tags %}{% if t != tag %}{{ t | handle }}+{% endif %}{% endfor %}"
-          class="active-filter-tag flex items-center bg-gray-100 hover:bg-gray-200 rounded-md px-3 py-1.5 text-sm border border-gray-200"
-        >
-          <span>{{ tag }}</span>
-          <span class="ml-1.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-            </svg>
-          </span>
-        </a>
-      {% endfor %}
-
-      <!-- Clear all filters -->
-      <a href="{{ collection.url }}" class="clear-filters text-sm text-gray-600 hover:text-gray-900 ml-2">Clear all</a>
-    </div>
-  </div>
+  {% comment %}
+    {% render 'collection-filters' %}
+  {% endcomment %}
 
   <!-- Product grid -->
   <div class="product-grid">
@@ -524,47 +70,13 @@
       {% if collection.products.size > 0 %}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {% for product in collection.products %}
-            <div class="product-card">
-              <a href="{{ product.url }}" class="block">
-                <div class="product-image relative pb-[125%] mb-2 bg-gray-100 overflow-hidden">
-                  {% if product.featured_image %}
-                    <img
-                      src="{{ product.featured_image | img_url: '500x' }}"
-                      alt="{{ product.featured_image.alt | escape }}"
-                      class="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                      width="{{ product.featured_image.width }}"
-                      height="{{ product.featured_image.height }}"
-                    >
-                  {% else %}
-                    {{ 'product-1' | placeholder_svg_tag: 'absolute inset-0 w-full h-full object-cover' }}
-                  {% endif %}
-
-                  <!-- Product badges (sale, sold out, etc.) -->
-                  {% if product.available == false %}
-                    <div class="absolute top-2 right-2 bg-gray-800 text-white text-xs px-2 py-1 rounded">Sold out</div>
-                  {% elsif product.compare_at_price > product.price %}
-                    <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">Sale</div>
-                  {% endif %}
-                </div>
-
-                <div class="product-info">
-                  <h3 class="product-title text-sm font-medium mb-1 line-clamp-2">
-                    {{ product.title }}
-                  </h3>
-                  <div class="product-price flex items-center gap-2">
-                    <span class="text-sm {% if product.compare_at_price > product.price %}text-red-600{% endif %}">
-                      {{ product.price | money }}
-                    </span>
-                    {% if product.compare_at_price > product.price %}
-                      <span class="text-xs text-gray-500 line-through">
-                        {{ product.compare_at_price | money }}
-                      </span>
-                    {% endif %}
-                  </div>
-                </div>
-              </a>
-            </div>
+            {% render 'product-card',
+              product: product,
+              show_secondary_image: true,
+              show_add_to_cart: true,
+              badge_type: 'percentage',
+              title_lines: 2
+            %}
           {% endfor %}
         </div>
       {% else %}
@@ -579,7 +91,6 @@
   </div>
 </div>
 
-
 {% schema %}
 {
   "name": "Collection Page",
@@ -593,6 +104,12 @@
       "id": "show_vendor",
       "label": "Show product vendor",
       "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "default_collection_image",
+      "label": "Default Collection Image",
+      "info": "This image will be used if a collection does not have its own featured image."
     },
     {
       "type": "checkbox",

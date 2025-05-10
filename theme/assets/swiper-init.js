@@ -38,25 +38,44 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Product gallery swiper
-  var swiper = new Swiper(".myProductSwiper", {
-    spaceBetween: 10,
-    slidesPerView: 4,
-    freeMode: true,
-    watchSlidesProgress: true,
-    loop: true,
-  });
+  if (window.innerWidth <= 768) {
+    var swiper = new Swiper(".myProductSwiper", {
+      pagination: {
+        el: ".swiper-pagination",
+        dynamicBullets: true,
+      },
+      centeredSlides: true,
+      autoplay: {
+        delay: 3000, // Time between slides in milliseconds (3 seconds)
+        disableOnInteraction: false, // Continue autoplay after user interaction
+        pauseOnMouseEnter: true // Pause autoplay when mouse enters the slider
+      },
+    });
+  }
+});
 
-  // Thumbnail swiper
-  var swiper2 = new Swiper(".mySwiper2", {
-    spaceBetween: 10,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    thumbs: {
-      swiper: swiper,
-    },
-  });
+// Handle window resize events to reinitialize swiper if needed
+window.addEventListener('resize', function () {
+  // Check if we're crossing the breakpoint
+  if (window.innerWidth < 768) {
+    if (!document.querySelector('myProductSwiper').swiper) {
+      var swiper = new Swiper('myProductSwiper', {
+        pagination: {
+          el: '.swiper-pagination',
+          dynamicBullets: true,
+        },
+        centeredSlides: true,
+        slidesPerView: 1,
+        spaceBetween: 10,
+      });
+    }
+  } else {
+    // Destroy swiper on desktop if it exists
+    const swiperInstance = document.querySelector('myProductSwiper').swiper;
+    if (swiperInstance) {
+      swiperInstance.destroy(true, true);
+    }
+  }
 });
 
 

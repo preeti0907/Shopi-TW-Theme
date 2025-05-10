@@ -1,200 +1,514 @@
-{% comment %}
-  collection-filters.liquid
-  This snippet handles the filter sidebar rendering and functionality
-{% endcomment %}
+{%- assign st = section.settings -%}
+{%- assign total_active_values = 0 -%}
 
-{% assign collection_filters = collection.filters %}
+<script src="{{ '2.0-filters.min.js' | asset_url }}" defer="defer"></script>
 
-<div class="filters-wrapper">
-  <div class="filters-header flex justify-between items-center mb-4">
-    <h3 class="text-lg font-medium">Filters</h3>
-    {% if current_tags.size > 0 or search.terms != '' %}
-      <a href="{{ collection.url }}" class="text-sm text-blue-600 hover:text-blue-800">Clear all</a>
-    {% endif %}
-  </div>
+<collection-filters-form class="collection-filters-horizontal w-full" data-section-id="{{ section.id }}">
+  <form id="CollectionFiltersForm" class="collection-filters">
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
 
-  {% if collection_filters.size > 0 %}
-    <div class="filters-list space-y-4">
-      {% for filter in collection_filters %}
-        <div class="filter-item" data-filter-index="{{ forloop.index }}">
-          <button 
-            class="filter-trigger w-full flex justify-between items-center py-2 border-b border-gray-200 focus:outline-none"
-            aria-expanded="false"
-            aria-controls="filter-dropdown-{{ forloop.index }}"
-          >
-            <span class="font-medium">{{ filter.label }}</span>
-            <span class="transform transition-transform duration-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 11l4-4H4l4 4z"/>
-              </svg>
-            </span>
-          </button>
-          
-          <div id="filter-dropdown-{{ forloop.index }}" class="filter-dropdown hidden mt-2 bg-white">
-            {% case filter.type %}
-              {% when 'price_range' %}
-                <div class="price-range-filter p-3">
-                  <div class="dual-range-slider relative mt-8 mb-6">
-                    <div class="slider-track absolute top-0 h-0.5 bg-gray-200"></div>
-                    <input 
-                      type="range" 
-                      id="price-range-min" 
-                      class="absolute w-full top-0 cursor-pointer" 
-                      min="{{ filter.min_value.value | times: 100 | round | divided_by: 100 }}" 
-                      max="{{ filter.max_value.value | times: 100 | round | divided_by: 100 }}" 
-                      value="{{ filter.min_value.value | default: filter.range_min | times: 100 | round | divided_by: 100 }}"
-                    >
-                    <input 
-                      type="range" 
-                      id="price-range-max" 
-                      class="absolute w-full top-0 cursor-pointer" 
-                      min="{{ filter.min_value.value | times: 100 | round | divided_by: 100 }}" 
-                      max="{{ filter.max_value.value | times: 100 | round | divided_by: 100 }}" 
-                      value="{{ filter.max_value.value | default: filter.range_max | times: 100 | round | divided_by: 100 }}"
-                    >
-                  </div>
-                  
-                  <div class="flex justify-between">
-                    <span id="display-min-price">{{ filter.min_value.value | money }}</span>
-                    <span id="display-max-price">{{ filter.max_value.value | money }}</span>
-                  </div>
-                  
-                  <div class="filter-form mt-4">
-                    <input type="hidden" name="filter.v.price.gte" id="filter-min-price" value="{{ filter.min_value.value }}">
-                    <input type="hidden" name="filter.v.price.lte" id="filter-max-price" value="{{ filter.max_value.value }}">
-                    
-                    <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">
-                      Apply
-                    </button>
-                  </div>
-                </div>
-                
-              {% when 'list' %}
-                <div class="filter-options p-3 max-h-60 overflow-y-auto">
-                  {% for value in filter.values %}
-                    <div class="filter-option py-1.5">
-                      <a 
-                        href="{{ value.url }}" 
-                        class="flex items-center {% if value.active %}font-medium text-blue-600{% endif %}"
-                      >
-                        <input 
-                          type="checkbox" 
-                          class="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                          {% if value.active %}checked{% endif %}
-                          id="filter-{{ filter.label | handleize }}-{{ value.label | handleize }}"
-                        >
-                        <label 
-                          for="filter-{{ filter.label | handleize }}-{{ value.label | handleize }}"
-                          class="flex-1 text-sm"
-                        >
-                          {{ value.label }} ({{ value.count }})
-                        </label>
-                      </a>
-                    </div>
-                  {% endfor %}
-                </div>
-                
-              {% else %}
-                <div class="filter-options p-3 max-h-60 overflow-y-auto">
-                  {% for value in filter.values %}
-                    <div class="filter-option py-1.5">
-                      <a 
-                        href="{{ value.url }}" 
-                        class="flex items-center {% if value.active %}font-medium text-blue-600{% endif %}"
-                      >
-                        <input 
-                          type="checkbox" 
-                          class="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                          {% if value.active %}checked{% endif %}
-                          id="filter-{{ filter.label | handleize }}-{{ value.label | handleize }}"
-                        >
-                        <label 
-                          for="filter-{{ filter.label | handleize }}-{{ value.label | handleize }}"
-                          class="flex-1 text-sm"
-                        >
-                          {{ value.label }}
-                        </label>
-                      </a>
-                    </div>
-                  {% endfor %}
-                </div>
-            {% endcase %}
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-  
-  {% if collection.all_tags.size > 0 %}
-    <div class="filter-item mt-4" data-filter-index="tags">
-      <button 
-        class="filter-trigger w-full flex justify-between items-center py-2 border-b border-gray-200 focus:outline-none"
-        aria-expanded="false"
-        aria-controls="filter-dropdown-tags"
-      >
-        <span class="font-medium">Tags</span>
-        <span class="transform transition-transform duration-200">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 11l4-4H4l4 4z"/>
-          </svg>
-        </span>
-      </button>
-      
-      <div id="filter-dropdown-tags" class="filter-dropdown hidden mt-2 bg-white">
-        <div class="filter-options p-3 max-h-60 overflow-y-auto">
-          {% for tag in collection.all_tags %}
-            <div class="filter-option py-1.5">
-              <a 
-                href="{% if current_tags contains tag %}{{ collection.url }}{% else %}{{ collection.url }}/{{ tag | handle }}{% endif %}" 
-                class="flex items-center {% if current_tags contains tag %}font-medium text-blue-600{% endif %}"
+    <div class="filters-container border-t border-b border-gray-200 py-3 mb-6">
+      <div class="flex flex-wrap items-center -mx-1">
+        {%- if st.show_sorting -%}
+          <div class="px-1 mb-2 md:mb-0" data-filter-group="sort">
+            <div class="filter-dropdown relative inline-block">
+              <button 
+                type="button" 
+                class="filter-button flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-full bg-white hover:bg-gray-50 transition-colors text-sm focus:outline-none"
               >
-                <input 
-                  type="checkbox" 
-                  class="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  {% if current_tags contains tag %}checked{% endif %}
-                  id="filter-tag-{{ tag | handleize }}"
-                >
-                <label 
-                  for="filter-tag-{{ tag | handleize }}"
-                  class="flex-1 text-sm"
-                >
-                  {{ tag }}
-                </label>
-              </a>
+                <span>Sort</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-down">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="dropdown-content hidden absolute left-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                <div class="p-2">
+                  {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
+                  {%- for option in results.sort_options -%}
+                    <label class="block px-3 py-2 rounded hover:bg-gray-100 cursor-pointer {% if option.value == sort_by %}text-blue-600 font-medium{% endif %}">
+                      <input 
+                        type="radio" 
+                        name="sort_by" 
+                        value="{{ option.value | escape }}"
+                        {% if option.value == sort_by %}checked="checked"{% endif %}
+                        class="sr-only sort-option"
+                      >
+                      <span>{{ option.name | escape }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </div>
             </div>
-          {% endfor %}
+          </div>
+        {%- endif -%}
+
+        {%- for filter in results.filters -%}
+          {% liquid
+            assign total_active_values = total_active_values | plus: filter.active_values.size
+            
+            assign filter_label = filter.label | downcase
+            assign color_swatches = section.settings.color_swatches | downcase | split: ','
+            assign has_color = color_swatches | where: filter_label | first
+            assign is_color = false
+
+            if color_swatches != blank and has_color != blank
+              assign is_color = true
+            endif
+          %}
+
+          <div class="px-1 mb-2 md:mb-0" data-filter-group="{{ filter.label | handle }}">
+            <div class="filter-dropdown relative inline-block">
+              <button 
+                type="button" 
+                class="filter-button flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-full bg-white hover:bg-gray-50 transition-colors text-sm focus:outline-none"
+              >
+                <span>{{ filter.label | escape }}</span>
+                {% if filter.active_values.size > 0 %}
+                  <span class="inline-flex items-center justify-center w-5 h-5 text-xs bg-blue-100 text-blue-800 rounded-full">
+                    {{ filter.active_values.size }}
+                  </span>
+                {% endif %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-down">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </button>
+              <div class="dropdown-content hidden absolute left-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                {% case filter.type %}
+                  {% when 'list' %}
+                    <div class="p-2 min-w-[200px]">
+                      <div class="max-h-60 overflow-y-auto">
+                        <ul class="{% if is_color %}grid grid-cols-{% if filter.values.size > 6 %}3{% else %}2{% endif %} gap-2{% endif %}" role="list">
+                          {%- for value in filter.values -%}
+                            {% if is_color %}
+                              {% liquid
+                                assign tag = value.value
+                                assign tag_downcase = tag | handleize | downcase
+                                assign colors = ',' | append: settings.product_colors | strip_newlines | downcase | append: ','
+                                assign _tag = tag | downcase | strip
+                                assign _tag = ',' | append: _tag | append: ':'
+                                
+                                capture curcol
+                                  if colors contains _tag
+                                    echo colors | split: _tag | last | split: ',' | first | strip
+                                  endif
+                                endcapture
+                                
+                                assign default_color = tag_downcase | split: '-' | first
+                              %}
+                              
+                              <li class="color-swatch-item py-1">
+                                <label class="flex flex-col items-center gap-1 cursor-pointer {% if value.count == 0 and value.active == false %}opacity-50{% endif %}">
+                                  <input
+                                    type="checkbox"
+                                    name="{{ value.param_name }}"
+                                    value="{{ value.value }}"
+                                    class="sr-only"
+                                    id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                    {% if value.active %}checked{% endif %}
+                                    {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                  >
+                                  <span class="color-swatch w-6 h-6 rounded-full border border-gray-200 block relative" 
+                                        style="background-color: {{ curcol | default: default_color }};">
+                                    {% if value.active %}
+                                      <span class="absolute inset-0 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{% if curcol == 'white' or curcol == '#ffffff' or default_color == 'white' %}black{% else %}white{% endif %}" stroke-width="3">
+                                          <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                      </span>
+                                    {% endif %}
+                                  </span>
+                                  <span class="text-xs">{{ value.label }}</span>
+                                  {%- if st.show_product_count -%}
+                                    <span class="text-xs text-gray-500">({{ value.count }})</span>
+                                  {%- endif -%}
+                                </label>
+                              </li>
+                            {% else %}
+                              <li class="py-1">
+                                <label class="flex items-center cursor-pointer px-3 py-1.5 rounded hover:bg-gray-50 {% if value.count == 0 and value.active == false %}opacity-50{% endif %}">
+                                  <input
+                                    type="checkbox"
+                                    name="{{ value.param_name }}"
+                                    value="{{ value.value }}"
+                                    id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                    class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                    {% if value.active %}checked{% endif %}
+                                    {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                                  >
+                                  <span class="ml-2 text-sm">{{ value.label | escape }}</span>
+                                  {%- if st.show_product_count -%}
+                                    <span class="ml-1 text-xs text-gray-500">({{ value.count }})</span>
+                                  {%- endif -%}
+                                </label>
+                              </li>
+                            {% endif %}
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                      {% if filter.active_values.size > 0 %}
+                        <div class="pt-2 mt-2 border-t border-gray-200">
+                          <button type="button" class="text-sm text-blue-600 hover:text-blue-800" data-clear-filter="{{ filter.label | handle }}">
+                            Clear {{ filter.label }}
+                          </button>
+                        </div>
+                      {% endif %}
+                    </div>
+
+                  {% when 'price_range' %}
+                    {%- liquid
+                      assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                      assign uses_comma_decimals = false
+                      if currencies_using_comma_decimals contains cart.currency.iso_code
+                        assign uses_comma_decimals = true
+                      endif
+
+                      if uses_comma_decimals
+                        assign from_value = filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+                        assign to_value = filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.'
+                        assign max = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.'
+                      else
+                        assign from_value = filter.min_value.value | money_without_currency | replace: ',', ''
+                        assign to_value = filter.max_value.value | money_without_currency | replace: ',', ''
+                        assign max = filter.range_max | money_without_currency | replace: ',', ''
+                      endif
+
+                      assign to_value = to_value | default: max
+                      assign _from = from_value | divided_by: max | times: 100 | round: 2
+                      assign _to = to_value | divided_by: max | times: 100 | round: 2
+                      if filter.min_value.value != blank or filter.max_value.value != blank
+                        assign total_active_values = total_active_values | plus: 1
+                      endif
+                    -%}
+                    
+                    <div class="p-4 min-w-[250px]">
+                      <price-range class="price-range flex flex-col gap-3">
+                        <div class="price-range-slider relative h-2 bg-gray-200 rounded-full mt-6">
+                          <div class="price-range-progress absolute h-full bg-blue-600 rounded-full" 
+                               style="left: {{ _from }}%; right: {{ 100 | minus: _to }}%;"></div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="{{ max }}"
+                            value="{{ from_value | default: 0 }}"
+                            class="price-range-input appearance-none absolute w-full h-2 bg-transparent"
+                            name="{{ filter.min_value.param_name }}"
+                            id="price-min"
+                          >
+                          <input
+                            type="range"
+                            min="0"
+                            max="{{ max }}"
+                            value="{{ to_value }}"
+                            class="price-range-input appearance-none absolute w-full h-2 bg-transparent"
+                            name="{{ filter.max_value.param_name }}"
+                            id="price-max"
+                          >
+                        </div>
+                        
+                        <div class="price-inputs grid grid-cols-2 gap-3 mt-2">
+                          <div class="min-price flex items-center border border-gray-300 rounded-md overflow-hidden">
+                            <span class="px-2 text-gray-500 text-sm">{{ cart.currency.symbol }}</span>
+                            <input
+                              type="number"
+                              name="{{ filter.min_value.param_name }}"
+                              id="price-min-value"
+                              placeholder="Min"
+                              value="{{ from_value | default: '' }}"
+                              min="0"
+                              max="{{ max }}"
+                              class="min-price-input w-full p-2 text-sm border-0 focus:ring-0"
+                            >
+                          </div>
+                          <div class="max-price flex items-center border border-gray-300 rounded-md overflow-hidden">
+                            <span class="px-2 text-gray-500 text-sm">{{ cart.currency.symbol }}</span>
+                            <input
+                              type="number"
+                              name="{{ filter.max_value.param_name }}"
+                              id="price-max-value"
+                              placeholder="Max"
+                              value="{{ to_value | default: '' }}"
+                              min="0"
+                              max="{{ max }}"
+                              class="max-price-input w-full p-2 text-sm border-0 focus:ring-0"
+                            >
+                          </div>
+                        </div>
+                        
+                        {% if filter.min_value.value != blank or filter.max_value.value != blank %}
+                          <div class="pt-2 mt-2 border-t border-gray-200">
+                            <button type="button" class="text-sm text-blue-600 hover:text-blue-800" data-remove-price-range>
+                              Clear price
+                            </button>
+                          </div>
+                        {% endif %}
+                      </price-range>
+                    </div>
+                {% endcase %}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+        
+        <!-- Products count -->
+        <div class="ml-auto px-1 mb-2 md:mb-0">
+          <div class="text-sm text-gray-500">{{ results.products_count }} products</div>
         </div>
       </div>
     </div>
-  {% endif %}
-  
-  <div class="filter-item mt-4" data-filter-index="sort">
-    <button 
-      class="filter-trigger w-full flex justify-between items-center py-2 border-b border-gray-200 focus:outline-none"
-      aria-expanded="false"
-      aria-controls="filter-dropdown-sort"
-    >
-      <span class="font-medium">Sort by</span>
-      <span class="transform transition-transform duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M8 11l4-4H4l4 4z"/>
-        </svg>
-      </span>
-    </button>
     
-    <div id="filter-dropdown-sort" class="filter-dropdown hidden mt-2 bg-white">
-      <div class="p-3">
-        <select id="sort-select" class="w-full p-2 border border-gray-300 rounded">
-          <option value="manual" {% if collection.sort_by == 'manual' %}selected{% endif %}>Featured</option>
-          <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
-          <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-          <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Alphabetically: A-Z</option>
-          <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Alphabetically: Z-A</option>
-          <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Date: Newest to Oldest</option>
-          <option value="created-ascending" {% if collection.sort_by == 'created-ascending' %}selected{% endif %}>Date: Oldest to Newest</option>
-          <option value="best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
-        </select>
+    {%- if total_active_values > 0 -%}
+      <div class="active-filters mb-6">
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="filters-title bg-gray-100 rounded-md px-3 py-1.5 text-sm font-medium">
+            Active Filters ({{ total_active_values }})
+          </div>
+          
+          <div class="active-filters-list flex flex-wrap gap-2">
+            {% for filter in results.filters %}
+              {% for active_value in filter.active_values %}
+                <button
+                  type="button"
+                  class="active-filter-tag flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-md text-sm hover:bg-blue-100 transition-colors"
+                  data-remove-filter
+                  data-filter-name="{{ filter.label | escape }}"
+                  data-filter-value="{{ active_value.value | escape }}"
+                >
+                  <span>{{ active_value.label }}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              {% endfor %}
+            {% endfor %}
+            
+            {% if results.filters.price_range.min_value.value != blank or results.filters.price_range.max_value.value != blank %}
+              <button
+                type="button"
+                class="active-filter-tag flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-md text-sm hover:bg-blue-100 transition-colors"
+                data-remove-price-range
+              >
+                <span>
+                  {{ cart.currency.symbol }}{{ results.filters.price_range.min_value.value | money_without_currency }} - 
+                  {{ cart.currency.symbol }}{{ results.filters.price_range.max_value.value | money_without_currency }}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            {% endif %}
+          </div>
+          
+          <button 
+            type="button" 
+            class="clear-all-filters text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            Clear all
+          </button>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+    {%- endif -%}
+    
+    {%- if results.current_vendor or results.current_type -%}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {%- endif -%}
+  </form>
+</collection-filters-form>
+
+<style>
+  /* Price range styling */
+  .price-range-input {
+    pointer-events: all;
+    position: absolute;
+    height: 0;
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  
+  .price-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 2px solid #2563eb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .price-range-input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 2px solid #2563eb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Filter dropdown animation */
+  .filter-button .chevron-down {
+    transition: transform 0.2s ease;
+  }
+  
+  .filter-button.open .chevron-down {
+    transform: rotate(180deg);
+  }
+  
+  /* Mobile responsive adjustments */
+  @media (max-width: 767px) {
+    .filters-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .filters-container > div {
+      display: inline-flex;
+      white-space: nowrap;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Toggle filter dropdowns
+    const filterButtons = document.querySelectorAll('.filter-button');
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        // Close other dropdowns first
+        document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+          const dropdownContent = dropdown.querySelector('.dropdown-content');
+          const btn = dropdown.querySelector('.filter-button');
+          
+          if (dropdown !== this.closest('.filter-dropdown') && dropdownContent && !dropdownContent.classList.contains('hidden')) {
+            dropdownContent.classList.add('hidden');
+            btn.classList.remove('open');
+          }
+        });
+        
+        // Toggle current dropdown
+        const dropdownContent = this.closest('.filter-dropdown').querySelector('.dropdown-content');
+        dropdownContent.classList.toggle('hidden');
+        this.classList.toggle('open');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(content => {
+          content.classList.add('hidden');
+        });
+        
+        document.querySelectorAll('.filter-button').forEach(button => {
+          button.classList.remove('open');
+        });
+      }
+    });
+    
+    // Sort options auto-submit
+    document.querySelectorAll('.sort-option').forEach(option => {
+      option.addEventListener('change', function() {
+        document.getElementById('CollectionFiltersForm').submit();
+      });
+    });
+    
+    // Clear individual filter group
+    document.querySelectorAll('[data-clear-filter]').forEach(button => {
+      button.addEventListener('click', function() {
+        const filterGroup = this.getAttribute('data-clear-filter');
+        const checkboxes = document.querySelectorAll(`[data-filter-group="${filterGroup}"] input[type="checkbox"]`);
+        
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        document.getElementById('CollectionFiltersForm').submit();
+      });
+    });
+    
+    // Initialize price range sliders
+    document.querySelectorAll('price-range').forEach(priceRange => {
+      const minSlider = priceRange.querySelector('#price-min');
+      const maxSlider = priceRange.querySelector('#price-max');
+      const minInput = priceRange.querySelector('#price-min-value');
+      const maxInput = priceRange.querySelector('#price-max-value');
+      const progress = priceRange.querySelector('.price-range-progress');
+      
+      if (!minSlider || !maxSlider) return;
+      
+      const min = parseFloat(minSlider.min) || 0;
+      const max = parseFloat(maxSlider.max) || 1000;
+      
+      function updateProgress() {
+        const minVal = parseFloat(minSlider.value);
+        const maxVal = parseFloat(maxSlider.value);
+        
+        const minPercent = ((minVal - min) / (max - min)) * 100;
+        const maxPercent = ((maxVal - min) / (max - min)) * 100;
+        
+        progress.style.left = `${minPercent}%`;
+        progress.style.right = `${100 - maxPercent}%`;
+      }
+      
+      minSlider.addEventListener('input', function() {
+        const minVal = parseFloat(this.value);
+        const maxVal = parseFloat(maxSlider.value);
+        
+        if (minVal > maxVal) {
+          this.value = maxVal;
+        }
+        
+        minInput.value = this.value;
+        updateProgress();
+      });
+      
+      maxSlider.addEventListener('input', function() {
+        const minVal = parseFloat(minSlider.value);
+        const maxVal = parseFloat(this.value);
+        
+        if (maxVal < minVal) {
+          this.value = minVal;
+        }
+        
+        maxInput.value = this.value;
+        updateProgress();
+      });
+      
+      minInput.addEventListener('input', function() {
+        const minVal = parseFloat(this.value);
+        
+        if (!isNaN(minVal)) {
+          minSlider.value = Math.min(minVal, parseFloat(maxSlider.value));
+          updateProgress();
+        }
+      });
+      
+      maxInput.addEventListener('input', function() {
+        const maxVal = parseFloat(this.value);
+        
+        if (!isNaN(maxVal)) {
+          maxSlider.value = Math.max(maxVal, parseFloat(minSlider.value));
+          updateProgress();
+        }
+      });
+      
+      // Initialize
+      updateProgress();
+    });
+  });
+</script>
