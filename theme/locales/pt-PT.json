@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "de",
     "password_page": {
       "login_form_heading": "Entre na loja usando a palavra-passe:",
       "login_password_button": "Entre usando a palavra-passe",
@@ -52,8 +53,8 @@
     },
     "slider": {
       "of": "de",
-      "next_slide": "Deslizar para a direita",
-      "previous_slide": "Deslizar para a esquerda",
+      "next_slide": "Próximo slide",
+      "previous_slide": "Slide anterior",
       "name": "Slider"
     }
   },
@@ -340,8 +341,8 @@
     },
     "slideshow": {
       "load_slide": "Carregar slide",
-      "previous_slideshow": "Diapositivo anterior",
-      "next_slideshow": "Diapositivo seguinte",
+      "previous_slide": "Slide anterior",
+      "next_slide": "Próximo slide",
       "pause_slideshow": "Pausa na apresentação de diapositivos",
       "play_slideshow": "Reproduzir apresentação de diapositivos",
       "carousel": "Carrossel",

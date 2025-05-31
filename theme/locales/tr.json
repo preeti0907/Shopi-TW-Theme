@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "ile",
     "password_page": {
       "login_form_heading": "Parolayı kullanarak mağazaya girin:",
       "login_password_button": "Parola kullanarak gir",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Slaytı yükle",
-      "previous_slideshow": "Önceki slayt",
-      "next_slideshow": "Sonraki slayt",
+      "previous_slide": "Önceki slayt",
+      "next_slide": "Sonraki slayt",
       "pause_slideshow": "Slayt gösterisini duraklat",
       "play_slideshow": "Slayt gösterisini oynat",
       "carousel": "Döngü",

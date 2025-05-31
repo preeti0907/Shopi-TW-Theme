@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "de",
     "password_page": {
       "login_form_heading": "Entre na loja usando a senha:",
       "login_password_button": "Entrar usando a senha",
@@ -340,8 +341,8 @@
     },
     "slideshow": {
       "load_slide": "Carregar slide",
-      "previous_slideshow": "Slide anterior",
-      "next_slideshow": "Próximo slide",
+      "previous_slide": "Slide anterior",
+      "next_slide": "Próximo slide",
       "pause_slideshow": "Pausar apresentação de slides",
       "play_slideshow": "Reproduzir apresentação de slides",
       "carousel": "Carrossel",

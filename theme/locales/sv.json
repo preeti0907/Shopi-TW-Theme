@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "av",
     "password_page": {
       "login_form_heading": "Ange lösenord för att komma i butiken:",
       "login_password_button": "Ange lösenord för att komma in",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Ladda bild",
-      "previous_slideshow": "Föregående bild",
-      "next_slideshow": "Nästa bild",
+      "previous_slide": "Bild till vänster",
+      "next_slide": "Bild till höger",
       "pause_slideshow": "Pausa bildspelet",
       "play_slideshow": "Spela bildspel",
       "carousel": "Karusell",

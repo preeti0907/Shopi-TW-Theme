@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "din",
     "password_page": {
       "login_form_heading": "Accesați magazinul folosind parola:",
       "login_password_button": "Accesați folosind parola",
@@ -340,8 +341,8 @@
     },
     "slideshow": {
       "load_slide": "Încarcă diapozitivul",
-      "previous_slideshow": "Diapozitivul anterior",
-      "next_slideshow": "Diapozitivul următor",
+      "previous_slide": "Diapozitivul anterior",
+      "next_slide": "Diapozitivul următor",
       "pause_slideshow": "Întrerupe prezentarea de diapozitive",
       "play_slideshow": "Redă prezentarea de diapozitive",
       "carousel": "Carusel",

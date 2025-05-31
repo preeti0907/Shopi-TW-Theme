@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "di",
     "password_page": {
       "login_form_heading": "Accedi al negozio utilizzando la password:",
       "login_password_button": "Accedi utilizzando la password",
@@ -340,8 +341,8 @@
     },
     "slideshow": {
       "load_slide": "Carica slide",
-      "previous_slideshow": "Slide precedente",
-      "next_slideshow": "Slide successiva",
+      "previous_slide": "Slide precedente",
+      "next_slide": "Slide successiva",
       "pause_slideshow": "Metti in pausa presentazione",
       "play_slideshow": "Avvia presentazione",
       "carousel": "Carousel",

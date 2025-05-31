@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "of",
     "password_page": {
       "login_form_heading": "Siirry kauppaan käyttämällä salasanaa:",
       "login_password_button": "Siirry sisään käyttämällä salasanaa",
@@ -330,11 +331,11 @@
     },
     "slideshow": {
       "load_slide": "Lataa dia",
-      "previous_slideshow": "Edellinen dia",
-      "next_slideshow": "Seuraava dia",
-      "pause_slideshow": "Keskeytä diaesitys",
-      "play_slideshow": "Toista diaesitys",
+      "previous_slide": "Edellinen dia",
+      "next_slide": "Seuraava dia",
       "carousel": "Karuselli",
+      "slide": "Dia"
+    },
       "slide": "Dia"
     },
     "page": {

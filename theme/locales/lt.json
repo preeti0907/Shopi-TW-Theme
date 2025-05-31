@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "iš",
     "password_page": {
       "login_form_heading": "Apsilankyti parduotuvėje naudojant slaptažodį:",
       "login_password_button": "Apsilankyti naudojant slaptažodį",
@@ -350,11 +351,11 @@
     },
     "slideshow": {
       "load_slide": "Įkelti skaidrę",
-      "previous_slideshow": "Ankstesnė skaidrė",
-      "next_slideshow": "Kita skaidrė",
       "pause_slideshow": "Pristabdyti skaidrių peržiūrą",
       "play_slideshow": "Leisti skaidrių peržiūrą",
       "carousel": "Karuselė",
+      "previous_slide": "Slinkti kairėn",
+      "next_slide": "Slinkti dešinėn",
       "slide": "Skaidrė"
     },
     "page": {

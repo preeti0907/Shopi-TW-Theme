@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "z",
     "password_page": {
       "login_form_heading": "Wejdź do sklepu, wpisując hasło:",
       "login_password_button": "Wejdź, wpisując hasło",
@@ -350,8 +351,8 @@
     },
     "slideshow": {
       "load_slide": "Wczytaj slajd",
-      "previous_slideshow": "Poprzedni slajd",
-      "next_slideshow": "Następny slajd",
+      "previous_slide": "Poprzedni slajd",
+      "next_slide": "Następny slajd",
       "pause_slideshow": "Wstrzymaj pokaz slajdów",
       "play_slideshow": "Odtwórz pokaz slajdów",
       "carousel": "Karuzela",

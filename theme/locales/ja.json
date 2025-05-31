@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "の",
     "password_page": {
       "login_form_heading": "パスワードを入力してストアにアクセスする。",
       "login_password_button": "パスワードを入力してアクセスする",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "スライドを読み込む",
-      "previous_slideshow": "前のスライド",
-      "next_slideshow": "次のスライド",
+      "previous_slide": "前のスライド",
+      "next_slide": "次のスライド",
       "pause_slideshow": "スライドショーを一時停止する",
       "play_slideshow": "スライドショーを再生する",
       "carousel": "カルーセル",

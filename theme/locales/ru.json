@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "из",
     "password_page": {
       "login_form_heading": "Вход в магазин с помощью пароля:",
       "login_password_button": "Войти с помощью пароля",
@@ -350,8 +351,8 @@
     },
     "slideshow": {
       "load_slide": "Загрузить слайд",
-      "previous_slideshow": "Предыдущий слайд",
-      "next_slideshow": "Следующий слайд",
+      "previous_slide": "Предыдущий слайд",
+      "next_slide": "Следующий слайд",
       "pause_slideshow": "Приостановить показ слайд-шоу",
       "play_slideshow": "Воспроизвести слайд-шоу",
       "carousel": "Карусель",

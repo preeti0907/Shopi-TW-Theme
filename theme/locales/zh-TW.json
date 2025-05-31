@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "的",
     "password_page": {
       "login_form_heading": "使用密碼進入商店：",
       "login_password_button": "使用密碼進入",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "載入投影片",
-      "previous_slideshow": "上一張投影片",
-      "next_slideshow": "下一張投影片",
+      "previous_slide": "上一張投影片",
+      "next_slide": "下一張投影片",
       "pause_slideshow": "暫停素材輪播",
       "play_slideshow": "播放素材輪播",
       "carousel": "輪播廣告",

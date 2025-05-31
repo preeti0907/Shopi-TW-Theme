@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "z",
     "password_page": {
       "login_form_heading": "Prejdite do obchodu s použitím hesla:",
       "login_password_button": "Prejsť s použitím hesla",
@@ -350,8 +351,8 @@
     },
     "slideshow": {
       "load_slide": "Načítať snímku",
-      "previous_slideshow": "Predchádzajúca snímka",
-      "next_slideshow": "Nasledujúca snímka",
+      "previous_slide": "Predchádzajúca snímka",
+      "next_slide": "Nasledujúca snímka",
       "pause_slideshow": "Pozastaviť prezentáciu",
       "play_slideshow": "Prehrať prezentáciu",
       "carousel": "Karusel",

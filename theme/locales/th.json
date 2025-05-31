@@ -1,6 +1,7 @@
 
 {
   "general": {
+    "of": "ของ",
     "password_page": {
       "login_form_heading": "เข้าสู่ร้านค้าโดยใช้รหัสผ่าน:",
       "login_password_button": "เข้าโดยใช้รหัสผ่าน",
@@ -331,8 +332,8 @@
     },
     "slideshow": {
       "load_slide": "โหลดสไลด์",
-      "previous_slideshow": "สไลด์ก่อนหน้า",
-      "next_slideshow": "สไลด์ถัดไป",
+      "previous_slide": "สไลด์ก่อนหน้า",
+      "next_slide": "สไลด์ถัดไป",
       "pause_slideshow": "หยุดสไลด์โชว์ชั่วคราว",
       "play_slideshow": "เล่นสไลด์โชว์",
       "carousel": "ภาพสไลด์",

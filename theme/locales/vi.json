@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "của",
     "password_page": {
       "login_form_heading": "Vào cửa hàng bằng mật khẩu:",
       "login_password_button": "Vào bằng mật khẩu",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Tải trang chiếu",
-      "previous_slideshow": "Trang chiếu trước",
-      "next_slideshow": "Trang chiếu sau",
+      "previous_slide": "Trang chiếu trước",
+      "next_slide": "Trang chiếu sau",
       "pause_slideshow": "Tạm dừng bản trình chiếu",
       "play_slideshow": "Phát bản trình chiếu",
       "carousel": "Quay vòng",

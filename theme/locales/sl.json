@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "od",
     "password_page": {
       "login_form_heading": "Vstopite v trgovino z geslom:",
       "login_password_button": "Vstop z geslom",
@@ -350,8 +351,8 @@
     },
     "slideshow": {
       "load_slide": "Naloži diapozitiv",
-      "previous_slideshow": "Prejšnji diapozitiv",
-      "next_slideshow": "Naslednji diapozitiv",
+      "previous_slide": "Prejšnji diapozitiv",
+      "next_slide": "Naslednji diapozitiv",
       "pause_slideshow": "Zaustavi diaprojekcijo",
       "play_slideshow": "Predvajaj diaprojekcijo",
       "carousel": "Vrtiljak",

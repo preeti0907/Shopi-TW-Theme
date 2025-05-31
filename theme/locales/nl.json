@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "van",
     "password_page": {
       "login_form_heading": "Ga winkel binnen met wachtwoord:",
       "login_password_button": "Ga naar binnen met wachtwoord",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Dia laden",
-      "previous_slideshow": "Vorige dia",
-      "next_slideshow": "Volgende dia",
+      "previous_slide": "Vorige dia",
+      "next_slide": "Volgende dia",
       "pause_slideshow": "Diavoorstelling pauzeren",
       "play_slideshow": "Diavoorstelling afspelen",
       "carousel": "Carrousel",

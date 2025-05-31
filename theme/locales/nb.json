@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "av",
     "password_page": {
       "login_form_heading": "Gå inn i butikken ved hjelp av passord:",
       "login_password_button": "Gå inn ved hjelp av passord",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Last inn lysbilde",
-      "previous_slideshow": "Forrige lysbilde",
-      "next_slideshow": "Neste lysbilde",
+      "previous_slide": "Forrige lysbilde",
+      "next_slide": "Neste lysbilde",
       "pause_slideshow": "Sett lysbildefremvisningen på pause",
       "play_slideshow": "Spill av lysbildefremvisningen",
       "carousel": "Karusell",

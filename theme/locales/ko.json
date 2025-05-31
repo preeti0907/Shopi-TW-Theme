@@ -8,8 +8,9 @@
       "login_form_error": "잘못된 비밀번호입니다!",
       "login_form_submit": "입력",
       "admin_link_html": "스토어 소유자입니까? <a href=\"/admin\" class=\"link underlined-link\">여기에서 로그인</a>",
-      "powered_by_shopify_html": "이 상점은 {{ shopify }}에서 제공합니다."
+      "powered_by_shopify_html": "이 상점은 {{ shopify }}에서 제공합니다.",
     },
+    "of": "의",
     "social": {
       "alt_text": {
         "share_on_facebook": "Facebook에서 공유",
@@ -330,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "슬라이드 로드",
-      "previous_slideshow": "이전 슬라이드",
-      "next_slideshow": "다음 슬라이드",
+      "previous_slide": "왼쪽으로 슬라이드",
+      "next_slide": "오른쪽으로 슬라이드",
       "pause_slideshow": "슬라이드 쇼 멈춤",
       "play_slideshow": "슬라이드 쇼 재생",
       "carousel": "캐러셀",

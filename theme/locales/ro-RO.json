@@ -9,6 +9,7 @@
  */
 {
   "general": {
+    "of": "din",
     "password_page": {
       "login_form_heading": "Accesați magazinul folosind parola:",
       "login_password_button": "Accesați folosind parola",
@@ -45,10 +46,12 @@
       "previous": "Pagina precedentă"
     },
     "search": {
-      "search": "Căutați"
+      "search": "Căutați",
+      "reset": "Resetați"
     },
     "cart": {
       "view": "Vizualizare coș ({{ count }})",
+      "view_empty_cart": "Vizualizați coșul gol",
       "item_added": "Articolul a fost adăugat în coș"
     },
     "share": {
@@ -110,7 +113,7 @@
     "product_title": "Exemplu de titlu de produs",
     "collection_title": "Numele colecției"
   },
-  "products": {
+
     "product": {
       "add_to_cart": "Adăugați în coș",
       "description": "Descriere",
@@ -199,7 +202,7 @@
   },
   "templates": {
     "search": {
-      "no_results": "Nu s-au găsit rezultate pentru „{{ terms }}”. Verificați ortografia sau utilizați alt cuvânt sau altă expresie.",
+      "no_results": "Nu s-au găsit rezultate pentru \"{{ terms }}\". Verificați ortografia sau utilizați alt cuvânt sau altă expresie.",
       "title": "Rezultatele căutării",
       "results_with_count": {
         "one": "{{ count }} rezultat",
@@ -208,11 +211,11 @@
       },
       "page": "Pagină",
       "products": "Produse",
-      "search_for": "Caută „{{ terms }}”",
+      "search_for": "Caută \"{{ terms }}\"",
       "results_with_count_and_term": {
-        "one": "S-a găsit {{ count }} rezultat pentru „{{ terms }}”",
-        "other": "S-au găsit {{ count }} rezultate pentru „{{ terms }}”",
-        "few": "S-au găsit {{ count }} rezultate pentru „{{ terms }}”"
+        "one": "S-a găsit {{ count }} rezultat pentru \"{{ terms }}\"",
+        "other": "S-au găsit {{ count }} rezultate pentru \"{{ terms }}\"",
+        "few": "S-au găsit {{ count }} rezultate pentru \"{{ terms }}\""
       }
     },
     "cart": {
@@ -254,7 +257,6 @@
       "note": "Instrucțiuni speciale legate de comandă",
       "checkout": "Finalizați comanda",
       "empty": "Coșul dvs. este gol",
-      "cart_error": "A apărut o eroare în timpul actualizării coșului. Încercați din nou.",
       "cart_quantity_error_html": "Cantitatea maximă pe care o poți adăuga în coș din acest articol: {{ quantity }}.",
       "taxes_and_shipping_policy_at_checkout_html": "Taxele și <a href=\"{{ link }}\">transportul</a> sunt calculate la finalizarea comenzii",
       "taxes_included_but_shipping_at_checkout": "Taxele sunt incluse și transportul este calculat la finalizarea comenzii",
@@ -437,6 +439,23 @@
       "expired": "Expirat",
       "copy_code_success": "Codul a fost copiat cu succes",
       "print_gift_card": "Imprimați"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Trimiteți acestui destinatar",
+      "expanded": "Detalii destinatar",
+      "collapsed": "Detalii destinatar",
+      "email_label": "E-mailul destinatarului",
+      "email_label_optional_for_no_js_behavior": "E-mailul destinatarului (opțional)",
+      "email": "E-mail",
+      "name_label": "Numele destinatarului",
+      "name": "Nume",
+      "message_label": "Mesaj (opțional)",
+      "message": "Mesaj",
+      "max_characters": "{{ count }} caractere rămase",
+      "send_on": "Trimiteți la",
+      "send_on_label": "Data de trimitere"
     }
   }
 }
