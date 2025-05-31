@@ -89,7 +89,7 @@
           {%- if section.settings.logo != blank -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
               <img 
-                src="{{ section.settings.logo | img_url: 'master' }}" 
+                src="{{ section.settings.logo | image_url: 'master' }}" 
                 alt="{{ shop.name }}" 
                 class="h-8 w-auto"
                 height=""
@@ -171,7 +171,7 @@
           {%- if section.settings.logo != blank -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
               <img 
-                src="{{ section.settings.logo | img_url: 'master' }}" 
+                src="{{ section.settings.logo | image_url: 'master' }}" 
                 alt="{{ shop.name }}" 
                 class="h-8 w-auto"
                 height=""

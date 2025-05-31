@@ -59,10 +59,6 @@
   {%- endcapture -%}
 
   {%- if picker_type == 'swatch' -%}
-    {%- capture help_text -%}
-      <span class="visually-hidden">{{ value | escape }}</span>
-      {{ label_unavailable }}
-    {%- endcapture -%}
     {%
       render 'swatch-input',
       id: input_id,
@@ -73,7 +69,6 @@
       checked: value.selected,
       visually_disabled: option_disabled,
       shape: block.settings.swatch_shape,
-      help_text: help_text,
       additional_props: input_dataset
     %}
   {%- elsif picker_type == 'button' -%}
@@ -113,7 +108,7 @@
     <div class="image_placeholder">
       {% if value.variant.featured_image %}
         <img
-          src="https://onetwo789.myshopify.com/cdn/shop/{{ value.variant.featured_image.src | width: '250', height: '250'}}"
+          src="{{ value.variant.featured_image | image_url: width: 250, height: 250 }}"
           alt="{{ value.variant.featured_media.alt | escape }}"
           class="variant-image__img"
           height="100px"

@@ -14,7 +14,7 @@
           <div class="flex gap-4 bg-white px-4 py-6 rounded-md shadow border">
             <div class="flex gap-6 sm:gap-4 max-sm:flex-col">
               <div class="w-24 h-24 max-sm:w-24 max-sm:h-24 shrink-0 border rounded">
-                {% comment %} <img src="{{ item.image | asset_img_url: '300x300' }}" alt="{{ item.product.title }}" class="w-full h-full object-contain" width="300" height="300" /> {% endcomment %}
+                {% comment %} <img src="{{ item.image | asset_image_url: '300x300' }}" alt="{{ item.product.title }}" class="w-full h-full object-contain" width="300" height="300" /> {% endcomment %}
 
                 <img
                   src="{{ item | image_url: width: 500 }}"

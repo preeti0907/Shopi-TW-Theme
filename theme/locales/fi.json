@@ -333,9 +333,9 @@
       "load_slide": "Lataa dia",
       "previous_slide": "Edellinen dia",
       "next_slide": "Seuraava dia",
+      "pause_slideshow": "Keskeytä esitys",
+      "play_slideshow": "Toista esitys",
       "carousel": "Karuselli",
-      "slide": "Dia"
-    },
       "slide": "Dia"
     },
     "page": {
@@ -343,7 +343,7 @@
     },
     "announcements": {
       "previous_announcement": "Edellinen ilmoitus",
-      "next_announcement": "Ilmoitus",
+      "next_announcement": "Seuraava ilmoitus",
       "carousel": "Karuselli",
       "announcement": "Ilmoitus",
       "announcement_bar": "Ilmoituspalkki"
@@ -514,7 +514,7 @@
       "checkbox": "Haluan lähettää tämän lahjaksi",
       "email_label": "Vastaanottajan sähköpostiosoite",
       "email": "Sähköposti",
-      "name_label": "Vastaanottajan sähköpostiosoite (valinnainen)",
+      "name_label": "Vastaanottajan nimi (valinnainen)",
       "name": "Nimi",
       "message_label": "Viesti (valinnainen)",
       "message": "Viesti",

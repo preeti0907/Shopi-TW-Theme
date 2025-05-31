@@ -149,7 +149,7 @@
                                 <div class="sm:col-span-3 flex items-center">
                                   <div class="flex-shrink-0 h-10 w-10 rounded-md border border-gray-200 overflow-hidden bg-gray-100">
                                     {% if line_item.image %}
-                                      <img src="{{ line_item.image | img_url: '60x60', crop: 'center' }}" alt="{{ line_item.title }}" class="h-full w-full object-center object-cover"
+                                      <img src="{{ line_item.image | image_url: '60x60', crop: 'center' }}" alt="{{ line_item.title }}" class="h-full w-full object-center object-cover"
                                       height="" width="">
                                     {% else %}
                                       <div class="h-full w-full flex items-center justify-center">

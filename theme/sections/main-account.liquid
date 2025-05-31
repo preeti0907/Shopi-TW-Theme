@@ -188,7 +188,7 @@
                   <div class="group relative">
                     <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
                       {% if product.featured_image %}
-                        <img src="{{ product.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ product.featured_image.alt }}" class="w-full h-full object-center object-cover"
+                        <img src="{{ product.featured_image | image_url: '300x300', crop: 'center' }}" alt="{{ product.featured_image.alt }}" class="w-full h-full object-center object-cover"
                         height="" width="">
                       {% else %}
                         <div class="w-full h-full flex items-center justify-center bg-gray-200">

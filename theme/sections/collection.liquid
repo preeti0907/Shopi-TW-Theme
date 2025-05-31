@@ -33,7 +33,7 @@
       >
         {% if collection.image %}
           <img
-            src="{{ collection.image | img_url: 'master' }}"
+            src="{{ collection.image | image_url: 'master' }}"
             alt="{{ collection.title | escape }}"
             class="w-full object-cover h-full rounded-xl lg:rounded-2xl shadow-sm"
             loading="lazy"
@@ -42,7 +42,7 @@
           >
         {% elsif section.settings.default_collection_image != blank and collection.image == blank %}
           <img
-            src="{{ section.settings.default_collection_image | img_url: 'master' }}"
+            src="{{ section.settings.default_collection_image | image_url: 'master' }}"
             alt="{{ collection.title | escape }}"
             class="w-full object-cover h-full  rounded-xl lg:rounded-2xl shadow-sm"
             loading="lazy"
