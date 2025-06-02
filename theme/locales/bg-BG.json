@@ -1,5 +1,6 @@
 {
   "general": {
+    "of": "от",
     "password_page": {
       "login_form_heading": "Влизане в магазина с парола:",
       "login_password_button": "Влизане с парола",
@@ -36,11 +37,13 @@
       "previous": "Предишна страница"
     },
     "search": {
-      "search": "Търсене"
+      "search": "Търсене",
+      "reset": "Изчистване на търсенето"
     },
     "cart": {
       "view": "Покажи количката ми ({{ count }})",
-      "item_added": "Артикулът е добавен в количката"
+      "item_added": "Артикулът е добавен в количката",
+      "view_empty_cart": "Покажи количката"
     },
     "share": {
       "copy_to_clipboard": "Копиране на връзката",
@@ -51,7 +54,8 @@
     "slider": {
       "of": "от",
       "next_slide": "Плъзгане надясно",
-      "previous_slide": "Плъзгане наляво"
+      "previous_slide": "Плъзгане наляво",
+      "name": "Плъзгач"
     }
   },
   "newsletter": {
@@ -74,7 +78,8 @@
     "skip_to_product_info": "Прескочи към информацията за продукта",
     "total_reviews": "общ брой мнения",
     "star_reviews_info": "{{ rating_value }} от {{ rating_max }} звезди",
-    "collapsible_content_title": "Съдържание, което може да се свива"
+    "collapsible_content_title": "Съдържание, което може да се свива",
+    "complementary_products": "Допълнителни продукти"
   },
   "blogs": {
     "article": {
@@ -110,7 +115,14 @@
         "label": "Количество",
         "input_label": "Количество за {{ product }}",
         "increase": "Увеличаване на количеството за {{ product }}",
-        "decrease": "Намаляване на количеството за {{ product }}"
+        "decrease": "Намаляване на количеството за {{ product }}",
+        "minimum_of": "Минимално количество {{ quantity }}",
+        "maximum_of": "Максимално количество {{ quantity }}",
+        "multiples_of": "Увеличение с: {{ quantity }}",
+        "in_cart_html": "<span class=\"quantity-cart\">{{ quantity }}</span> в количката",
+        "note": "Вижте правилата за количеството",
+        "min_of": "Мин. {{ quantity }}",
+        "max_of": "Макс. {{ quantity }}"
       },
       "price": {
         "from_price_html": "От {{ price }}",
@@ -123,7 +135,7 @@
       "vendor": "Доставчик",
       "video_exit_message": "{{ title }} отваря видео на цял екран в същия прозорец.",
       "xr_button": "Преглед във вашето пространство",
-      "xr_button_label": "При „Преглед във вашето пространство“ елементът се зарежда в прозорец с обогатена реалност.",
+      "xr_button_label": "При „Преглед във вашето пространство елементът се зарежда в прозорец с обогатена реалност.",
       "sold_out": "Изчерпано",
       "pickup_availability": {
         "view_store_info": "Вижте информация за магазина",
@@ -145,10 +157,28 @@
         "image_available": "Изображение {{ index }} вече е налично във визуализатора на галерията"
       },
       "view_full_details": "Покажи пълните подробности",
-      "include_taxes": "С включени данъци.",
       "shipping_policy_html": "<a href=\"{{ link }}\">Доставката</a> се изчислява при плащане.",
       "choose_options": "Изберете опции",
-      "choose_product_options": "Изберете опции за {{ product_name }}"
+      "choose_product_options": "Изберете опции за {{ product_name }}",
+      "value_unavailable": "{{ option_value }} – Неналично",
+      "variant_sold_out_or_unavailable": "Вариантът е изчерпан или неналичен",
+      "inventory_in_stock": "В наличност",
+      "inventory_in_stock_show_count": "{{ quantity }} в наличност",
+      "inventory_low_stock": "Малка наличност",
+      "inventory_low_stock_show_count": "Малка наличност: остават {{ quantity }}",
+      "inventory_out_of_stock": "Извън наличност",
+      "sku": "SKU",
+      "inventory_out_of_stock_continue_selling": "В наличност",
+      "volume_pricing": {
+        "title": "Количествени цени",
+        "note": "Количествени цени са налични",
+        "minimum": "{{ quantity }}+",
+        "price_at_each": "{{ price }}/бр.",
+        "price_range": "{{ minimum }} - {{ maximum }}"
+      },
+      "taxes_included": "С включени данъци.",
+      "duties_included": "С включени мита.",
+      "duties_and_taxes_included": "С включени мита и данъци."
     },
     "modal": {
       "label": "Мултимедийна галерия"
@@ -162,8 +192,8 @@
       "filter_by_label": "Филтър:",
       "filter_button": "Филтър",
       "filters_selected": {
-        "one": "Избрани: {{ count }}",
-        "other": "Избрани: {{ count }}"
+        "one": "{{ count }} избран",
+        "other": "{{ count }} избрани"
       },
       "max_price": "Най-високата цена е {{ price }}",
       "product_count": {
@@ -181,12 +211,13 @@
       "clear_filter": "Премахване на филтъра",
       "filter_selected_accessibility": "{{ type }} ({{ count }} избрани филтъра)",
       "show_more": "Покажи повече",
-      "show_less": "Покажи по-малко"
+      "show_less": "Покажи по-малко",
+      "filter_and_operator_subtitle": "Приложи всички"
     }
   },
   "templates": {
     "search": {
-      "no_results": "Няма резултати за „{{ terms }}“. Проверете начина на изписване или използвайте различна дума или фраза.",
+      "no_results": "Няма резултати за „{{ terms }} Проверете начина на изписване или използвайте различна дума или фраза.",
       "results_with_count": {
         "one": "{{ count }} резултат",
         "other": "{{ count }} резултата"
@@ -194,10 +225,24 @@
       "title": "Резултати от търсенето",
       "page": "Страница",
       "products": "Продукти",
-      "search_for": "Търсене на „{{ terms }}“",
+      "search_for": "Търсене на „{{ terms }}",
       "results_with_count_and_term": {
-        "one": "Открит е {{ count }} резултат за „{{ terms }}“",
-        "other": "Открити са {{ count }} резултата за „{{ terms }}“"
+        "one": "{{ count }} резултат за „{{ terms }}",
+        "other": "{{ count }} резултата за „{{ terms }}"
+      },
+      "results_pages_with_count": {
+        "one": "{{ count }} страница",
+        "other": "{{ count }} страници"
+      },
+      "results_products_with_count": {
+        "one": "{{ count }} продукт",
+        "other": "{{ count }} продукта"
+      },
+      "suggestions": "Предложения",
+      "pages": "Страници",
+      "results_suggestions_with_count": {
+        "one": "{{ count }} предложение",
+        "other": "{{ count }} предложения"
       }
     },
     "cart": {
@@ -233,28 +278,33 @@
       "title": "Вашата количка",
       "caption": "Артикули в количката",
       "remove_title": "Премахване на {{ title }}",
-      "subtotal": "Междинна сума",
-      "new_subtotal": "Нова междинна сума",
       "checkout": "Преминаване към плащане",
       "empty": "Количката ви е празна.",
       "cart_error": "При актуализирането на количката ви възникна грешка. Опитайте отново.",
       "cart_quantity_error_html": "Можете да добавите само {{ quantity }} броя от този артикул в количката си.",
-      "taxes_and_shipping_policy_at_checkout_html": "Данъците и <a href=\"{{ link }}\">доставката</a> се изчисляват при плащане",
-      "taxes_included_but_shipping_at_checkout": "Данъците са включени, а доставката се изчислява при плащане",
-      "taxes_included_and_shipping_policy_html": "С включени данъци. <a href=\"{{ link }}\">Доставката</a> се изчислява при плащане.",
-      "taxes_and_shipping_at_checkout": "Данъците и доставката се изчисляват при плащане",
       "headings": {
         "product": "Продукт",
         "price": "Цена",
         "total": "Обща сума",
-        "quantity": "Количество"
+        "quantity": "Количество",
+        "image": "Изображение на продукта"
       },
       "update": "Актуализиране",
       "note": "Специални инструкции за поръчката",
       "login": {
         "title": "Имате профил?",
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Влезте</a> за по-бързо преминаване към плащане."
-      }
+      },
+      "estimated_total": "Очаквана обща сума",
+      "new_estimated_total": "Нова очаквана обща сума",
+      "duties_and_taxes_included_shipping_at_checkout_with_policy_html": "Митата и данъците са включени. Отстъпките и <a href=\"{{ link }}\">доставката</a> се изчисляват при плащане.",
+      "duties_and_taxes_included_shipping_at_checkout_without_policy": "Митата и данъците са включени. Отстъпките и доставката се изчисляват при плащане.",
+      "taxes_included_shipping_at_checkout_with_policy_html": "Данъците са включени. Отстъпките и <a href=\"{{ link }}\">доставката</a> се изчисляват при плащане.",
+      "taxes_included_shipping_at_checkout_without_policy": "Данъците са включени. Отстъпките и доставката се изчисляват при плащане.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html": "Митата са включени. Данъците, отстъпките и <a href=\"{{ link }}\">доставката</a> се изчисляват при плащане.",
+      "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy": "Митата са включени. Данъците, отстъпките и доставката се изчисляват при плащане.",
+      "taxes_at_checkout_shipping_at_checkout_with_policy_html": "Данъците, отстъпките и <a href=\"{{ link }}\">доставката</a> се изчисляват при плащане.",
+      "taxes_at_checkout_shipping_at_checkout_without_policy": "Данъците, отстъпките и доставката се изчисляват при плащане."
     },
     "footer": {
       "payment": "Начини на плащане"
@@ -267,7 +317,6 @@
     "featured_collection": {
       "view_all": "Покажи всички",
       "view_all_label": "Покажи всички продукти в колекция {{ collection_name }}",
-      "slider": "Плъзгач"
     },
     "collection_list": {
       "view_all": "Покажи всички"
@@ -282,8 +331,8 @@
     },
     "slideshow": {
       "load_slide": "Зареждане на слайд",
-      "previous_slideshow": "Предишен слайд",
-      "next_slideshow": "Следващ слайд",
+      "previous_slide": "Предишен слайд",
+      "next_slide": "Следващ слайд",
       "pause_slideshow": "Пауза на слайдшоуто",
       "play_slideshow": "Възпроизвеждане на слайдшоу",
       "carousel": "Въртележка",
@@ -291,13 +340,48 @@
     },
     "page": {
       "title": "Заглавие на страница"
+    },
+    "announcements": {
+      "previous_announcement": "Предишно известие",
+      "next_announcement": "Следващо известие",
+      "carousel": "Въртележка",
+      "announcement": "Известие",
+      "announcement_bar": "Лента за известия"
+    },
+    "quick_order_list": {
+      "product_total": "Междинна сума на продукта",
+      "view_cart": "Покажи количката",
+      "each": "{{ money }}/бр.",
+      "product": "Продукт",
+      "variant": "Вариант",
+      "variant_total": "Обща сума на вариантите",
+      "items_added": {
+        "one": "Добавен {{ quantity }} артикул",
+        "other": "Добавени {{ quantity }} артикула"
+      },
+      "items_removed": {
+        "one": "Премахнат {{ quantity }} артикул",
+        "other": "Премахнати {{ quantity }} артикула"
+      },
+      "product_variants": "Варианти на продукта",
+      "total_items": "Общо артикули",
+      "remove_all_items_confirmation": "Премахване на всички {{ quantity }} артикула от количката?",
+      "remove_all": "Премахни всички",
+      "cancel": "Отказ",
+      "remove_all_single_item_confirmation": "Премахване на 1 артикул от количката?",
+      "min_error": "Минималната стойност за този артикул е {{ min }}",
+      "max_error": "Максималната стойност за този артикул е {{ max }}",
+      "step_error": "Можете да добавите този артикул само в стъпки от {{ step }}"
     }
   },
   "localization": {
     "country_label": "Държава/регион",
     "language_label": "Език",
     "update_language": "Актуализиране на езика",
-    "update_country": "Актуализиране на държава/регион"
+    "update_country": "Актуализиране на държава/регион",
+    "search": "Търсене",
+    "popular_countries_regions": "Популярни държави/региони",
+    "country_results_count": "Намерени {{ count }} държави/региона"
   },
   "customer": {
     "account_fallback": "Профил",
@@ -344,7 +428,8 @@
       "title": "Влизане",
       "sign_in": "Влизане",
       "submit": "Изпрати",
-      "create_account": "Създаване на профил"
+      "create_account": "Създаване на профил",
+      "alternate_provider_separator": "или"
     },
     "orders": {
       "order_number": "Поръчка",
@@ -405,7 +490,8 @@
       "tracking_company": "Превозвач",
       "tracking_number": "Номер за проследяване",
       "subtotal": "Междинна сума",
-      "total_duties": "Мито"
+      "total_duties": "Мито",
+      "total_refunded": "Общо възстановено"
     }
   },
   "gift_cards": {
@@ -413,14 +499,31 @@
       "title": "Получавате ваучер за подарък на стойност {{ value }} за {{ shop }}!",
       "gift_card_code": "Код на ваучер за подарък",
       "shop_link": "Продължете да пазарувате",
-      "remaining_html": "остава: {{ balance }}",
       "add_to_apple_wallet": "Добавяне към Apple Wallet",
       "qr_image_alt": "QR код – сканирайте го, за да използвате ваучера за подарък",
       "copy_code": "копирай кода",
       "expired": "Изтекъл",
       "copy_code_success": "Кодът е копиран успешно",
-      "print_gift_card": "Печат",
-      "subtext": "Вашият ваучер за подарък"
+      "subtext": "Вашият ваучер за подарък",
+      "how_to_use_gift_card": "Използвайте кода на ваучера за подарък онлайн или QR кода в магазина",
+      "expiration_date": "Валиден до {{ expires_on }}"
+    }
+  },
+  "recipient": {
+    "form": {
+      "checkbox": "Искам да изпратя това като подарък",
+      "expanded": "Формуляр за получател на ваучер за подарък разширен",
+      "collapsed": "Формуляр за получател на ваучер за подарък свит",
+      "email_label": "Имейл на получателя",
+      "email_label_optional_for_no_js_behavior": "Имейл на получателя (по избор)",
+      "email": "Имейл",
+      "name_label": "Име на получателя (по избор)",
+      "name": "Име",
+      "message_label": "Съобщение (по избор)",
+      "message": "Съобщение",
+      "max_characters": "максимум {{ max_chars }} знака",
+      "send_on": "ГГГГ-ММ-ДД",
+      "send_on_label": "Изпрати на (по избор)"
     }
   }
 }
