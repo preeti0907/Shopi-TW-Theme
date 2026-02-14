@@ -1,7 +1,6 @@
 {%- liquid
   assign padding_top = section.settings.padding_top | default: 20
   assign padding_bottom = section.settings.padding_bottom | default: 20
-  assign gap_size = section.settings.item_gap | default: 16
   assign mobile_columns = section.settings.columns_mobile | default: 1
   assign desktop_columns = section.settings.columns_desktop | default: 5
 -%}
@@ -201,4 +200,4 @@
     }
   ]
 }
-{% endschema %} 
+{% endschema %}

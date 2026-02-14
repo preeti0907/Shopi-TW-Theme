@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "shopify-theme": {
+            "command": "npx",
+            "args": [
+                "@antigravity/mcp-server",
+                "--root",
+                ".",
+                "--read-only"
+            ]
+        }
+    }
+}

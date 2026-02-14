@@ -2,7 +2,10 @@
   Pagination component for collections
   Usage: {% render 'pagination', pagination: paginate %}
 {% endcomment %}
-<div class=" lg:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4 xl:grid-cols-5"></div>
+<div class=" lg:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4 xl:grid-cols-5">
+  Pagination
+</div>
+{% comment %}
 {% if pagination.pages > 1 %}
     <div class="pagination">
       <nav class="flex items-center justify-center" aria-label="Pagination">
@@ -59,7 +62,7 @@
               {% endif %}
             {% else %}
               {% if part.title contains 'Previous' or part.title contains 'Next' %}
-                <!-- Skip Previous/Next buttons as we're handling them separately -->
+                
               {% else %}
                 <li>
                   <span aria-current="page" class="z-10 px-3 py-2 leading-tight text-blue-600 border border-blue-300 bg-blue-50">{{ part.title }}</span>
@@ -106,3 +109,4 @@
       </nav>
     </div>
   {% endif %}
+{% endcomment %}

@@ -82,10 +82,10 @@
 
     <!-- GSAP Core + ScrollTrigger -->
     <script src="{{ 'gsap-min.js' | asset_url }}" defer></script>
-    <script src="{{ 'ScrollTrigger-min.js' | asset_url }}"defer></script>
-    <script src="https://unpkg.com/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+    <script src="{{ 'ScrollTrigger-min.js' | asset_url }}" defer></script>
+    <script src="{{ 'SplitText.min.js' | asset_url }}" defer></script>
     <!-- Your custom GSAP code -->
-     <script src="{{ 'gsap-init.js' |  asset_url }}" defer></script>
+    <script src="{{ 'gsap-init.js' | asset_url }}" defer></script>
 
     {% if template.name == 'product' %}
       {% render 'product-variant-data', product: product %}
@@ -94,6 +94,7 @@
   <body class="flex flex-col min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
     {% render 'cart-drawer' %}
+    {%- assign accessories = product.metafields.custom.accessories | default: '' -%}
     {% render 'installation-popup', product_id: product.id, item: product, accessories: accessories %}
     {% sections 'header-group' %}
 

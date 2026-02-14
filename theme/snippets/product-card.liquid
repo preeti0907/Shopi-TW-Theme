@@ -67,9 +67,6 @@
       assign title_class = 'line-clamp-3'
     endif
     
-    # Get available variant options
-    assign option_count = product.options_with_values.size
-    
     # Check inventory status
     assign is_sold_out = false
     assign has_low_inventory = false
@@ -302,8 +299,3 @@
     </div>
   </div>
 </div>
-{% comment %}
-  IMPORTANT: Move this script to a separate JS file or to your theme.js file
-  The product card initialization should be done outside of this component
-  to prevent duplicate class definitions.
-{% endcomment %}

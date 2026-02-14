@@ -89,11 +89,12 @@
           {%- if section.settings.logo != blank -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
               <img 
-                src="{{ section.settings.logo | image_url: 'master' }}" 
-                alt="{{ shop.name }}" 
+                src="{{ section.settings.logo | image_url: width: 300 }}" 
+                alt="{{ section.settings.logo.alt | default: shop.name | escape }}" 
                 class="h-8 w-auto"
-                height=""
-                width="">
+                height="{{ section.settings.logo_height | default: 32 }}"
+                width="{{ section.settings.logo_width | default: 120 }}"
+                loading="eager">
             </a>
           {%- else -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
@@ -171,11 +172,12 @@
           {%- if section.settings.logo != blank -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">
               <img 
-                src="{{ section.settings.logo | image_url: 'master' }}" 
-                alt="{{ shop.name }}" 
+                src="{{ section.settings.logo | image_url: width: 300 }}" 
+                alt="{{ section.settings.logo.alt | default: shop.name | escape }}" 
                 class="h-8 w-auto"
-                height=""
-                width="">
+                height="{{ section.settings.logo_height | default: 32 }}"
+                width="{{ section.settings.logo_width | default: 120 }}"
+                loading="lazy">
             </a>
           {%- else -%}
             <a href="{{ routes.root_url }}" class="flex-shrink-0">

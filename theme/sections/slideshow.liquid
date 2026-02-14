@@ -131,8 +131,6 @@
   }
 {%- endstyle -%}
 
-{% assign unique_id = section.id %}
-
 <section
   id="slideshow-{{ section.id }}"
   class="swiper swiper-slideshow_{{ section.id }} w-full aspect-square md:aspect-[3/1]"
@@ -297,9 +295,7 @@
       </div>
     {% endfor %}
   </div>
-
 </section>
-
 
 {% schema %}
 {

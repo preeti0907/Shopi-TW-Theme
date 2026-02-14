@@ -10,9 +10,9 @@
   <div class="collection-page-header mb-8 pt-4 md:pt-6">
     <div class="flex flex-col md:flex-row gap-x-8 lg:gap-x-12 gap-y-6 items-start">
       <div
-        class="w-full md:w-2/5 space-y-3 md:space-y-4 order-2 md:order-1 {% if text_align_block == 'center' %}text-center md:text-left{% else %}text-left{% endif %}"
+        class="w-full md:w-2/5 space-y-3 md:space-y-4 order-2 md:order-1 {% if section.settings.text_align == 'center' %}text-center md:text-left{% else %}text-left{% endif %}"
       >
-        {% if section_settings.show_breadcrumbs %}
+        {% if section.settings.show_breadcrumbs %}
           <div class="breadcrumb-container">{% render 'breadcrumbs' %}</div>
         {% endif %}
 
@@ -20,9 +20,9 @@
           {{ collection.title }}
         </h1>
 
-        {% if collection.description != blank and section_settings.description_position == 'header' %}
+        {% if collection.description != blank and section.settings.description_position == 'header' %}
           <div
-            class="collection-description text-base text-gray-700 {% if text_align_block == 'center' %}mx-auto md:mx-0 max-w-lg{% endif %}"
+            class="collection-description text-base text-gray-700 {% if section.settings.text_align == 'center' %}mx-auto md:mx-0 max-w-lg{% endif %}"
           >
             {{ collection.description }}
           </div>
@@ -116,6 +116,44 @@
       "id": "show_secondary_image",
       "label": "Show secondary image on hover",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "description_position",
+      "label": "Description position",
+      "options": [
+        {
+          "value": "header",
+          "label": "Header"
+        },
+        {
+          "value": "below",
+          "label": "Below products"
+        }
+      ],
+      "default": "header"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
     }
   ]
 }

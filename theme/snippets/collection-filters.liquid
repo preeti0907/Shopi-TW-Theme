@@ -87,12 +87,12 @@
                                 assign tag = value.value
                                 assign tag_downcase = tag | handleize | downcase
                                 assign colors = ',' | append: settings.product_colors | strip_newlines | downcase | append: ','
-                                assign _tag = tag | downcase | strip
-                                assign _tag = ',' | append: _tag | append: ':'
+                                assign tagvalue = tag | downcase | strip
+                                assign tagvalue = ',' | append: tagvalue | append: ':'
                                 
                                 capture curcol
-                                  if colors contains _tag
-                                    echo colors | split: _tag | last | split: ',' | first | strip
+                                  if colors contains tagvalue
+                                    echo colors | split: tagvalue | last | split: ',' | first | strip
                                   endif
                                 endcapture
                                 
@@ -176,8 +176,8 @@
                       endif
 
                       assign to_value = to_value | default: max
-                      assign _from = from_value | divided_by: max | times: 100 | round: 2
-                      assign _to = to_value | divided_by: max | times: 100 | round: 2
+                      assign frompercent = from_value | divided_by: max | times: 100 | round: 2
+                      assign topercent = to_value | divided_by: max | times: 100 | round: 2
                       if filter.min_value.value != blank or filter.max_value.value != blank
                         assign total_active_values = total_active_values | plus: 1
                       endif
@@ -187,7 +187,7 @@
                       <price-range class="price-range flex flex-col gap-3">
                         <div class="price-range-slider relative h-2 bg-gray-200 rounded-full mt-6">
                           <div class="price-range-progress absolute h-full bg-blue-600 rounded-full" 
-                               style="left: {{ _from }}%; right: {{ 100 | minus: _to }}%;"></div>
+                               style="left: {{ frompercent }}%; right: {{ 100 | minus: topercent }}%;"></div>
                           <input
                             type="range"
                             min="0"

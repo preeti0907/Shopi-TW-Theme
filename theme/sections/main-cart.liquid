@@ -144,21 +144,21 @@
 
         <div class="mt-5 flex flex-wrap justify-center gap-4">
           <img
-            src="https://readymadeui.com/images/master.webp"
+            src="{{ 'master.webp' | asset_url }}"
             alt="card1"
             class="w-10 object-contain"
             width="10"
             height="10"
           >
           <img
-            src="https://readymadeui.com/images/visa.webp"
+            src="{{ 'visa.webp' | asset_url }}"
             alt="card2"
             class="w-10 object-contain"
             width="10"
             height="10"
           >
           <img
-            src="https://readymadeui.com/images/american-express.webp"
+            src="{{ 'american-express.webp' | asset_url }}"
             alt="card3"
             class="w-10 object-contain"
             width="10"
@@ -168,5 +168,4 @@
       </div>
     </div>
   {% endif %}
-
 </div>

@@ -40,11 +40,8 @@
               <!-- Product Image (Mobile) -->
               <div class="product-image">
                 {% if accessory.images.size > 0 %}
-                  {% liquid
-                    assign base_img = accessory.images[0].src | file_url
-                  %}
                   <img
-                    src="https:{{ base_img |  replace: '/files/files', '/files' }}&width=150"
+                    src="{{ accessory.images[0] | image_url: width: 150 }}"
                     alt="{{ accessory.title }}"
                     class="h-[80px] w-[80px] object-cover"
                     height=""
@@ -83,11 +80,8 @@
             <!-- Product Image (Desktop) -->
             <div class="product-image hidden sm:block">
               {% if accessory.images.size > 0 %}
-                {% liquid
-                  assign base_img = accessory.images[0].src | file_url
-                %}
                 <img
-                  src="https:{{ base_img |  replace: '/files/files', '/files' }}&width=150"
+                  src="{{ accessory.images[0] | image_url: width: 150 }}"
                   alt="{{ accessory.title }}"
                   class="h-[100px] w-[100px] object-cover"
                   height=""
